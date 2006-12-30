@@ -36,7 +36,7 @@ AllowedContentTypesVocabularyFactory = AllowedContentTypesVocabulary()
 
 
 class PortalTypesVocabulary(object):
-    """Vocabulary factory for available portal types.
+    """Vocabulary factory for portal types.
     """
     implements(IVocabularyFactory)
 

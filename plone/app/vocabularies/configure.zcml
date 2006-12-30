@@ -3,23 +3,38 @@
     xmlns:five="http://namespaces.zope.org/five">
 
   <utility
-      component=".types.AllowedContentTypesVocabularyFactory"
-      name="plone.app.vocabularies.AllowedContentTypes"
-      />
+    component=".security.RolesVocabularyFactory"
+    name="plone.app.vocabularies.Roles"
+    />
 
   <utility
-      component=".types.AllowableContentTypesVocabularyFactory"
-      name="plone.app.vocabularies.AllowableContentTypes"
-      />
+    component=".security.GroupsVocabularyFactory"
+    name="plone.app.vocabularies.Groups"
+    />
 
   <utility
-      component=".types.PortalTypesVocabularyFactory"
-      name="plone.app.vocabularies.AvailablePortalTypes"
-      />
+    component=".types.AllowedContentTypesVocabularyFactory"
+    name="plone.app.vocabularies.AllowedContentTypes"
+    />
 
   <utility
-      component=".workflow.WorkflowStatesVocabularyFactory"
-      name="plone.app.vocabularies.AvailableWorkflowStates"
-      />
+    component=".types.AllowableContentTypesVocabularyFactory"
+    name="plone.app.vocabularies.AllowableContentTypes"
+    />
+
+  <utility
+    component=".types.PortalTypesVocabularyFactory"
+    name="plone.app.vocabularies.PortalTypes"
+    />
+
+  <utility
+    component=".workflow.WorkflowStatesVocabularyFactory"
+    name="plone.app.vocabularies.WorkflowStates"
+    />
+
+  <utility
+    component=".workflow.WorkflowTransitionsVocabularyFactory"
+    name="plone.app.vocabularies.WorkflowTransitions"
+    />
 
 </configure>
