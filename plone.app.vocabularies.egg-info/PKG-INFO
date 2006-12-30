@@ -1,0 +1,15 @@
+Metadata-Version: 1.0
+Name: plone.app.vocabularies
+Version: 0.1dev-r11805
+Summary: A collection of generally useful vocabularies for usage in zope.formlib.
+Home-page: http://svn.plone.org/svn/plone/plone.app.vocabularies
+Author: Plone Foundation
+Author-email: plone-developers@lists.sourceforge.net
+License: GPL
+Description: UNKNOWN
+Keywords: Plone Zope formlib vocabularies
+Platform: UNKNOWN
+Classifier: Framework :: Zope2
+Classifier: Framework :: Zope3
+Classifier: Programming Language :: Python
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
