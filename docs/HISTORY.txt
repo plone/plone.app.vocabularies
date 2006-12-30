@@ -1,0 +1,9 @@
+Changelog for plone.app.vocabularies
+
+    (name of developer listed in brackets)
+
+plone.app.vocabularies - 0.1 Unreleased
+
+    - Initial package structure.
+      [zopeskel]
+
