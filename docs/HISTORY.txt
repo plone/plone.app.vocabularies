@@ -2,7 +2,10 @@ Changelog for plone.app.vocabularies
 
     (name of developer listed in brackets)
 
-plone.app.vocabularies - 0.1 Unreleased
+plone.app.vocabularies - 1.0a2 Released February 6, 2007
+
+    - Some initial vocabularies.
+      [hannosch, optilude]
 
     - Initial package structure.
       [zopeskel]

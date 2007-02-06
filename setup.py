@@ -1,14 +1,13 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.1'
+version = '1.0a2'
 
 setup(name='plone.app.vocabularies',
       version=version,
       description="A collection of generally useful vocabularies for usage in zope.formlib.",
       long_description="""\
 """,
-      # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
         "Framework :: Zope2",
         "Framework :: Zope3",
