@@ -28,6 +28,11 @@
     />
 
   <utility
+    component=".skins.SkinsVocabularyFactory"
+    name="plone.app.vocabularies.Skins"
+    />
+
+  <utility
     component=".workflow.WorkflowStatesVocabularyFactory"
     name="plone.app.vocabularies.WorkflowStates"
     />
