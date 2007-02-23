@@ -23,13 +23,26 @@ class SearchableTextSource(object):
             return False
         return True
 
-    def search(self, query):
-        context = self.context
+    def _parse_query(self, query):
+        query_parts = query.split()
+        query = {'SearchableText': []}
+        for part in query_parts:
+            if part.startswith('path:'):
+                path = part[5:]
+                query['path'] = {'query': path}
+            else:
+                query['SearchableText'].append(part)
+        text = " ".join(query['SearchableText'])
         for char in '?-+*()':
-            query = query.replace(char, ' ')
-        query = query.split()
-        query = " AND ".join(x+"*" for x in query)
-        return (x.getPath() for x in self.catalog(SearchableText=query))
+            text = text.replace(char, ' ')
+        query['SearchableText'] = " AND ".join(x+"*" for x in text.split())
+        if not len(query['SearchableText']) and query.has_key('path'):
+            query["path"]["depth"] = 1
+        return query
+
+    def search(self, query):
+        query = self._parse_query(query)
+        return (x.getPath() for x in self.catalog(**query))
 
 
 class QuerySearchableTextSourceView(object):
@@ -59,10 +72,18 @@ class QuerySearchableTextSourceView(object):
         return self.template(name=name)
 
     def results(self, name):
-        if not name+".search" in self.request.form:
-            return None
-        query_fieldname = name+".query"
-        if query_fieldname in self.request.form:
-            query = self.request.form[query_fieldname]
-            if query != '':
-                return self.context.search(query)
+        # check whether the normal search button was pressed
+        if name+".search" in self.request.form:
+            query_fieldname = name+".query"
+            if query_fieldname in self.request.form:
+                query = self.request.form[query_fieldname]
+                if query != '':
+                    return self.context.search(query)
+
+        # check whether a browse button was pressed
+        browse_prefix = name+".browse."
+        browse = tuple(x for x in self.request.form
+                       if x.startswith(browse_prefix))
+        if len(browse) == 1:
+            path = browse[0][len(browse_prefix):]
+            return self.context.search("path:"+path)
