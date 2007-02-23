@@ -1,0 +1,14 @@
+<div class="row"
+     i18n:domain="plone">
+  <div class="field">
+    <input type="text"
+           name="name.query"
+           value=""
+           tal:attributes="name string:${options/name}.query" />
+    <input type="submit"
+           name="name.search"
+           value="Search"
+           i18n:attributes="value label_search"
+           tal:attributes="name string:${options/name}.search" />
+  </div>
+</div>

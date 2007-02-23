@@ -42,4 +42,18 @@
     name="plone.app.vocabularies.WorkflowTransitions"
     />
 
+  <adapter
+      for=".catalog.SearchableTextSource
+           zope.publisher.interfaces.browser.IBrowserRequest"
+      factory=".catalog.QuerySearchableTextSourceView"
+      provides="zope.app.form.browser.interfaces.ITerms"
+      />
+
+  <adapter
+      for=".catalog.SearchableTextSource
+           zope.publisher.interfaces.browser.IBrowserRequest"
+      factory=".catalog.QuerySearchableTextSourceView"
+      provides="zope.app.form.browser.interfaces.ISourceQueryView"
+      />
+
 </configure>
