@@ -15,11 +15,13 @@ class SearchableTextSource(object):
     def __init__(self, context):
         self.context = context
         self.catalog = getToolByName(context, "portal_catalog")
+        self.portal_tool = getToolByName(context, "portal_url")
+        self.portal_path = self.portal_tool.getPortalPath()
 
     def __contains__(self, value):
         """Return whether the value is available in this source
         """
-        if self.catalog.getrid(value) is None:
+        if self.catalog.getrid(self.portal_path + value) is None:
             return False
         return True
 
@@ -36,13 +38,15 @@ class SearchableTextSource(object):
         for char in '?-+*()':
             text = text.replace(char, ' ')
         query['SearchableText'] = " AND ".join(x+"*" for x in text.split())
-        if not len(query['SearchableText']) and query.has_key('path'):
-            query["path"]["depth"] = 1
+        if query.has_key('path'):
+            if not len(query['SearchableText']):
+                query["path"]["depth"] = 1
+            query["path"]["query"] = self.portal_path + query["path"]["query"]
         return query
 
     def search(self, query):
         query = self._parse_query(query)
-        return (x.getPath() for x in self.catalog(**query))
+        return (x.getPath()[len(self.portal_path):] for x in self.catalog(**query))
 
 
 class QuerySearchableTextSourceView(object):
@@ -56,9 +60,12 @@ class QuerySearchableTextSourceView(object):
         self.request = request
 
     def getTerm(self, value):
-        rid = self.context.catalog.getrid(value)
-        brain = self.context.catalog._catalog[rid]
-        title = brain.Title
+        rid = self.context.catalog.getrid(self.context.portal_path + value)
+        if rid is not None:
+            brain = self.context.catalog._catalog[rid]
+            title = brain.Title
+        else:
+            title = value
         token = value
         return SimpleTerm(value, token=token, title=title)
 
