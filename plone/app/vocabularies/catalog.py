@@ -1,9 +1,11 @@
+import itertools
 from zope.interface import implements, classProvides
 from zope.schema.interfaces import ISource, IContextSourceBinder
-from zope.schema.vocabulary import SimpleTerm
 
 from zope.app.form.browser.interfaces import ISourceQueryView, ITerms
 from zope.app.pagetemplate.viewpagetemplatefile import ViewPageTemplateFile
+
+from plone.app.vocabularies.terms import BrowsableTerm
 
 from Products.CMFCore.utils import getToolByName
 
@@ -77,6 +79,7 @@ def parse_query(query, path_prefix=""):
         query["path"]["query"] = path_prefix + query["path"]["query"]
     return query
 
+
 class SearchableTextSource(object):
     implements(ISource)
     classProvides(IContextSourceBinder)
@@ -96,7 +99,12 @@ class SearchableTextSource(object):
 
     def search(self, query):
         query = parse_query(query, self.portal_path)
-        return (x.getPath()[len(self.portal_path):] for x in self.catalog(**query))
+        results = (x.getPath()[len(self.portal_path):] for x in self.catalog(**query))
+        if query.has_key('path'):
+            path = query['path']['query'][len(self.portal_path):]
+            if path != '':
+                return itertools.chain((path,), results)
+        return results
 
 
 class QuerySearchableTextSourceView(object):
@@ -112,16 +120,21 @@ class QuerySearchableTextSourceView(object):
     def getTerm(self, value):
         # get rid for path
         rid = self.context.catalog.getrid(self.context.portal_path + value)
+        # first some defaults
+        token = value
+        title = value
+        browse_token = None
+        parent_token = None
         if rid is not None:
             # fetch the brain from the catalog
             brain = self.context.catalog._catalog[rid]
             title = brain.Title
-        else:
-            # there is no brain, this can happen if the object was deleted,
-            # or the value was set without validation for some reason
-            title = value
-        token = value
-        return SimpleTerm(value, token=token, title=title)
+            if brain.is_folderish:
+                browse_token = value
+            parent_token = "/".join(value.split("/")[:-1])
+        return BrowsableTerm(value, token=token, title=title,
+                             browse_token=browse_token,
+                             parent_token=parent_token)
 
     def getValue(self, token):
         if token not in self.context:
