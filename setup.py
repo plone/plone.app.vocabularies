@@ -9,8 +9,10 @@ setup(name='plone.app.vocabularies',
       long_description="""\
 """,
       classifiers=[
+        "Framework :: Plone",
         "Framework :: Zope2",
         "Framework :: Zope3",
+        "License :: OSI Approved :: GNU General Public License (GPL)",
         "Programming Language :: Python",
         "Topic :: Software Development :: Libraries :: Python Modules",
         ],
