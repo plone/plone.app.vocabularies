@@ -12,8 +12,26 @@ def parse_query(query, portal_path=""):
     """ Parse the query string and turn it into a dictionary for querying the
         catalog.
 
+        We want to find anything which starts with the given string, so we add
+        a * at the end of words.
+
         >>> parse_query('foo')
         {'SearchableText': 'foo*'}
+
+        If we have more than one word, each of them should have the * and
+        they should be combined with the AND operator.
+
+        >>> parse_query('foo bar')
+        {'SearchableText': 'foo* AND bar*'}
+
+        We also filter out some special characters. They are handled like
+        spaces and seperate words from each other.
+
+        >>> parse_query('foo +bar some-thing')
+        {'SearchableText': 'foo* AND bar* AND some* AND thing*'}
+        >>> parse_query('what? (spam) *ham')
+        {'SearchableText': 'what* AND spam* AND ham*'}
+
     """
     query_parts = query.split()
     query = {'SearchableText': []}
