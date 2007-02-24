@@ -8,7 +8,7 @@ from zope.app.pagetemplate.viewpagetemplatefile import ViewPageTemplateFile
 from Products.CMFCore.utils import getToolByName
 
 
-def parse_query(query, portal_path=""):
+def parse_query(query, path_prefix=""):
     """ Parse the query string and turn it into a dictionary for querying the
         catalog.
 
@@ -29,8 +29,33 @@ def parse_query(query, portal_path=""):
 
         >>> parse_query('foo +bar some-thing')
         {'SearchableText': 'foo* AND bar* AND some* AND thing*'}
+
         >>> parse_query('what? (spam) *ham')
         {'SearchableText': 'what* AND spam* AND ham*'}
+
+        You can also limit searches to paths, if you only supply the path,
+        then all contents of that folder will be searched. If you supply
+        additional search words, then all subfolders are searched as well.
+
+        >>> parse_query('path:/dummy')
+        {'path': {'query': '/dummy', 'depth': 1}}
+
+        >>> parse_query('bar path:/dummy')
+        {'path': {'query': '/dummy'}, 'SearchableText': 'bar*'}
+
+        >>> parse_query('path:/dummy foo')
+        {'path': {'query': '/dummy'}, 'SearchableText': 'foo*'}
+
+        If you supply more then one path, then only the last one is used.
+
+        >>> parse_query('path:/dummy path:/spam')
+        {'path': {'query': '/spam', 'depth': 1}}
+
+        You can also provide a prefix for the path. This is useful for virtual
+        hosting.
+
+        >>> parse_query('path:/dummy', path_prefix='/portal')
+        {'path': {'query': '/portal/dummy', 'depth': 1}}
 
     """
     query_parts = query.split()
@@ -46,9 +71,10 @@ def parse_query(query, portal_path=""):
         text = text.replace(char, ' ')
     query['SearchableText'] = " AND ".join(x+"*" for x in text.split())
     if query.has_key('path'):
-        if not len(query['SearchableText']):
+        if query['SearchableText'] == '':
+            del query['SearchableText']
             query["path"]["depth"] = 1
-        query["path"]["query"] = portal_path + query["path"]["query"]
+        query["path"]["query"] = path_prefix + query["path"]["query"]
     return query
 
 class SearchableTextSource(object):
@@ -84,11 +110,15 @@ class QuerySearchableTextSourceView(object):
         self.request = request
 
     def getTerm(self, value):
+        # get rid for path
         rid = self.context.catalog.getrid(self.context.portal_path + value)
         if rid is not None:
+            # fetch the brain from the catalog
             brain = self.context.catalog._catalog[rid]
             title = brain.Title
         else:
+            # there is no brain, this can happen if the object was deleted,
+            # or the value was set without validation for some reason
             title = value
         token = value
         return SimpleTerm(value, token=token, title=title)
