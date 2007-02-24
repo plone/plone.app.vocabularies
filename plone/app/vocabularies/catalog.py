@@ -8,6 +8,31 @@ from zope.app.pagetemplate.viewpagetemplatefile import ViewPageTemplateFile
 from Products.CMFCore.utils import getToolByName
 
 
+def parse_query(query, portal_path=""):
+    """ Parse the query string and turn it into a dictionary for querying the
+        catalog.
+
+        >>> parse_query("foo")
+        {"SearchableText": "foo"}
+    """
+    query_parts = query.split()
+    query = {'SearchableText': []}
+    for part in query_parts:
+        if part.startswith('path:'):
+            path = part[5:]
+            query['path'] = {'query': path}
+        else:
+            query['SearchableText'].append(part)
+    text = " ".join(query['SearchableText'])
+    for char in '?-+*()':
+        text = text.replace(char, ' ')
+    query['SearchableText'] = " AND ".join(x+"*" for x in text.split())
+    if query.has_key('path'):
+        if not len(query['SearchableText']):
+            query["path"]["depth"] = 1
+        query["path"]["query"] = portal_path + query["path"]["query"]
+    return query
+
 class SearchableTextSource(object):
     implements(ISource)
     classProvides(IContextSourceBinder)
@@ -25,27 +50,8 @@ class SearchableTextSource(object):
             return False
         return True
 
-    def _parse_query(self, query):
-        query_parts = query.split()
-        query = {'SearchableText': []}
-        for part in query_parts:
-            if part.startswith('path:'):
-                path = part[5:]
-                query['path'] = {'query': path}
-            else:
-                query['SearchableText'].append(part)
-        text = " ".join(query['SearchableText'])
-        for char in '?-+*()':
-            text = text.replace(char, ' ')
-        query['SearchableText'] = " AND ".join(x+"*" for x in text.split())
-        if query.has_key('path'):
-            if not len(query['SearchableText']):
-                query["path"]["depth"] = 1
-            query["path"]["query"] = self.portal_path + query["path"]["query"]
-        return query
-
     def search(self, query):
-        query = self._parse_query(query)
+        query = parse_query(query, self.portal_path)
         return (x.getPath()[len(self.portal_path):] for x in self.catalog(**query))
 
 
