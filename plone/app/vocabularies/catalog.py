@@ -12,8 +12,8 @@ def parse_query(query, portal_path=""):
     """ Parse the query string and turn it into a dictionary for querying the
         catalog.
 
-        >>> parse_query("foo")
-        {"SearchableText": "foo"}
+        >>> parse_query('foo')
+        {'SearchableText': 'foo*'}
     """
     query_parts = query.split()
     query = {'SearchableText': []}
