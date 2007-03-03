@@ -28,6 +28,11 @@
     />
 
   <utility
+    component=".types.UserFriendlyTypesVocabularyFactory"
+    name="plone.app.vocabularies.UserFriendlyTypes"
+    />
+
+  <utility
     component=".skins.SkinsVocabularyFactory"
     name="plone.app.vocabularies.Skins"
     />
