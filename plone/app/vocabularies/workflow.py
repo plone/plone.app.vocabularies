@@ -14,8 +14,8 @@ class WorkflowStatesVocabulary(object):
         context = getattr(context, 'context', context)
         wtool = getToolByName(context, 'portal_workflow')
         items = wtool.listWFStatesByTitle(filter_similar=True)
-        items.sort()
-        return SimpleVocabulary.fromItems(items)
+        item_dict = dict([(i[1], i[0]) for i in items])
+        return SimpleVocabulary.fromItems([(item_dict[k], k) for k in sorted(item_dict.keys())])
 
 WorkflowStatesVocabularyFactory = WorkflowStatesVocabulary()
 
