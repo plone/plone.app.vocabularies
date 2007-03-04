@@ -38,6 +38,11 @@
     />
 
   <utility
+    component=".workflow.WorkflowsVocabularyFactory"
+    name="plone.app.vocabularies.Workflows"
+    />
+    
+  <utility
     component=".workflow.WorkflowStatesVocabularyFactory"
     name="plone.app.vocabularies.WorkflowStates"
     />

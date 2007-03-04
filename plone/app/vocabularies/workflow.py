@@ -4,6 +4,19 @@ from zope.schema.vocabulary import SimpleVocabulary
 
 from Products.CMFCore.utils import getToolByName
 
+class WorkflowsVocabulary(object):
+    """Vocabulary factory for workflows.
+    """
+    implements(IVocabularyFactory)
+
+    def __call__(self, context):
+        context = getattr(context, 'context', context)
+        wtool = getToolByName(context, 'portal_workflow')
+        items = [(w.title, w.id) for w in wtool.objectValues()]
+        items.sort()
+        return SimpleVocabulary.fromItems(items)
+
+WorkflowsVocabularyFactory = WorkflowsVocabulary()
 
 class WorkflowStatesVocabulary(object):
     """Vocabulary factory for workflow states.
