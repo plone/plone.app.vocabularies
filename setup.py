@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '1.0a3'
+version = '1.0b1'
 
 setup(name='plone.app.vocabularies',
       version=version,
@@ -11,7 +11,6 @@ setup(name='plone.app.vocabularies',
       classifiers=[
         "Framework :: Plone",
         "Framework :: Zope2",
-        "Framework :: Zope3",
         "License :: OSI Approved :: GNU General Public License (GPL)",
         "Programming Language :: Python",
         "Topic :: Software Development :: Libraries :: Python Modules",
