@@ -1,8 +1,9 @@
 from zope.app.schema.vocabulary import IVocabularyFactory
+from zope.component import getUtility
 from zope.interface import implements
 from zope.schema.vocabulary import SimpleVocabulary
 
-from Products.CMFCore.utils import getToolByName
+from Products.CMFCore.interfaces import ISkinsTool
 
 
 class SkinsVocabulary(object):
@@ -11,8 +12,7 @@ class SkinsVocabulary(object):
     implements(IVocabularyFactory)
 
     def __call__(self, context):
-        context = getattr(context, 'context', context)
-        stool = getToolByName(context, 'portal_skins')
+        stool = getUtility(ISkinsTool)
         items = [ (s, s)
                   for s in stool.getSkinSelections() ]
         items.sort()
