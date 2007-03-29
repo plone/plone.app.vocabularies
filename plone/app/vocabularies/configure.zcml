@@ -38,6 +38,11 @@
     />
 
   <utility
+    component=".skins.IconVisibilityFactory"
+    name="plone.app.vocabularies.IconVisibility"
+    />
+
+  <utility
     component=".workflow.WorkflowsVocabularyFactory"
     name="plone.app.vocabularies.Workflows"
     />
