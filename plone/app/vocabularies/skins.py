@@ -27,9 +27,9 @@ class IconVisibilityFactory(object):
 
     def __call__(self, context):
         vd = {
-            _(u"Disabled for anonymous"): 'authenticated',
-            _(u"Disabled for all"): 'disabled',
-            _(u"Enabled for all"): 'enabled',}
+            _(u"Only for users who are logged in"): 'authenticated',
+            _(u"Never show icons"): 'disabled',
+            _(u"Always show icons"): 'enabled',}
         return SimpleVocabulary.fromItems(vd.items())
 
 IconVisibilityFactory = IconVisibilityFactory()
