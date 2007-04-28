@@ -1,12 +1,10 @@
 from zope.app.schema.vocabulary import IVocabularyFactory
-from zope.component import getUtility
 from zope.interface import implements
 from zope.schema.vocabulary import SimpleVocabulary
 from Products.Archetypes.mimetype_utils import getAllowableContentTypes
 from Products.Archetypes.mimetype_utils import getAllowedContentTypes
 
-from Products.CMFCore.interfaces import ITypesTool
-from Products.CMFPlone.interfaces import IPloneTool
+from Products.CMFCore.utils import getToolByName
 
 
 class AllowableContentTypesVocabulary(object):
@@ -43,7 +41,8 @@ class PortalTypesVocabulary(object):
     implements(IVocabularyFactory)
 
     def __call__(self, context):
-        ttool = getUtility(ITypesTool)
+        context = getattr(context, 'context', context)
+        ttool = getToolByName(context, 'portal_types')
         items = [ (ttool[t].Title(), t)
                   for t in ttool.listContentTypes() ]
         items.sort()
@@ -58,8 +57,9 @@ class UserFriendlyTypesVocabulary(object):
     implements(IVocabularyFactory)
 
     def __call__(self, context):
-        ptool = getUtility(IPloneTool)
-        ttool = getUtility(ITypesTool)
+        context = getattr(context, 'context', context)
+        ptool = getToolByName(context, 'plone_utils')
+        ttool = getToolByName(context, 'portal_types')
         items = [ (ttool[t].Title(), t)
                   for t in ptool.getUserFriendlyTypes() ]
         items.sort()

@@ -1,5 +1,4 @@
 import itertools
-from zope.component import getUtility
 from zope.interface import implements, classProvides
 from zope.schema.interfaces import ISource, IContextSourceBinder
 
@@ -8,8 +7,7 @@ from zope.app.pagetemplate.viewpagetemplatefile import ViewPageTemplateFile
 
 from plone.app.vocabularies.terms import BrowsableTerm
 
-from Products.CMFCore.interfaces import ICatalogTool
-from Products.CMFCore.interfaces import IURLTool
+from Products.CMFCore.utils import getToolByName
 
 
 def parse_query(query, path_prefix=""):
@@ -88,8 +86,8 @@ class SearchableTextSource(object):
 
     def __init__(self, context):
         self.context = context
-        self.catalog = getUtility(ICatalogTool)
-        self.portal_tool = getUtility(IURLTool)
+        self.catalog = getToolByName(context, "portal_catalog")
+        self.portal_tool = getToolByName(context, "portal_url")
         self.portal_path = self.portal_tool.getPortalPath()
 
     def __contains__(self, value):

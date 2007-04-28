@@ -1,10 +1,8 @@
 from zope.app.schema.vocabulary import IVocabularyFactory
-from zope.component import getUtility
 from zope.interface import implements
 from zope.schema.vocabulary import SimpleVocabulary
 
-from Products.CMFCore.interfaces import IConfigurableWorkflowTool
-
+from Products.CMFCore.utils import getToolByName
 
 class WorkflowsVocabulary(object):
     """Vocabulary factory for workflows.
@@ -12,13 +10,13 @@ class WorkflowsVocabulary(object):
     implements(IVocabularyFactory)
 
     def __call__(self, context):
-        wtool = getUtility(IConfigurableWorkflowTool)
+        context = getattr(context, 'context', context)
+        wtool = getToolByName(context, 'portal_workflow')
         items = [(w.title, w.id) for w in wtool.objectValues()]
         items.sort()
         return SimpleVocabulary.fromItems(items)
 
 WorkflowsVocabularyFactory = WorkflowsVocabulary()
-
 
 class WorkflowStatesVocabulary(object):
     """Vocabulary factory for workflow states.
@@ -26,7 +24,8 @@ class WorkflowStatesVocabulary(object):
     implements(IVocabularyFactory)
 
     def __call__(self, context):
-        wtool = getUtility(IConfigurableWorkflowTool)
+        context = getattr(context, 'context', context)
+        wtool = getToolByName(context, 'portal_workflow')
         items = wtool.listWFStatesByTitle(filter_similar=True)
         item_dict = dict([(i[1], i[0]) for i in items])
         return SimpleVocabulary.fromItems([(item_dict[k], k) for k in sorted(item_dict.keys())])
@@ -40,7 +39,9 @@ class WorkflowTransitionsVocabulary(object):
     implements(IVocabularyFactory)
     
     def __call__(self, context):
-        wtool = getUtility(IConfigurableWorkflowTool)
+        context = getattr(context, 'context', context)
+        wtool = getToolByName(context, 'portal_workflow')
+        
         transitions = {}
         
         for wf in wtool.objectValues():
