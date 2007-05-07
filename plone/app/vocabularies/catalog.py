@@ -157,7 +157,8 @@ class QuerySearchableTextSourceView(object):
             if brain.is_folderish:
                 browse_token = value
             parent_token = "/".join(value.split("/")[:-1])
-        return BrowsableTerm(value, token=token, title=title,
+        return BrowsableTerm(value, token=token, title=title, 
+                             description=value,
                              browse_token=browse_token,
                              parent_token=parent_token)
 
