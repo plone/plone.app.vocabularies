@@ -65,5 +65,19 @@
       factory=".catalog.QuerySearchableTextSourceView"
       provides="zope.app.form.browser.interfaces.ISourceQueryView"
       />
+      
+  <adapter
+      for=".users.UsersSource
+           zope.publisher.interfaces.browser.IBrowserRequest"
+      factory=".users.UsersSourceQueryView"
+      provides="zope.app.form.browser.interfaces.ITerms"
+      />
+
+  <adapter
+      for=".users.UsersSource
+           zope.publisher.interfaces.browser.IBrowserRequest"
+      factory=".users.UsersSourceQueryView"
+      provides="zope.app.form.browser.interfaces.ISourceQueryView"
+      />
 
 </configure>
