@@ -84,8 +84,9 @@ class SearchableTextSource(object):
     implements(ISource)
     classProvides(IContextSourceBinder)
 
-    def __init__(self, context):
+    def __init__(self, context, base_query={}):
         self.context = context
+        self.base_query = base_query
         self.catalog = getToolByName(context, "portal_catalog")
         self.portal_tool = getToolByName(context, "portal_url")
         self.portal_path = self.portal_tool.getPortalPath()
@@ -97,8 +98,10 @@ class SearchableTextSource(object):
             return False
         return True
 
-    def search(self, query):
-        query = parse_query(query, self.portal_path)
+    def search(self, query_string):
+        query = self.base_query.copy()
+        query.update(parse_query(query_string, self.portal_path))
+        
         results = (x.getPath()[len(self.portal_path):] for x in self.catalog(**query))
         if query.has_key('path'):
             path = query['path']['query'][len(self.portal_path):]
@@ -106,6 +109,28 @@ class SearchableTextSource(object):
                 return itertools.chain((path,), results)
         return results
 
+class SearchableTextSourceBinder(object):
+    """Use this to instantiate a new SearchableTextSource with custom
+    parameters. For example:
+    
+    target_folder = schema.Choice(
+        title=_(u"Target folder"),
+        description=_(u"As a path relative to the portal root"),
+        required=True,
+        source=SearchableTextSourceBinder({'is_folderish' : True}),
+        )
+        
+    This ensures that the is_folderish=True is always in the query used.
+    """
+    
+    implements(IContextSourceBinder)
+    
+    def __init__(self, query):
+        self.query = query
+        
+    def __call__(self, context):
+        return SearchableTextSource(context, base_query=self.query.copy())
+    
 
 class QuerySearchableTextSourceView(object):
     implements(ITerms,
