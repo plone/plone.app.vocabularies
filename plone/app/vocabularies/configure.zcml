@@ -80,4 +80,18 @@
       provides="zope.app.form.browser.interfaces.ISourceQueryView"
       />
 
+  <adapter
+      for=".groups.GroupsSource
+           zope.publisher.interfaces.browser.IBrowserRequest"
+      factory=".groups.GroupsSourceQueryView"
+      provides="zope.app.form.browser.interfaces.ITerms"
+      />
+
+  <adapter
+      for=".groups.GroupsSource
+           zope.publisher.interfaces.browser.IBrowserRequest"
+      factory=".groups.GroupsSourceQueryView"
+      provides="zope.app.form.browser.interfaces.ISourceQueryView"
+      />
+
 </configure>
