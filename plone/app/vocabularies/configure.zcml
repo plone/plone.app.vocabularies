@@ -13,16 +13,6 @@
     />
 
   <utility
-    component=".types.AllowedContentTypesVocabularyFactory"
-    name="plone.app.vocabularies.AllowedContentTypes"
-    />
-
-  <utility
-    component=".types.AllowableContentTypesVocabularyFactory"
-    name="plone.app.vocabularies.AllowableContentTypes"
-    />
-
-  <utility
     component=".types.PortalTypesVocabularyFactory"
     name="plone.app.vocabularies.PortalTypes"
     />
