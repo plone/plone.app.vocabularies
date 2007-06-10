@@ -2,6 +2,30 @@ Changelog for plone.app.vocabularies
 
     (name of developer listed in brackets)
 
+plone.app.vocabularies - 1.0b4 Unreleased
+
+    - Added new AvailableContentLanguages and SupportedContentLanguages
+      vocabularies.
+      [hannosch]
+
+    - If we have a users vocabulary, we should have a groups one :)
+      [optilude]
+
+    - Make use of description-aware terms
+      [optilude]
+
+    - Allow parameterisation of the query, so that we can restrict to
+      folders-only, for example.
+      [optilude]
+
+    - Add a user source, so that we can use the UberSelectionWidget on users.
+      [optilude]
+
+plone.app.vocabularies - 1.0b3 Released May 1, 2007
+
+    - Back to getToolByName we go.
+      [wichert]
+
 plone.app.vocabularies - 1.0b2 Released March 23, 2007
 
     - Replaced getToolByName with getUtility.

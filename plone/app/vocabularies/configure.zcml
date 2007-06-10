@@ -3,6 +3,16 @@
     xmlns:five="http://namespaces.zope.org/five">
 
   <utility
+    component=".language.AvailableContentLanguageVocabularyFactory"
+    name="plone.app.vocabularies.AvailableContentLanguages"
+    />
+
+  <utility
+    component=".language.SupportedContentLanguageVocabularyFactory"
+    name="plone.app.vocabularies.SupportedContentLanguages"
+    />
+
+  <utility
     component=".security.RolesVocabularyFactory"
     name="plone.app.vocabularies.Roles"
     />
