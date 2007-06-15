@@ -143,6 +143,9 @@ class QuerySearchableTextSourceView(object):
         self.request = request
 
     def getTerm(self, value):
+        if (not self.context.portal_path.endswith('/')) \
+               and (not value.startswith('/')):
+            value = '/' + value
         # get rid for path
         rid = self.context.catalog.getrid(self.context.portal_path + value)
         # first some defaults
