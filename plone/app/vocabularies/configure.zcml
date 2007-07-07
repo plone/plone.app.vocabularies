@@ -38,6 +38,11 @@
     />
 
   <utility
+    component=".types.ReallyUserFriendlyTypesVocabularyFactory"
+    name="plone.app.vocabularies.ReallyUserFriendlyTypes"
+    />
+
+  <utility
     component=".types.UserFriendlyTypesVocabularyFactory"
     name="plone.app.vocabularies.UserFriendlyTypes"
     />
