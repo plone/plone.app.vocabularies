@@ -45,7 +45,7 @@ class UsersSourceQueryView(object):
         token = value
         title = value
         if user is not None:
-            title = user.getProperty('fullname', None) or user.getUserName()
+            title = user.getProperty('fullname', None) or user.getId()
         return SimpleTerm(value, token=token, title=title)
 
     def getValue(self, token):
