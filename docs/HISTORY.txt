@@ -2,7 +2,7 @@ Changelog for plone.app.vocabularies
 
     (name of developer listed in brackets)
 
-plone.app.vocabularies - 1.0b4 Unreleased
+plone.app.vocabularies - 1.0rc1 Released July 9, 2007
 
     - Added new ReallyUserFriendlyTypes and a BAD_TYPES list, which are used
       to filter out types which are not content types at all.
