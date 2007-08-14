@@ -2,6 +2,12 @@ Changelog for plone.app.vocabularies
 
     (name of developer listed in brackets)
 
+plone.app.vocabularies - 1.0 Unreleased
+
+    - Fixed ReallyUserFriendlyTypesVocabulary to include the Messages for
+      type names. This refs http://dev.plone.org/plone/ticket/6911.
+      [hannosch]
+
 plone.app.vocabularies - 1.0rc3 Released July 28, 2007
 
     - Fixed missing history.

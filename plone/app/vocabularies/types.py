@@ -1,6 +1,7 @@
 from zope.app.schema.vocabulary import IVocabularyFactory
 from zope.interface import implements
 from zope.schema.vocabulary import SimpleVocabulary
+from zope.schema.vocabulary import SimpleTerm
 from Products.Archetypes.mimetype_utils import getAllowableContentTypes
 from Products.Archetypes.mimetype_utils import getAllowedContentTypes
 
@@ -84,10 +85,9 @@ class ReallyUserFriendlyTypesVocabulary(object):
     def __call__(self, context):
         context = getattr(context, 'context', context)
         ttool = getToolByName(context, 'portal_types')
-        items = [ (ttool[t].Title(), t)
+        items = [ SimpleTerm(t, t, ttool[t].Title())
                   for t in ttool.listContentTypes()
                   if t not in BAD_TYPES ]
-        items.sort()
-        return SimpleVocabulary.fromItems(items)
+        return SimpleVocabulary(items)
 
 ReallyUserFriendlyTypesVocabularyFactory = ReallyUserFriendlyTypesVocabulary()
