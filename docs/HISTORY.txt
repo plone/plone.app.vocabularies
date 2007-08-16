@@ -2,6 +2,15 @@ Changelog for plone.app.vocabularies
 
     (name of developer listed in brackets)
 
+plone.app.vocabulary - 1.0.1 Released August 17, 2007
+
+    - Fixed catalog vocabulary when dealing with the degenerate-case of
+      an empty value. This makes it work better with the UberSelectionWidget.
+      [optilude]
+
+    - Made catalog vocabulary less fragile for simple/short queries.
+      [optilude]
+
 plone.app.vocabularies - 1.0 Released August 14, 2007
 
     - Fixed ReallyUserFriendlyTypesVocabulary to include the Messages for

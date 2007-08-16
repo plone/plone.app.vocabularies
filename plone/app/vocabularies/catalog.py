@@ -148,6 +148,8 @@ class QuerySearchableTextSourceView(object):
         self.request = request
 
     def getTerm(self, value):
+        if not value:
+            return None
         if (not self.context.portal_path.endswith('/')) \
                and (not value.startswith('/')):
             value = '/' + value
