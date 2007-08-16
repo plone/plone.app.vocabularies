@@ -7,6 +7,7 @@ from zope.app.pagetemplate.viewpagetemplatefile import ViewPageTemplateFile
 
 from plone.app.vocabularies.terms import BrowsableTerm
 
+from Products.ZCTextIndex.ParseTree import ParseError
 from Products.CMFCore.utils import getToolByName
 
 
@@ -102,7 +103,11 @@ class SearchableTextSource(object):
         query = self.base_query.copy()
         query.update(parse_query(query_string, self.portal_path))
         
-        results = (x.getPath()[len(self.portal_path):] for x in self.catalog(**query))
+        try:
+            results = (x.getPath()[len(self.portal_path):] for x in self.catalog(**query))
+        except ParseError:
+            return []
+        
         if query.has_key('path'):
             path = query['path']['query'][len(self.portal_path):]
             if path != '':
