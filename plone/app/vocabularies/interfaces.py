@@ -16,7 +16,7 @@ class IBrowsableTerm(Interface):
     """
 
     browse_token = Attribute(
-        "token",
+        "browse_token",
         """Token which can be used to get contents of browsable terms in
            queryable sources.
 
@@ -25,7 +25,7 @@ class IBrowsableTerm(Interface):
         """)
 
     parent_token = Attribute(
-        "token",
+        "parent_token",
         """Token which can be used to get contents of the parent of browsable
            terms in queryable sources.
 
