@@ -2,6 +2,13 @@ Changelog for plone.app.vocabularies
 
     (name of developer listed in brackets)
 
+plone.app.vocabulary - 1.0.2
+
+    - Fixed invalid context argument passed into the translation machinery in
+      the workflow state vocabulary. This fixes
+      http://dev.plone.org/plone/ticket/7492.
+      [hannosch]
+
 plone.app.vocabulary - 1.0.1 Released August 17, 2007
 
     - Fixed catalog vocabulary when dealing with the degenerate-case of
