@@ -2,12 +2,18 @@ Changelog for plone.app.vocabularies
 
     (name of developer listed in brackets)
 
-plone.app.vocabulary - 1.0.2
+plone.app.vocabulary - 1.0.2 Released December 24, 2007
 
     - Fixed invalid context argument passed into the translation machinery in
       the workflow state vocabulary. This fixes
       http://dev.plone.org/plone/ticket/7492.
       [hannosch]
+
+    - Added optional default query string to searchable text source.
+      [fschulze]
+
+    - Correct name for attributes.
+      [wichert]
 
 plone.app.vocabulary - 1.0.1 Released August 17, 2007
 
