@@ -33,6 +33,10 @@ def test_suite():
                      setUp=configurationSetUp,
                      tearDown=tearDown,
                      optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE),
+        DocTestSuite('plone.app.vocabularies.workflow',
+                     setUp=configurationSetUp,
+                     tearDown=tearDown,
+                     optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE),
         ))
 
 if __name__ == '__main__':
