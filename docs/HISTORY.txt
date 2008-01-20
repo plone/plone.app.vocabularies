@@ -4,7 +4,7 @@ Changelog for plone.app.vocabularies
 
 plone.app.vocabulary - 1.0.3 Unreleased
 
-    - Added tests for the language vocabularies.
+    - Added tests for the language and skins vocabularies.
       [hannosch]
 
 plone.app.vocabulary - 1.0.2 Released December 24, 2007
