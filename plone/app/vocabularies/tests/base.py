@@ -1,5 +1,8 @@
 from Acquisition import Explicit
 
+from Products.ZCTextIndex.ParseTree import ParseError
+
+
 class DummyContext(Explicit):
 
     def __init__(self):
@@ -44,3 +47,36 @@ class Request(dict):
 
     def __init__(self, form=None):
         self.form = form
+
+
+class Brain(object):
+
+    Title = 'BrainTitle'
+    is_folderish = True
+
+    def __init__(self, rid):
+        self.rid = rid
+
+    def getPath(self):
+        return self.rid
+
+
+class DummyCatalog(dict):
+
+    def __init__(self, values):
+        for r in values:
+            self[r] = Brain(r)
+
+    def __call__(self, **values):
+        if 'SearchableText' in values:
+            st = values['SearchableText']
+            if st.startswith('error'):
+                raise ParseError
+        return self.values()
+
+    @property
+    def _catalog(self):
+        return self
+
+    def getrid(self, value):
+        return value in self and value or None

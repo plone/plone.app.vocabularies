@@ -4,8 +4,8 @@ Changelog for plone.app.vocabularies
 
 plone.app.vocabulary - 1.0.3 Unreleased
 
-    - Added tests for the groups and users sources. Fixed two bugs, which
-      failed to raise a LookupError.
+    - Added tests for the catalog, groups and users sources. Fixed three bugs,
+      where a LookupError was not raised.
       [hannosch]
 
     - Added tests for the special term classes.

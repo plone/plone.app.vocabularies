@@ -82,6 +82,57 @@ def parse_query(query, path_prefix=""):
 
 
 class SearchableTextSource(object):
+    """
+      >>> from plone.app.vocabularies.tests.base import Brain
+      >>> from plone.app.vocabularies.tests.base import DummyContext
+      >>> from plone.app.vocabularies.tests.base import DummyTool
+
+      >>> context = DummyContext()
+
+      >>> tool = DummyTool('portal_catalog')
+      >>> rids = ('/1234', '/2345')
+      >>> def getrid(value):
+      ...     return value in rids and value or None
+      >>> tool.getrid = getrid
+      >>> def call(**values):
+      ...     if values['SearchableText'].startswith('error'):
+      ...         raise ParseError
+      ...     return [Brain(r) for r in rids]
+      >>> tool.__call__ = call
+      >>> context.portal_catalog = tool
+
+      >>> tool = DummyTool('portal_url')
+      >>> def getPortalPath():
+      ...     return '/'
+      >>> tool.getPortalPath = getPortalPath
+      >>> context.portal_url = tool
+
+      >>> source = SearchableTextSource(context)
+      >>> source
+      <plone.app.vocabularies.catalog.SearchableTextSource object at ...>
+
+      >>> '1234' in source, '1' in source
+      (True, False)
+
+      >>> source.search('')
+      []
+
+      >>> source.search('error')
+      []
+
+      >>> source.search('foo')
+      <generator object at ...>
+
+      >>> list(source.search('foo'))
+      ['1234', '2345']
+
+      >>> list(source.search('bar path:/dummy'))
+      ['/dummy', '1234', '2345']
+
+      >>> source = SearchableTextSource(context, default_query='default')
+      >>> list(source.search(''))
+      ['1234', '2345']
+    """
     implements(ISource)
     classProvides(IContextSourceBinder)
 
@@ -131,8 +182,39 @@ class SearchableTextSourceBinder(object):
         required=True,
         source=SearchableTextSourceBinder({'is_folderish' : True}),
         )
-        
+
     This ensures that the is_folderish=True is always in the query used.
+
+      >>> query = {'query': 'query'}
+
+      >>> binder = SearchableTextSourceBinder(query)
+      >>> binder
+      <plone.app.vocabularies.catalog.SearchableTextSourceBinder object at ...>
+
+      >>> binder.query == query
+      True
+
+      >>> from plone.app.vocabularies.tests.base import Brain
+      >>> from plone.app.vocabularies.tests.base import DummyContext
+      >>> from plone.app.vocabularies.tests.base import DummyTool
+
+      >>> context = DummyContext()
+
+      >>> tool = DummyTool('portal_catalog')
+      >>> context.portal_catalog = tool
+
+      >>> tool = DummyTool('portal_url')
+      >>> def getPortalPath():
+      ...     return '/'
+      >>> tool.getPortalPath = getPortalPath
+      >>> context.portal_url = tool
+
+      >>> source = binder(context)
+      >>> source
+      <plone.app.vocabularies.catalog.SearchableTextSource object at ...>
+
+      >>> source.base_query == query
+      True
     """
     
     implements(IContextSourceBinder)
@@ -147,6 +229,68 @@ class SearchableTextSourceBinder(object):
     
 
 class QuerySearchableTextSourceView(object):
+    """
+      >>> from plone.app.vocabularies.tests.base import DummyCatalog
+      >>> from plone.app.vocabularies.tests.base import DummyContext
+      >>> from plone.app.vocabularies.tests.base import DummyTool
+      >>> from plone.app.vocabularies.tests.base import Request
+
+      >>> context = DummyContext()
+
+      >>> rids = ('/1234', '/2345', '/dummy/1234')
+      >>> tool = DummyCatalog(rids)
+      >>> context.portal_catalog = tool
+
+      >>> tool = DummyTool('portal_url')
+      >>> def getPortalPath():
+      ...     return '/dummy'
+      >>> tool.getPortalPath = getPortalPath
+      >>> context.portal_url = tool
+
+      >>> source = SearchableTextSource(context)
+      >>> source
+      <plone.app.vocabularies.catalog.SearchableTextSource object at ...>
+
+      >>> view = QuerySearchableTextSourceView(source, Request())
+      >>> view
+      <plone.app.vocabularies.catalog.QuerySearchableTextSourceView object ...>
+
+      >>> view.getValue('a')
+      Traceback (most recent call last):
+      ...
+      LookupError: a
+
+      >>> view.getValue('/1234')
+      '/1234'
+
+      >>> view.getTerm(None) is None
+      True
+
+      >>> view.getTerm('1234')
+      <plone.app.vocabularies.terms.BrowsableTerm object at ...>
+
+      >>> view.getTerm('/1234')
+      <plone.app.vocabularies.terms.BrowsableTerm object at ...>
+
+      >>> template = view.render(name='t')
+      >>> u'<input type="text" name="t.query" value="" />' in template
+      True
+
+      >>> u'<input type="submit" name="t.search" value="Search" />' in template
+      True
+
+      >>> request = Request(form={'t.search' : True, 't.query' : 'value'})
+      >>> view = QuerySearchableTextSourceView(source, request)
+      >>> list(view.results('t'))
+      ['', '/1234', '']
+
+      >>> request = Request(form={'t.search' : True, 't.query' : 'value',
+      ...                         't.browse.foo' : '/foo'})
+      >>> view = QuerySearchableTextSourceView(source, request)
+      >>> list(view.results('t'))
+      ['foo', '', '/1234', '']
+    """
+
     implements(ITerms,
                ISourceQueryView)
 
@@ -183,8 +327,7 @@ class QuerySearchableTextSourceView(object):
 
     def getValue(self, token):
         if token not in self.context:
-            LookupError(token)
-
+            raise LookupError(token)
         return token
 
     def render(self, name):
