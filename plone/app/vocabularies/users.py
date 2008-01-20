@@ -9,6 +9,35 @@ from zope.app.pagetemplate.viewpagetemplatefile import ViewPageTemplateFile
 from Products.CMFCore.utils import getToolByName
 
 class UsersSource(object):
+    """
+      >>> from plone.app.vocabularies.tests.base import DummyContext
+      >>> from plone.app.vocabularies.tests.base import DummyTool
+
+      >>> context = DummyContext()
+
+      >>> tool = DummyTool('acl_users')
+      >>> users = ('user1', 'user2')
+      >>> def getUserById(value, default):
+      ...     return value in users and value or default
+      >>> tool.getUserById = getUserById
+      >>> def searchUsers(fullname=None):
+      ...     return [dict(userid=u) for u in users]
+      >>> tool.searchUsers = searchUsers
+      >>> context.acl_users = tool
+
+      >>> source = UsersSource(context)
+      >>> source
+      <plone.app.vocabularies.users.UsersSource object at ...>
+
+      >>> len(source.search(None))
+      2
+
+      >>> 'user1' in source, 'noone' in source
+      (True, False)
+
+      >>> source.get('user1'), source.get('noone')
+      ('user1', None)
+    """
     implements(ISource)
     classProvides(IContextSourceBinder)
 
@@ -31,6 +60,65 @@ class UsersSource(object):
 
 
 class UsersSourceQueryView(object):
+    """
+      >>> from plone.app.vocabularies.tests.base import DummyContext
+      >>> from plone.app.vocabularies.tests.base import DummyTool
+      >>> from plone.app.vocabularies.tests.base import Request
+
+      >>> context = DummyContext()
+
+      >>> class User(object):
+      ...     def __init__(self, id):
+      ...         self.id = id
+      ...
+      ...     def getProperty(self, value, default):
+      ...         return self.id
+      ...
+      ...     getId = getProperty
+
+      >>> tool = DummyTool('acl_users')
+      >>> users = ('user1', 'user2')
+      >>> def getUserById(value, default):
+      ...     return value in users and User(value) or None
+      >>> tool.getUserById = getUserById
+      >>> def searchUsers(fullname=None):
+      ...     return [dict(userid=u) for u in users]
+      >>> tool.searchUsers = searchUsers
+      >>> context.acl_users = tool
+
+      >>> source = UsersSource(context)
+      >>> source
+      <plone.app.vocabularies.users.UsersSource object at ...>
+
+      >>> view = UsersSourceQueryView(source, Request())
+      >>> view
+      <plone.app.vocabularies.users.UsersSourceQueryView object at ...>
+
+      >>> view.getTerm('user1')
+      <zope.schema.vocabulary.SimpleTerm object at ...>
+
+      >>> view.getValue('user1')
+      'user1'
+
+      >>> view.getValue('noone')
+      Traceback (most recent call last):
+      ...
+      LookupError: noone
+
+      >>> template = view.render(name='t')
+
+      >>> u'<input type="text" name="t.query" value="" />' in template
+      True
+
+      >>> u'<input type="submit" name="t.search" value="Search" />' in template
+      True
+
+      >>> request = Request(form={'t.search' : True, 't.query' : 'value'})
+      >>> view = UsersSourceQueryView(source, request)
+      >>> view.results('t')
+      ['user1', 'user2']
+    """
+
     implements(ITerms,
                ISourceQueryView)
 
@@ -50,7 +138,7 @@ class UsersSourceQueryView(object):
 
     def getValue(self, token):
         if token not in self.context:
-            LookupError(token)
+            raise LookupError(token)
         return token
 
     def render(self, name):

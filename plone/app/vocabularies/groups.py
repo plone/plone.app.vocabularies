@@ -9,6 +9,38 @@ from zope.app.pagetemplate.viewpagetemplatefile import ViewPageTemplateFile
 from Products.CMFCore.utils import getToolByName
 
 class GroupsSource(object):
+    """
+      >>> from plone.app.vocabularies.tests.base import DummyContext
+      >>> from plone.app.vocabularies.tests.base import DummyTool
+
+      >>> context = DummyContext()
+
+      >>> tool = DummyTool('acl_users')
+      >>> groups = ('group1', 'group2')
+      >>> def getGroupById(value, default):
+      ...     return value in groups and value or default
+      >>> tool.getGroupById = getGroupById
+      >>> def searchGroups(name=None):
+      ...     return [dict(groupid=u) for u in groups]
+      >>> tool.searchGroups = searchGroups
+      >>> context.acl_users = tool
+
+      >>> source = GroupsSource(context)
+      >>> source
+      <plone.app.vocabularies.groups.GroupsSource object at ...>
+
+      >>> len(source.search(''))
+      2
+
+      >>> len(source.search(u'\xa4'))
+      2
+
+      >>> 'group1' in source, 'noone' in source
+      (True, False)
+
+      >>> source.get('group1'), source.get('noone')
+      ('group1', None)
+    """
     implements(ISource)
     classProvides(IContextSourceBinder)
 
@@ -40,6 +72,64 @@ class GroupsSource(object):
 
 
 class GroupsSourceQueryView(object):
+    """
+      >>> from plone.app.vocabularies.tests.base import DummyContext
+      >>> from plone.app.vocabularies.tests.base import DummyTool
+      >>> from plone.app.vocabularies.tests.base import Request
+
+      >>> context = DummyContext()
+
+      >>> class Group(object):
+      ...     def __init__(self, id):
+      ...         self.id = id
+      ...
+      ...     def getProperty(self, value, default):
+      ...         return self.id
+      ...
+      ...     getId = getProperty
+
+      >>> tool = DummyTool('acl_users')
+      >>> groups = ('group1', 'group2')
+      >>> def getGroupById(value, default):
+      ...     return value in groups and Group(value) or None
+      >>> tool.getGroupById = getGroupById
+      >>> def searchGroups(name=None):
+      ...     return [dict(groupid=u) for u in groups]
+      >>> tool.searchGroups = searchGroups
+      >>> context.acl_users = tool
+
+      >>> source = GroupsSource(context)
+      >>> source
+      <plone.app.vocabularies.groups.GroupsSource object at ...>
+
+      >>> view = GroupsSourceQueryView(source, Request())
+      >>> view
+      <plone.app.vocabularies.groups.GroupsSourceQueryView object at ...>
+
+      >>> view.getTerm('group1')
+      <zope.schema.vocabulary.SimpleTerm object at ...>
+
+      >>> view.getValue('group1')
+      'group1'
+
+      >>> view.getValue('noone')
+      Traceback (most recent call last):
+      ...
+      LookupError: noone
+
+      >>> template = view.render(name='t')
+
+      >>> u'<input type="text" name="t.query" value="" />' in template
+      True
+
+      >>> u'<input type="submit" name="t.search" value="Search" />' in template
+      True
+
+      >>> request = Request(form={'t.search' : True, 't.query' : 'value'})
+      >>> view = GroupsSourceQueryView(source, request)
+      >>> view.results('t')
+      ['group1', 'group2']
+    """
     implements(ITerms,
                ISourceQueryView)
 
@@ -59,7 +149,7 @@ class GroupsSourceQueryView(object):
 
     def getValue(self, token):
         if token not in self.context:
-            LookupError(token)
+            raise LookupError(token)
         return token
 
     def render(self, name):

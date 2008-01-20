@@ -16,6 +16,10 @@ def configurationSetUp(self):
 
 def test_suite():
     return unittest.TestSuite((
+        DocTestSuite('plone.app.vocabularies.groups',
+                     setUp=configurationSetUp,
+                     tearDown=tearDown,
+                     optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE),
         DocTestSuite('plone.app.vocabularies.language',
                      setUp=configurationSetUp,
                      tearDown=tearDown,
@@ -30,6 +34,10 @@ def test_suite():
                      optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE),
         DocTestSuite('plone.app.vocabularies.terms'),
         DocTestSuite('plone.app.vocabularies.types',
+                     setUp=configurationSetUp,
+                     tearDown=tearDown,
+                     optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE),
+        DocTestSuite('plone.app.vocabularies.users',
                      setUp=configurationSetUp,
                      tearDown=tearDown,
                      optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE),

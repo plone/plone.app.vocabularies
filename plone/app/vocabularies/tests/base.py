@@ -29,3 +29,18 @@ class DummyTypeTool(dict):
 
     def listContentTypes(self):
         return self.keys()
+
+
+class Response(dict):
+
+    def getHeader(self, value):
+        return 'header %s' % value
+
+
+class Request(dict):
+
+    debug = False
+    response = Response()
+
+    def __init__(self, form=None):
+        self.form = form
