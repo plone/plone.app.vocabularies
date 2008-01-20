@@ -2,6 +2,11 @@ Changelog for plone.app.vocabularies
 
     (name of developer listed in brackets)
 
+plone.app.vocabulary - 1.0.3 Unreleased
+
+    - Added tests for the language vocabularies.
+      [hannosch]
+
 plone.app.vocabulary - 1.0.2 Released December 24, 2007
 
     - Fixed invalid context argument passed into the translation machinery in
