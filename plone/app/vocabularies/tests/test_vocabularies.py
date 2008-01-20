@@ -29,6 +29,10 @@ def test_suite():
                      tearDown=tearDown,
                      optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE),
         DocTestSuite('plone.app.vocabularies.terms'),
+        DocTestSuite('plone.app.vocabularies.types',
+                     setUp=configurationSetUp,
+                     tearDown=tearDown,
+                     optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE),
         ))
 
 if __name__ == '__main__':
