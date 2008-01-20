@@ -1,6 +1,7 @@
 from zope.app.schema.vocabulary import IVocabularyFactory
 from zope.interface import implements
-from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
+from zope.schema.vocabulary import SimpleTerm
+from zope.schema.vocabulary import SimpleVocabulary
 
 from Products.CMFCore.utils import getToolByName
 

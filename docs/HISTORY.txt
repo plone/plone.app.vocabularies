@@ -7,7 +7,7 @@ plone.app.vocabulary - 1.0.3 Unreleased
     - Added tests for the special term classes.
       [hannosch]
 
-    - Added tests for the language and skins vocabularies.
+    - Added tests for the language, security and skins vocabularies.
       [hannosch]
 
 plone.app.vocabulary - 1.0.2 Released December 24, 2007
