@@ -2,6 +2,9 @@ Changelog for plone.app.vocabularies
 
     (name of developer listed in brackets)
 
+plone.app.vocabulary - 1.0.4 Unreleased
+
+
 plone.app.vocabulary - 1.0.3 Released February 13, 2008
 
     - Added tests for the catalog, groups and users sources. Fixed three bugs,
