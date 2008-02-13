@@ -2,10 +2,10 @@ Changelog for plone.app.vocabularies
 
     (name of developer listed in brackets)
 
-plone.app.vocabulary - 1.0.4 Unreleased
+plone.app.vocabularies - 1.0.4 Unreleased
 
 
-plone.app.vocabulary - 1.0.3 Released February 13, 2008
+plone.app.vocabularies - 1.0.3 Released February 13, 2008
 
     - Added tests for the catalog, groups and users sources. Fixed three bugs,
       where a LookupError was not raised.
@@ -18,7 +18,7 @@ plone.app.vocabulary - 1.0.3 Released February 13, 2008
       workflow vocabularies.
       [hannosch]
 
-plone.app.vocabulary - 1.0.2 Released December 24, 2007
+plone.app.vocabularies - 1.0.2 Released December 24, 2007
 
     - Fixed invalid context argument passed into the translation machinery in
       the workflow state vocabulary. This fixes
@@ -31,7 +31,7 @@ plone.app.vocabulary - 1.0.2 Released December 24, 2007
     - Correct name for attributes.
       [wichert]
 
-plone.app.vocabulary - 1.0.1 Released August 17, 2007
+plone.app.vocabularies - 1.0.1 Released August 17, 2007
 
     - Fixed catalog vocabulary when dealing with the degenerate-case of
       an empty value. This makes it work better with the UberSelectionWidget.
