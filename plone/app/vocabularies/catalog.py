@@ -347,6 +347,12 @@ class QuerySearchableTextSourceView(object):
         browse = tuple(x for x in self.request.form
                        if x.startswith(browse_prefix))
         if len(browse) == 1:
-            query = "path:" + browse[0][len(browse_prefix):]
+            path = browse[0][len(browse_prefix):]
+            query = "path:" + path
+            results = self.context.search(query)
+            if name+".omitbrowsedfolder" in self.request.form:
+                results = itertools.ifilter(lambda x: x != path, results)
+        else:
+            results = self.context.search(query)
 
-        return self.context.search(query)
+        return results
