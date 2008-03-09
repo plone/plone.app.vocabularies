@@ -4,6 +4,9 @@ Changelog for plone.app.vocabularies
 
 plone.app.vocabularies - 1.0.4 Unreleased
 
+    - Added option to omit the current folder in a browse query, this is used
+      for the UberSelectionWidget.
+      [fschulze]
 
 plone.app.vocabularies - 1.0.3 Released February 13, 2008
 
