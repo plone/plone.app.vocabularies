@@ -1,114 +1,139 @@
-Changelog for plone.app.vocabularies
+Changelog
+=========
 
-    (name of developer listed in brackets)
+1.0.5 - August 18, 2008
+-----------------------
 
-plone.app.vocabularies - 1.0.5 Unreleased
+- Documentation updates.
+  [hannosch]
 
 
+1.0.4 - March 9, 2008
+---------------------
 
-plone.app.vocabularies - 1.0.4 Released March 9, 2008
+- Added option to omit the current folder in a browse query, this is used
+  for the UberSelectionWidget.
+  [fschulze]
 
-    - Added option to omit the current folder in a browse query, this is used
-      for the UberSelectionWidget.
-      [fschulze]
 
-plone.app.vocabularies - 1.0.3 Released February 13, 2008
+1.0.3 - February 13, 2008
+-------------------------
 
-    - Added tests for the catalog, groups and users sources. Fixed three bugs,
-      where a LookupError was not raised.
-      [hannosch]
+- Added tests for the catalog, groups and users sources. Fixed three bugs,
+  where a LookupError was not raised.
+  [hannosch]
 
-    - Added tests for the special term classes.
-      [hannosch]
+- Added tests for the special term classes.
+  [hannosch]
 
-    - Added tests for the language, security, skins, types and
-      workflow vocabularies.
-      [hannosch]
+- Added tests for the language, security, skins, types and
+  workflow vocabularies.
+  [hannosch]
 
-plone.app.vocabularies - 1.0.2 Released December 24, 2007
 
-    - Fixed invalid context argument passed into the translation machinery in
-      the workflow state vocabulary. This fixes
-      http://dev.plone.org/plone/ticket/7492.
-      [hannosch]
+1.0.2 - December 24, 2007
+-------------------------
 
-    - Added optional default query string to searchable text source.
-      [fschulze]
+- Fixed invalid context argument passed into the translation machinery in
+  the workflow state vocabulary. This fixes
+  http://dev.plone.org/plone/ticket/7492.
+  [hannosch]
 
-    - Correct name for attributes.
-      [wichert]
+- Added optional default query string to searchable text source.
+  [fschulze]
 
-plone.app.vocabularies - 1.0.1 Released August 17, 2007
+- Correct name for attributes.
+  [wichert]
 
-    - Fixed catalog vocabulary when dealing with the degenerate-case of
-      an empty value. This makes it work better with the UberSelectionWidget.
-      [optilude]
 
-    - Made catalog vocabulary less fragile for simple/short queries.
-      [optilude]
+1.0.1 - August 17, 2007
+-----------------------
 
-plone.app.vocabularies - 1.0 Released August 14, 2007
+- Fixed catalog vocabulary when dealing with the degenerate-case of
+  an empty value. This makes it work better with the UberSelectionWidget.
+  [optilude]
 
-    - Fixed ReallyUserFriendlyTypesVocabulary to include the Messages for
-      type names. This refs http://dev.plone.org/plone/ticket/6911.
-      [hannosch]
+- Made catalog vocabulary less fragile for simple/short queries.
+  [optilude]
 
-plone.app.vocabularies - 1.0rc3 Released July 28, 2007
 
-    - Fixed missing history.
-      [hannosch]
+1.0 - August 14, 2007
+---------------------
 
-plone.app.vocabularies - 1.0rc2 Released July 27, 2007
+- Fixed ReallyUserFriendlyTypesVocabulary to include the Messages for
+  type names. This refs http://dev.plone.org/plone/ticket/6911.
+  [hannosch]
 
-    - Fixed to return localized workflow state names.
-      [deo]
 
-plone.app.vocabularies - 1.0rc1 Released July 9, 2007
+1.0rc3 - July 28, 2007
+----------------------
 
-    - Added new ReallyUserFriendlyTypes and a BAD_TYPES list, which are used
-      to filter out types which are not content types at all.
-      [hannosch]
+- Fixed missing history.
+  [hannosch]
 
-    - Added new AvailableContentLanguages and SupportedContentLanguages
-      vocabularies.
-      [hannosch]
 
-    - If we have a users vocabulary, we should have a groups one :)
-      [optilude]
+1.0rc2 - July 27, 2007
+----------------------
 
-    - Make use of description-aware terms
-      [optilude]
+- Fixed to return localized workflow state names.
+  [deo]
 
-    - Allow parameterisation of the query, so that we can restrict to
-      folders-only, for example.
-      [optilude]
 
-    - Add a user source, so that we can use the UberSelectionWidget on users.
-      [optilude]
+1.0rc1 - July 9, 2007
+---------------------
 
-plone.app.vocabularies - 1.0b3 Released May 1, 2007
+- Added new ReallyUserFriendlyTypes and a BAD_TYPES list, which are used
+  to filter out types which are not content types at all.
+  [hannosch]
 
-    - Back to getToolByName we go.
-      [wichert]
+- Added new AvailableContentLanguages and SupportedContentLanguages
+  vocabularies.
+  [hannosch]
 
-plone.app.vocabularies - 1.0b2 Released March 23, 2007
+- If we have a users vocabulary, we should have a groups one :)
+  [optilude]
 
-    - Replaced getToolByName with getUtility.
-      [hannosch]
+- Make use of description-aware terms
+  [optilude]
 
-plone.app.vocabularies - 1.0b1 Released March 5, 2007
+- Allow parameterisation of the query, so that we can restrict to
+  folders-only, for example.
+  [optilude]
 
-    - Added workflow vocabulary.
-      [optilude]
+- Add a user source, so that we can use the UberSelectionWidget on users.
+  [optilude]
 
-    - Added UserFriendlyTypes vocabulary.
-      [hannosch]
 
-plone.app.vocabularies - 1.0a2 Released February 6, 2007
+1.0b3 - May 1, 2007
+-------------------
 
-    - Some initial vocabularies.
-      [hannosch, optilude]
+- Back to getToolByName we go.
+  [wichert]
 
-    - Initial package structure.
-      [zopeskel]
+
+1.0b2 - March 23, 2007
+----------------------
+
+- Replaced getToolByName with getUtility.
+  [hannosch]
+
+
+1.0b1 - March 5, 2007
+---------------------
+
+- Added workflow vocabulary.
+  [optilude]
+
+- Added UserFriendlyTypes vocabulary.
+  [hannosch]
+
+
+1.0a2 - February 6, 2007
+------------------------
+
+- Some initial vocabularies.
+  [hannosch, optilude]
+
+- Initial package structure.
+  [zopeskel]
 
