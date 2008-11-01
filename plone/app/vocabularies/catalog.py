@@ -121,7 +121,7 @@ class SearchableTextSource(object):
       []
 
       >>> source.search('foo')
-      <generator object at ...>
+      <generator object ...>
 
       >>> list(source.search('foo'))
       ['1234', '2345']
