@@ -143,6 +143,11 @@ class SearchableTextSource(object):
         self.catalog = getToolByName(context, "portal_catalog")
         self.portal_tool = getToolByName(context, "portal_url")
         self.portal_path = self.portal_tool.getPortalPath()
+        try:
+            self.encoding = getToolByName(
+                context, "portal_properties").site_properties.default_charset
+        except AttributeError:
+            self.encoding = 'ascii'
 
     def __contains__(self, value):
         """Return whether the value is available in this source
@@ -289,6 +294,10 @@ class QuerySearchableTextSourceView(object):
       >>> view = QuerySearchableTextSourceView(source, request)
       >>> list(view.results('t'))
       ['foo', '', '/1234', '']
+      
+      Titles need to be unicode:
+      >>> view.getTerm(list(view.results('t'))[0]).title
+      u'/foo'      
     """
 
     implements(ITerms,
@@ -317,10 +326,12 @@ class QuerySearchableTextSourceView(object):
             # fetch the brain from the catalog
             brain = self.context.catalog._catalog[rid]
             title = brain.Title
+            #title = brain.Title
             if brain.is_folderish:
                 browse_token = value
             parent_token = "/".join(value.split("/")[:-1])
-        return BrowsableTerm(value, token=token, title=title, 
+        return BrowsableTerm(value, token=token, 
+                             title=title.decode(self.context.encoding), 
                              description=value,
                              browse_token=browse_token,
                              parent_token=parent_token)
