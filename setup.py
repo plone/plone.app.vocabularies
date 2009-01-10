@@ -1,5 +1,5 @@
+import os
 from setuptools import setup, find_packages
-import sys, os
 
 version = '1.0.7'
 
@@ -24,7 +24,26 @@ setup(name='plone.app.vocabularies',
       namespace_packages = ['plone', 'plone.app'],
       include_package_data=True,
       zip_safe=False,
+      extras_require=dict(
+        test=[
+            'zope.component',
+            'zope.configuration',
+            'zope.testing',
+            'Products.PloneTestCase',
+            # 'Acquisition',
+        ]
+      ),
       install_requires=[
         'setuptools',
+        'zope.i18n',
+        'zope.i18nmessageid',
+        'zope.interface',
+        'zope.schema',
+        'zope.app.form',
+        'zope.app.pagetemplate',
+        'zope.app.schema',
+        'Products.Archetypes',
+        'Products.CMFCore',
+        # 'Zope2',
       ],
       )
