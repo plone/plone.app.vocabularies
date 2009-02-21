@@ -4,6 +4,9 @@ Changelog
 2.0 - Unreleased
 ----------------
 
+- Use the ITerms interface from the new zope.browser package if available.
+  [hannosch]
+
 - Specified package dependencies.
   [hannosch]
 

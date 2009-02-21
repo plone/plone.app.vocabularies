@@ -1,12 +1,17 @@
-import itertools
 from zope.interface import implements, classProvides
 from zope.schema.interfaces import ISource, IContextSourceBinder
 from zope.schema.vocabulary import SimpleTerm
 
-from zope.app.form.browser.interfaces import ISourceQueryView, ITerms
+from zope.app.form.browser.interfaces import ISourceQueryView
 from zope.app.pagetemplate.viewpagetemplatefile import ViewPageTemplateFile
 
 from Products.CMFCore.utils import getToolByName
+
+try:
+    from zope.browser.interfaces import ITerms
+except ImportError:
+    from zope.app.form.browser.interfaces import ITerms
+
 
 class GroupsSource(object):
     """

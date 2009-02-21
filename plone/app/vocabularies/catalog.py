@@ -2,13 +2,18 @@ import itertools
 from zope.interface import implements, classProvides
 from zope.schema.interfaces import ISource, IContextSourceBinder
 
-from zope.app.form.browser.interfaces import ISourceQueryView, ITerms
+from zope.app.form.browser.interfaces import ISourceQueryView
 from zope.app.pagetemplate.viewpagetemplatefile import ViewPageTemplateFile
-
-from plone.app.vocabularies.terms import BrowsableTerm
 
 from Products.ZCTextIndex.ParseTree import ParseError
 from Products.CMFCore.utils import getToolByName
+
+from plone.app.vocabularies.terms import BrowsableTerm
+
+try:
+    from zope.browser.interfaces import ITerms
+except ImportError:
+    from zope.app.form.browser.interfaces import ITerms
 
 
 def parse_query(query, path_prefix=""):
