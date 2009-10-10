@@ -67,6 +67,11 @@
     name="plone.app.vocabularies.WorkflowTransitions"
     />
 
+  <utility 
+    component=".editors.AvailableEditorsVocabularyFactory" 
+    name="plone.app.vocabularies.AvailableEditors" 
+    />
+
   <adapter
       for=".catalog.SearchableTextSource
            zope.publisher.interfaces.browser.IBrowserRequest"

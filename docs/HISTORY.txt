@@ -4,6 +4,9 @@ Changelog
 2.0 - Unreleased
 ----------------
 
+- Added AvailableEditors vocabulary. 
+  [robgietema]
+
 - Removed ChangeSet from the BAD_TYPES as this is not a portal type
   anymore.  [maurits]
 
@@ -12,6 +15,7 @@ Changelog
 
 - Specified package dependencies.
   [hannosch]
+
 
 1.0.6 - November 6, 2008
 ------------------------
@@ -22,7 +26,7 @@ Changelog
 - The QuerySearchableTextSourceView made terms with string titles. However
   zope.app.form.browser.source assumes it to be unicode, with the result that
   you get unicode errors if you have non-ascii characters. [regebro]
-  
+
 
 1.0.5 - August 18, 2008
 -----------------------
