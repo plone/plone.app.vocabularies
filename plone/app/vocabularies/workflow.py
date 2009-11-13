@@ -177,6 +177,7 @@ class WorkflowTransitionsVocabulary(object):
 
     def __call__(self, context):
         context = getattr(context, 'context', context)
+        
         wtool = getToolByName(context, 'portal_workflow', None)
         if wtool is None:
             return None
@@ -194,8 +195,10 @@ class WorkflowTransitionsVocabulary(object):
         for transition_id, info in transitions.items():
             titles = set([i['title'] for i in info])
             item_title = ' // '.join(sorted(titles))
-            items.append(("%s [%s]" % (item_title, transition_id,), transition_id),)
+            items.append(SimpleTerm(value = transition_id,
+               token = transition_id,
+               title = "%s [%s]" % (item_title, transition_id,)))
 
-        return SimpleVocabulary.fromItems(sorted(items))
+        return SimpleVocabulary(sorted(items))
 
 WorkflowTransitionsVocabularyFactory = WorkflowTransitionsVocabulary()

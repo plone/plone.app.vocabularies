@@ -4,7 +4,8 @@ Changelog
 1.0.7 - Unreleased
 ------------------
 
-- 
+- Removed the usage of the fromItems method for creating the
+  WorkflowTransistionVocabulary, see issue 6480. [jladage]
 
 1.0.6 - November 6, 2008
 ------------------------
