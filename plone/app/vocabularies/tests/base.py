@@ -1,15 +1,13 @@
-from Acquisition import Explicit
-
 from Products.ZCTextIndex.ParseTree import ParseError
 
 
-class DummyContext(Explicit):
+class DummyContext(object):
 
     def __init__(self):
         self.context = None
 
 
-class DummyTool(Explicit):
+class DummyTool(object):
 
     def __init__(self, name):
         self.name = name

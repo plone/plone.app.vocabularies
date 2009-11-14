@@ -1,10 +1,10 @@
-from zope.app.schema.vocabulary import IVocabularyFactory
 from zope.interface import implements
+from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleVocabulary
 from zope.schema.vocabulary import SimpleTerm
+
 from Products.Archetypes.mimetype_utils import getAllowableContentTypes
 from Products.Archetypes.mimetype_utils import getAllowedContentTypes
-
 from Products.CMFCore.utils import getToolByName
 
 

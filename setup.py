@@ -1,19 +1,17 @@
-import os
 from setuptools import setup, find_packages
 
-version = '2.0'
+version = '2.0a1'
 
 setup(name='plone.app.vocabularies',
       version=version,
       description="A collection of generally useful vocabularies for usage in zope.formlib.",
       long_description=open("README.txt").read() + "\n" +
-                       open(os.path.join("docs", "HISTORY.txt")).read(),
+                       open("CHANGES.txt").read(),
       classifiers=[
         "Framework :: Plone",
         "Framework :: Zope2",
         "License :: OSI Approved :: GNU General Public License (GPL)",
         "Programming Language :: Python",
-        "Topic :: Software Development :: Libraries :: Python Modules",
         ],
       keywords='Plone Zope formlib vocabularies',
       author='Plone Foundation',
@@ -30,7 +28,6 @@ setup(name='plone.app.vocabularies',
             'zope.configuration',
             'zope.testing',
             'Products.PloneTestCase',
-            # 'Acquisition',
         ]
       ),
       install_requires=[
@@ -40,10 +37,9 @@ setup(name='plone.app.vocabularies',
         'zope.interface',
         'zope.schema',
         'zope.app.form',
-        'zope.app.pagetemplate',
-        'zope.app.schema',
+        'Acquisition',
         'Products.Archetypes',
         'Products.CMFCore',
-        # 'Zope2',
+        'Zope2',
       ],
       )

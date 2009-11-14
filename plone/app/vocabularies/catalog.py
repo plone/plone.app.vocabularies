@@ -4,10 +4,10 @@ from zope.interface import implements, classProvides
 from zope.schema.interfaces import ISource, IContextSourceBinder
 
 from zope.app.form.browser.interfaces import ISourceQueryView
-from zope.app.pagetemplate.viewpagetemplatefile import ViewPageTemplateFile
 
-from Products.ZCTextIndex.ParseTree import ParseError
 from Products.CMFCore.utils import getToolByName
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from Products.ZCTextIndex.ParseTree import ParseError
 
 from plone.app.vocabularies.terms import BrowsableTerm
 
@@ -85,22 +85,14 @@ def parse_query(query, path_prefix=""):
 class SearchableTextSource(object):
     """
       >>> from plone.app.vocabularies.tests.base import Brain
+      >>> from plone.app.vocabularies.tests.base import DummyCatalog
       >>> from plone.app.vocabularies.tests.base import DummyContext
       >>> from plone.app.vocabularies.tests.base import DummyTool
 
       >>> context = DummyContext()
 
-      >>> tool = DummyTool('portal_catalog')
-      >>> rids = ('/1234', '/2345')
-      >>> def getrid(value):
-      ...     return value in rids and value or None
-      >>> tool.getrid = getrid
-      >>> def call(**values):
-      ...     if values['SearchableText'].startswith('error'):
-      ...         raise ParseError
-      ...     return [Brain(r) for r in rids]
-      >>> tool.__call__ = call
-      >>> context.portal_catalog = tool
+      >>> catalog = DummyCatalog(('/1234', '/2345'))
+      >>> context.portal_catalog = catalog
 
       >>> tool = DummyTool('portal_url')
       >>> def getPortalPath():

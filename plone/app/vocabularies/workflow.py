@@ -1,14 +1,15 @@
-from zope.app.schema.vocabulary import IVocabularyFactory
 from zope.interface import implements
+from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
-from zope.i18nmessageid import MessageFactory
 from zope.i18n import translate
+from zope.i18nmessageid import MessageFactory
 
 from Acquisition import aq_get
-
 from Products.CMFCore.utils import getToolByName
+
 _ = MessageFactory('plone')
+
 
 class WorkflowsVocabulary(object):
     """Vocabulary factory for workflows.

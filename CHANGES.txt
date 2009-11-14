@@ -1,14 +1,17 @@
 Changelog
 =========
 
-2.0 - Unreleased
-----------------
+2.0a1 - Unreleased
+------------------
+
+- Avoid dependencies on zope.app.pagetemplate and zope.app.schema.
+  [hannosch]
 
 - Added AvailableEditors vocabulary. 
   [robgietema]
 
-- Removed ChangeSet from the BAD_TYPES as this is not a portal type
-  anymore.  [maurits]
+- Removed ChangeSet from the BAD_TYPES as this is not a portal type anymore.
+  [maurits]
 
 - Use the ITerms interface from the new zope.browser package.
   [hannosch]
