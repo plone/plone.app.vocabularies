@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.0a1 - Unreleased
+2.0a1 - 2009-11-14
 ------------------
 
 - Avoid dependencies on zope.app.pagetemplate and zope.app.schema.
@@ -19,7 +19,6 @@ Changelog
 - Specified package dependencies.
   [hannosch]
 
-
 1.0.6 - November 6, 2008
 ------------------------
 
@@ -30,13 +29,11 @@ Changelog
   zope.app.form.browser.source assumes it to be unicode, with the result that
   you get unicode errors if you have non-ascii characters. [regebro]
 
-
 1.0.5 - August 18, 2008
 -----------------------
 
 - Documentation updates.
   [hannosch]
-
 
 1.0.4 - March 9, 2008
 ---------------------
@@ -44,7 +41,6 @@ Changelog
 - Added option to omit the current folder in a browse query, this is used
   for the UberSelectionWidget.
   [fschulze]
-
 
 1.0.3 - February 13, 2008
 -------------------------
@@ -60,7 +56,6 @@ Changelog
   workflow vocabularies.
   [hannosch]
 
-
 1.0.2 - December 24, 2007
 -------------------------
 
@@ -75,7 +70,6 @@ Changelog
 - Correct name for attributes.
   [wichert]
 
-
 1.0.1 - August 17, 2007
 -----------------------
 
@@ -86,7 +80,6 @@ Changelog
 - Made catalog vocabulary less fragile for simple/short queries.
   [optilude]
 
-
 1.0 - August 14, 2007
 ---------------------
 
@@ -94,20 +87,17 @@ Changelog
   type names. This refs http://dev.plone.org/plone/ticket/6911.
   [hannosch]
 
-
 1.0rc3 - July 28, 2007
 ----------------------
 
 - Fixed missing history.
   [hannosch]
 
-
 1.0rc2 - July 27, 2007
 ----------------------
 
 - Fixed to return localized workflow state names.
   [deo]
-
 
 1.0rc1 - July 9, 2007
 ---------------------
@@ -133,20 +123,17 @@ Changelog
 - Add a user source, so that we can use the UberSelectionWidget on users.
   [optilude]
 
-
 1.0b3 - May 1, 2007
 -------------------
 
 - Back to getToolByName we go.
   [wichert]
 
-
 1.0b2 - March 23, 2007
 ----------------------
 
 - Replaced getToolByName with getUtility.
   [hannosch]
-
 
 1.0b1 - March 5, 2007
 ---------------------
@@ -157,7 +144,6 @@ Changelog
 - Added UserFriendlyTypes vocabulary.
   [hannosch]
 
-
 1.0a2 - February 6, 2007
 ------------------------
 
@@ -166,4 +152,3 @@ Changelog
 
 - Initial package structure.
   [zopeskel]
-
