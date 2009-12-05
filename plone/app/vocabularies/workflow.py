@@ -156,9 +156,9 @@ class WorkflowTransitionsVocabulary(object):
       >>> len(transitions.by_token)
       2
 
-      >>> pub = transitions.by_token['Publish [publish]']
+      >>> pub = transitions.by_token['publish']
       >>> pub.title, pub.token, pub.value
-      (None, 'Publish [publish]', 'publish')
+      ('Publish [publish]', 'publish', 'publish')
     """
     implements(IVocabularyFactory)
 
