@@ -4,6 +4,9 @@ Changelog
 2.0b1 - Unreleased
 ------------------
 
+- Removed funky Acquisition handling for vocabularies inside addforms. This
+  closes http://dev.plone.org/plone/ticket/9408.
+  [hannosch]
 
 2.0a1 - 2009-11-14
 ------------------

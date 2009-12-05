@@ -11,10 +11,10 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 class GroupsSource(object):
     """
-      >>> from plone.app.vocabularies.tests.base import DummyContext
+      >>> from plone.app.vocabularies.tests.base import create_context
       >>> from plone.app.vocabularies.tests.base import DummyTool
 
-      >>> context = DummyContext()
+      >>> context = create_context()
 
       >>> tool = DummyTool('acl_users')
       >>> groups = ('group1', 'group2')
@@ -74,11 +74,11 @@ class GroupsSource(object):
 
 class GroupsSourceQueryView(object):
     """
-      >>> from plone.app.vocabularies.tests.base import DummyContext
+      >>> from plone.app.vocabularies.tests.base import create_context
       >>> from plone.app.vocabularies.tests.base import DummyTool
       >>> from plone.app.vocabularies.tests.base import Request
 
-      >>> context = DummyContext()
+      >>> context = create_context()
 
       >>> class Group(object):
       ...     def __init__(self, id):

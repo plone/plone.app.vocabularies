@@ -1,10 +1,25 @@
+from zope.site.hooks import setSite
+
 from Products.ZCTextIndex.ParseTree import ParseError
+
+
+def create_context():
+    context = DummyContext()
+    setSite(context)
+    return context
 
 
 class DummyContext(object):
 
     def __init__(self):
-        self.context = None
+        self.__name__ = 'dummy'
+        self.__parent__ = None
+
+    def getSiteManager(self):
+        return self
+
+    def queryUtility(*args, **kwargs):
+        return None
 
 
 class DummyTool(object):

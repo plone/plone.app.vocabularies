@@ -1,9 +1,10 @@
+from zope.i18n import translate
+from zope.i18nmessageid import MessageFactory
 from zope.interface import implements
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
-from zope.i18n import translate
-from zope.i18nmessageid import MessageFactory
+from zope.site.hooks import getSite
 
 from Acquisition import aq_get
 from Products.CMFCore.utils import getToolByName
@@ -15,17 +16,12 @@ class WorkflowsVocabulary(object):
     """Vocabulary factory for workflows.
 
       >>> from zope.component import queryUtility
-      >>> from plone.app.vocabularies.tests.base import DummyContext
+      >>> from plone.app.vocabularies.tests.base import create_context
       >>> from plone.app.vocabularies.tests.base import DummyTool
 
       >>> name = 'plone.app.vocabularies.Workflows'
       >>> util = queryUtility(IVocabularyFactory, name)
-      >>> context1 = DummyContext()
-      >>> context2 = DummyContext()
-      >>> context1.context = context2
-
-      >>> util(context1) is None
-      True
+      >>> context = create_context()
 
       >>> class Workflow(object):
       ...     def __init__(self, id, title):
@@ -33,13 +29,13 @@ class WorkflowsVocabulary(object):
       ...         self.title = title
 
       >>> tool = DummyTool('portal_workflow')
-      >>> def objectValues():
+      >>> def values():
       ...     return (Workflow('default', 'Default Workflow'),
       ...             Workflow('intranet', 'Intranet Workflow'))
-      >>> tool.objectValues = objectValues
-      >>> context2.portal_workflow = tool
+      >>> tool.values = values
+      >>> context.portal_workflow = tool
 
-      >>> workflows = util(context1)
+      >>> workflows = util(context)
       >>> workflows
       <zope.schema.vocabulary.SimpleVocabulary object at ...>
 
@@ -53,13 +49,13 @@ class WorkflowsVocabulary(object):
     implements(IVocabularyFactory)
 
     def __call__(self, context):
-        context = getattr(context, 'context', context)
-        wtool = getToolByName(context, 'portal_workflow', None)
-        if wtool is None:
-            return None
-        items = [(w.title, w.id) for w in wtool.objectValues()]
-        items.sort()
-        items = [SimpleTerm(i[1], i[1], i[0]) for i in items]
+        items = []
+        site = getSite()
+        wtool = getToolByName(site, 'portal_workflow', None)
+        if wtool is not None:
+            items = [(w.title, w.id) for w in wtool.values()]
+            items.sort()
+            items = [SimpleTerm(i[1], i[1], i[0]) for i in items]
         return SimpleVocabulary(items)
 
 WorkflowsVocabularyFactory = WorkflowsVocabulary()
@@ -68,25 +64,20 @@ class WorkflowStatesVocabulary(object):
     """Vocabulary factory for workflow states.
 
       >>> from zope.component import queryUtility
-      >>> from plone.app.vocabularies.tests.base import DummyContext
+      >>> from plone.app.vocabularies.tests.base import create_context
       >>> from plone.app.vocabularies.tests.base import DummyTool
 
       >>> name = 'plone.app.vocabularies.WorkflowStates'
       >>> util = queryUtility(IVocabularyFactory, name)
-      >>> context1 = DummyContext()
-      >>> context2 = DummyContext()
-      >>> context1.context = context2
-
-      >>> util(context1) is None
-      True
+      >>> context = create_context()
 
       >>> tool = DummyTool('portal_workflow')
       >>> def listWFStatesByTitle(filter_similar=None):
       ...     return (('Private', 'private'), ('Published', 'published'))
       >>> tool.listWFStatesByTitle = listWFStatesByTitle
-      >>> context2.portal_workflow = tool
+      >>> context.portal_workflow = tool
 
-      >>> states = util(context1)
+      >>> states = util(context)
       >>> states
       <zope.schema.vocabulary.SimpleVocabulary object at ...>
 
@@ -100,13 +91,14 @@ class WorkflowStatesVocabulary(object):
     implements(IVocabularyFactory)
 
     def __call__(self, context):
-        context = getattr(context, 'context', context)
+        site = getSite()
+        wtool = getToolByName(site, 'portal_workflow', None)
+        if wtool is None:
+            return SimpleVocabulary([])
+
         # XXX This is evil. A vocabulary shouldn't be request specific.
         # The sorting should go into a separate widget.
         request = aq_get(context, 'REQUEST', None)
-        wtool = getToolByName(context, 'portal_workflow', None)
-        if wtool is None:
-            return None
         items = wtool.listWFStatesByTitle(filter_similar=True)
         items_dict = dict([(i[1], translate(_(i[0]), context=request)) for i in items])
         items_list = [(k, v) for k, v in items_dict.items()]
@@ -121,17 +113,12 @@ class WorkflowTransitionsVocabulary(object):
     """Vocabulary factory for workflow transitions
 
       >>> from zope.component import queryUtility
-      >>> from plone.app.vocabularies.tests.base import DummyContext
+      >>> from plone.app.vocabularies.tests.base import create_context
       >>> from plone.app.vocabularies.tests.base import DummyTool
 
       >>> name = 'plone.app.vocabularies.WorkflowTransitions'
       >>> util = queryUtility(IVocabularyFactory, name)
-      >>> context1 = DummyContext()
-      >>> context2 = DummyContext()
-      >>> context1.context = context2
-
-      >>> util(context1) is None
-      True
+      >>> context = create_context()
 
       >>> class Transition(object):
       ...     def __init__(self, id, actbox_name):
@@ -140,10 +127,9 @@ class WorkflowTransitionsVocabulary(object):
 
       >>> class TransitionsFolder(object):
       ...     def __init__(self, values):
-      ...         self.values = values
-      ...
-      ...     def objectValues(self):
-      ...         return self.values
+      ...         self._values = values
+      ...     def values(self):
+      ...         return self._values
 
       >>> class Workflow(object):
       ...     def __init__(self, id, title, values):
@@ -158,12 +144,12 @@ class WorkflowTransitionsVocabulary(object):
       >>> wf1 = Workflow('default', 'Default Workflow', (t1, t2))
       >>> wf2 = Workflow('intranet', 'Intranet Workflow', (t1, ))
 
-      >>> def objectValues():
+      >>> def values():
       ...     return (wf1, wf2)
-      >>> tool.objectValues = objectValues
-      >>> context2.portal_workflow = tool
+      >>> tool.values = values
+      >>> context.portal_workflow = tool
 
-      >>> transitions = util(context1)
+      >>> transitions = util(context)
       >>> transitions
       <zope.schema.vocabulary.SimpleVocabulary object at ...>
 
@@ -177,20 +163,20 @@ class WorkflowTransitionsVocabulary(object):
     implements(IVocabularyFactory)
 
     def __call__(self, context):
-        context = getattr(context, 'context', context)
-        wtool = getToolByName(context, 'portal_workflow', None)
+        site = getSite()
+        wtool = getToolByName(site, 'portal_workflow', None)
         if wtool is None:
-            return None
+            return SimpleVocabulary([])
 
         transitions = {}
-        for wf in wtool.objectValues():
+        for wf in wtool.values():
             transition_folder = getattr(wf, 'transitions', None)
             wf_name = wf.title or wf.id
             if transition_folder is not None:
-                for transition in transition_folder.objectValues():
+                for transition in transition_folder.values():
                     transition_title = transition.actbox_name
-                    transitions.setdefault(transition.id, []).append(dict(title=transition_title,
-                                                                        wf_name=wf_name))
+                    transitions.setdefault(transition.id, []).append(
+                        dict(title=transition_title, wf_name=wf_name))
         items = []
         for transition_id, info in transitions.items():
             titles = set([i['title'] for i in info])

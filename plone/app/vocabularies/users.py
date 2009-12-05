@@ -11,10 +11,10 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 class UsersSource(object):
     """
-      >>> from plone.app.vocabularies.tests.base import DummyContext
+      >>> from plone.app.vocabularies.tests.base import create_context
       >>> from plone.app.vocabularies.tests.base import DummyTool
 
-      >>> context = DummyContext()
+      >>> context = create_context()
 
       >>> tool = DummyTool('acl_users')
       >>> users = ('user1', 'user2')
@@ -62,11 +62,11 @@ class UsersSource(object):
 
 class UsersSourceQueryView(object):
     """
-      >>> from plone.app.vocabularies.tests.base import DummyContext
+      >>> from plone.app.vocabularies.tests.base import create_context
       >>> from plone.app.vocabularies.tests.base import DummyTool
       >>> from plone.app.vocabularies.tests.base import Request
 
-      >>> context = DummyContext()
+      >>> context = create_context()
 
       >>> class User(object):
       ...     def __init__(self, id):

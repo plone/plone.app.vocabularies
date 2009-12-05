@@ -2,6 +2,7 @@ from zope.interface import implements
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
+from zope.site.hooks import getSite
 
 from Products.CMFCore.utils import getToolByName
 
@@ -9,25 +10,23 @@ class SkinsVocabulary(object):
     """Vocabulary factory for skins.
 
       >>> from zope.component import queryUtility
-      >>> from plone.app.vocabularies.tests.base import DummyContext
+      >>> from plone.app.vocabularies.tests.base import create_context
       >>> from plone.app.vocabularies.tests.base import DummyTool
 
       >>> name = 'plone.app.vocabularies.Skins'
       >>> util = queryUtility(IVocabularyFactory, name)
-      >>> context1 = DummyContext()
-      >>> context2 = DummyContext()
-      >>> context1.context = context2
+      >>> context = create_context()
 
-      >>> util(context1) is None
-      True
+      >>> len(util(context))
+      0
 
       >>> tool = DummyTool('portal_skins')
       >>> def getSkinSelections():
       ...     return ('Plone Default', 'Plone Kitty')
       >>> tool.getSkinSelections = getSkinSelections
-      >>> context2.portal_skins = tool
+      >>> context.portal_skins = tool
 
-      >>> skins = util(context1)
+      >>> skins = util(context)
       >>> skins
       <zope.schema.vocabulary.SimpleVocabulary object at ...>
 
@@ -41,13 +40,13 @@ class SkinsVocabulary(object):
     implements(IVocabularyFactory)
 
     def __call__(self, context):
-        context = getattr(context, 'context', context)
-        stool = getToolByName(context, 'portal_skins', None)
-        if stool is None:
-            return None
-        items = list(stool.getSkinSelections())
-        items.sort()
-        items = [SimpleTerm(i, i, i) for i in items]
+        items = []
+        site = getSite()
+        stool = getToolByName(site, 'portal_skins', None)
+        if stool is not None:
+            items = list(stool.getSkinSelections())
+            items.sort()
+            items = [SimpleTerm(i, i, i) for i in items]
         return SimpleVocabulary(items)
 
 SkinsVocabularyFactory = SkinsVocabulary()

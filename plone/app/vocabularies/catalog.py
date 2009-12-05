@@ -86,10 +86,10 @@ class SearchableTextSource(object):
     """
       >>> from plone.app.vocabularies.tests.base import Brain
       >>> from plone.app.vocabularies.tests.base import DummyCatalog
-      >>> from plone.app.vocabularies.tests.base import DummyContext
+      >>> from plone.app.vocabularies.tests.base import create_context
       >>> from plone.app.vocabularies.tests.base import DummyTool
 
-      >>> context = DummyContext()
+      >>> context = create_context()
 
       >>> catalog = DummyCatalog(('/1234', '/2345'))
       >>> context.portal_catalog = catalog
@@ -193,10 +193,10 @@ class SearchableTextSourceBinder(object):
       True
 
       >>> from plone.app.vocabularies.tests.base import Brain
-      >>> from plone.app.vocabularies.tests.base import DummyContext
+      >>> from plone.app.vocabularies.tests.base import create_context
       >>> from plone.app.vocabularies.tests.base import DummyTool
 
-      >>> context = DummyContext()
+      >>> context = create_context()
 
       >>> tool = DummyTool('portal_catalog')
       >>> context.portal_catalog = tool
@@ -229,11 +229,11 @@ class SearchableTextSourceBinder(object):
 class QuerySearchableTextSourceView(object):
     """
       >>> from plone.app.vocabularies.tests.base import DummyCatalog
-      >>> from plone.app.vocabularies.tests.base import DummyContext
+      >>> from plone.app.vocabularies.tests.base import create_context
       >>> from plone.app.vocabularies.tests.base import DummyTool
       >>> from plone.app.vocabularies.tests.base import Request
 
-      >>> context = DummyContext()
+      >>> context = create_context()
 
       >>> rids = ('/1234', '/2345', '/dummy/1234')
       >>> tool = DummyCatalog(rids)
