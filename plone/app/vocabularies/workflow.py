@@ -181,8 +181,9 @@ class WorkflowTransitionsVocabulary(object):
         for transition_id, info in transitions.items():
             titles = set([i['title'] for i in info])
             item_title = ' // '.join(sorted(titles))
-            items.append(("%s [%s]" % (item_title, transition_id,), transition_id),)
+            item_title = "%s [%s]" % (item_title, transition_id,)
+            items.append(SimpleTerm(transition_id, transition_id, item_title))
 
-        return SimpleVocabulary.fromItems(sorted(items))
+        return SimpleVocabulary(sorted(items))
 
 WorkflowTransitionsVocabularyFactory = WorkflowTransitionsVocabulary()

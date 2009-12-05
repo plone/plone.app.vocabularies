@@ -4,6 +4,10 @@ Changelog
 2.0b1 - Unreleased
 ------------------
 
+- Avoid the last use of ``SimpleVocabulary.fromItems``. This refs
+  http://dev.plone.org/plone/ticket/6480.
+  [hannosch]
+
 - Removed funky Acquisition handling for vocabularies inside addforms. This
   closes http://dev.plone.org/plone/ticket/9408.
   [hannosch]
