@@ -31,6 +31,7 @@ setup(name='plone.app.vocabularies',
       ),
       install_requires=[
         'setuptools',
+        'zope.browser',
         'zope.component',
         'zope.i18n',
         'zope.i18nmessageid',
