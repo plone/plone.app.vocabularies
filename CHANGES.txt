@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.0a3 - Unreleased
+2.0b1 - 2009-12-27
 ------------------
 
 - Added missing zope.browser dependency.
