@@ -4,6 +4,9 @@ Changelog
 2.0b2 - unreleased
 ------------------
 
+- In the skins vocabulary, give the 'Plone Default' skin the title '(Unstyled)'
+  to reduce confusion, now that Sunburst is actually the default.
+  [davisagli]
 
 2.0b1 - 2009-12-27
 ------------------
