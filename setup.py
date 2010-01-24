@@ -4,7 +4,7 @@ version = '2.0b2'
 
 setup(name='plone.app.vocabularies',
       version=version,
-      description="A collection of generally useful vocabularies for usage in zope.formlib.",
+      description="A collection of generally useful vocabularies.",
       long_description=open("README.txt").read() + "\n" +
                        open("CHANGES.txt").read(),
       classifiers=[
