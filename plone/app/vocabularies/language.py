@@ -6,6 +6,7 @@ from zope.site.hooks import getSite
 
 from Products.CMFCore.utils import getToolByName
 
+
 def sort_key(language):
     return language[1]
 

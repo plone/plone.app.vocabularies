@@ -55,7 +55,7 @@ class UsersSource(object):
 
     def search(self, query):
         return [u['userid'] for u in self.users.searchUsers(fullname=query)]
-        
+
     def get(self, value):
         return self.users.getUserById(value, None)
 

@@ -163,22 +163,23 @@ class SearchableTextSource(object):
                 return []
         else:
             query.update(parse_query(query_string, self.portal_path))
-        
+
         try:
             results = (x.getPath()[len(self.portal_path):] for x in self.catalog(**query))
         except ParseError:
             return []
-        
+
         if query.has_key('path'):
             path = query['path']['query'][len(self.portal_path):]
             if path != '':
-                return itertools.chain((path,), results)
+                return itertools.chain((path, ), results)
         return results
+
 
 class SearchableTextSourceBinder(object):
     """Use this to instantiate a new SearchableTextSource with custom
     parameters. For example:
-    
+
     target_folder = schema.Choice(
         title=_(u"Target folder"),
         description=_(u"As a path relative to the portal root"),
@@ -219,17 +220,17 @@ class SearchableTextSourceBinder(object):
       >>> source.base_query == query
       True
     """
-    
+
     implements(IContextSourceBinder)
-    
+
     def __init__(self, query, default_query=None):
         self.query = query
         self.default_query = default_query
-        
+
     def __call__(self, context):
         return SearchableTextSource(context, base_query=self.query.copy(),
                                     default_query=self.default_query)
-    
+
 
 class QuerySearchableTextSourceView(object):
     """
@@ -292,10 +293,10 @@ class QuerySearchableTextSourceView(object):
       >>> view = QuerySearchableTextSourceView(source, request)
       >>> list(view.results('t'))
       ['foo', '', '/1234', '']
-      
+
       Titles need to be unicode:
       >>> view.getTerm(list(view.results('t'))[0]).title
-      u'/foo'      
+      u'/foo'
     """
 
     implements(ITerms,
@@ -328,8 +329,8 @@ class QuerySearchableTextSourceView(object):
             if brain.is_folderish:
                 browse_token = value
             parent_token = "/".join(value.split("/")[:-1])
-        return BrowsableTerm(value, token=token, 
-                             title=title.decode(self.context.encoding), 
+        return BrowsableTerm(value, token=token,
+                             title=title.decode(self.context.encoding),
                              description=value,
                              browse_token=browse_token,
                              parent_token=parent_token)

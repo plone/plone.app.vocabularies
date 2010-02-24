@@ -1,14 +1,16 @@
 from zope.interface import Interface, Attribute
 
+
 class ITermWithDescription(Interface):
     """A term which carries an additional description
     """
-    
+
     description = Attribute(
         "description",
         """Description of the term, which will be displayed to distinguish
            between terms with similar labels.
         """)
+
 
 class IBrowsableTerm(Interface):
     """A term which may be browsed. This interface is only applied to

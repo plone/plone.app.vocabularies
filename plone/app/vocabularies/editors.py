@@ -6,6 +6,7 @@ from zope.site.hooks import getSite
 
 from Products.CMFCore.utils import getToolByName
 
+
 class AvailableEditorsVocabulary(object):
     """Vocabulary factory for available editors in the portal.
 

@@ -9,11 +9,13 @@ from zope.testing.doctestunit import DocTestSuite
 
 import plone.app.vocabularies
 
+
 def vocabSetUp(self):
     setUp()
     XMLConfig('meta.zcml', zope.component)()
     XMLConfig('configure.zcml', plone.app.vocabularies)()
     hooks.setHooks()
+
 
 def vocabTearDown(self):
     tearDown()
@@ -56,10 +58,10 @@ def test_suite():
                      setUp=vocabSetUp,
                      tearDown=vocabTearDown,
                      optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE),
-       DocTestSuite('plone.app.vocabularies.editors', 
-                     setUp=vocabSetUp, 
-                     tearDown=vocabTearDown, 
-                     optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE), 
+       DocTestSuite('plone.app.vocabularies.editors',
+                     setUp=vocabSetUp,
+                     tearDown=vocabTearDown,
+                     optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE),
         ))
 
 if __name__ == '__main__':

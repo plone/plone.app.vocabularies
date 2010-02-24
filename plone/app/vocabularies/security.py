@@ -6,6 +6,7 @@ from zope.site.hooks import getSite
 
 from Products.CMFCore.utils import getToolByName
 
+
 class RolesVocabulary(object):
     """Vocabulary factory for roles in the portal
 
@@ -50,6 +51,7 @@ class RolesVocabulary(object):
         return SimpleVocabulary(items)
 
 RolesVocabularyFactory = RolesVocabulary()
+
 
 class GroupsVocabulary(object):
     """Vocabulary factory for groups in the portal
@@ -106,5 +108,5 @@ class GroupsVocabulary(object):
             items.sort()
             items = [SimpleTerm(i[0], i[0], i[1]) for i in items]
         return SimpleVocabulary(items)
-        
+
 GroupsVocabularyFactory = GroupsVocabulary()

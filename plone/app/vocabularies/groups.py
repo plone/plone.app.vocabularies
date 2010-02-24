@@ -60,14 +60,14 @@ class GroupsSource(object):
         # XXX: For some reason, this doesn't seem to know how to match on
         # title, only name, and seems to match other random groups if
         # it's unicode
-        
+
         try:
             name = query.encode('ascii')
         except UnicodeEncodeError:
             name = query
-        
+
         return [u['groupid'] for u in self.users.searchGroups(name=name)]
-        
+
     def get(self, value):
         return self.users.getGroupById(value, None)
 

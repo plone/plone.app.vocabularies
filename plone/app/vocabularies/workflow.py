@@ -60,6 +60,7 @@ class WorkflowsVocabulary(object):
 
 WorkflowsVocabularyFactory = WorkflowsVocabulary()
 
+
 class WorkflowStatesVocabulary(object):
     """Vocabulary factory for workflow states.
 
@@ -181,7 +182,7 @@ class WorkflowTransitionsVocabulary(object):
         for transition_id, info in transitions.items():
             titles = set([i['title'] for i in info])
             item_title = ' // '.join(sorted(titles))
-            item_title = "%s [%s]" % (item_title, transition_id,)
+            item_title = "%s [%s]" % (item_title, transition_id)
             items.append(SimpleTerm(transition_id, transition_id, item_title))
 
         return SimpleVocabulary(sorted(items))

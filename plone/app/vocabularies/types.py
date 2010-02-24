@@ -129,8 +129,8 @@ class PortalTypesVocabulary(object):
         ttool = getToolByName(site, 'portal_types', None)
         if ttool is None:
             return SimpleVocabulary([])
-        items = [ (ttool[t].Title(), t)
-                  for t in ttool.listContentTypes() ]
+        items = [(ttool[t].Title(), t)
+                 for t in ttool.listContentTypes()]
         items.sort()
         items = [SimpleTerm(i[1], i[1], i[0]) for i in items]
         return SimpleVocabulary(items)
@@ -176,8 +176,8 @@ class UserFriendlyTypesVocabulary(object):
         ttool = getToolByName(site, 'portal_types', None)
         if ptool is None or ttool is None:
             return SimpleVocabulary([])
-        items = [ (ttool[t].Title(), t)
-                  for t in ptool.getUserFriendlyTypes() ]
+        items = [(ttool[t].Title(), t)
+                 for t in ptool.getUserFriendlyTypes()]
         items.sort()
         items = [SimpleTerm(i[1], i[1], i[0]) for i in items]
         return SimpleVocabulary(items)
@@ -227,9 +227,9 @@ class ReallyUserFriendlyTypesVocabulary(object):
         ttool = getToolByName(site, 'portal_types', None)
         if ttool is None:
             return SimpleVocabulary([])
-        items = [ SimpleTerm(t, t, ttool[t].Title())
-                  for t in ttool.listContentTypes()
-                  if t not in BAD_TYPES ]
+        items = [SimpleTerm(t, t, ttool[t].Title())
+                 for t in ttool.listContentTypes()
+                 if t not in BAD_TYPES]
         return SimpleVocabulary(items)
 
 ReallyUserFriendlyTypesVocabularyFactory = ReallyUserFriendlyTypesVocabulary()

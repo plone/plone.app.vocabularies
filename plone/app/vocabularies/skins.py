@@ -9,6 +9,7 @@ from Products.CMFCore.utils import getToolByName
 
 _ = MessageFactory('plone')
 
+
 class SkinsVocabulary(object):
     """Vocabulary factory for skins.
 
@@ -39,7 +40,7 @@ class SkinsVocabulary(object):
       >>> term = skins.by_token['Plone Kitty']
       >>> term.title, term.token, term.value
       ('Plone Kitty', 'Plone Kitty', 'Plone Kitty')
-      
+
       Plone Default is a special case that gets a different title
       for clarification.
       >>> term = skins.by_token['Plone Default']
