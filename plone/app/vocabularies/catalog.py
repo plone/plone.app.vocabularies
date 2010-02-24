@@ -122,6 +122,9 @@ class SearchableTextSource(object):
       >>> list(source.search('bar path:/dummy'))
       ['/dummy', '1234', '2345']
 
+      >>> u'' in source
+      True
+
       >>> source = SearchableTextSource(context, default_query='default')
       >>> list(source.search(''))
       ['1234', '2345']
@@ -145,7 +148,9 @@ class SearchableTextSource(object):
     def __contains__(self, value):
         """Return whether the value is available in this source
         """
-        if self.catalog.getrid(self.portal_path + value) is None:
+        if not value:
+            return True
+        elif self.catalog.getrid(self.portal_path + value) is None:
             return False
         return True
 
