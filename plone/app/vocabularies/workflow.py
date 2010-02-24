@@ -10,6 +10,7 @@ from Acquisition import aq_get
 from Products.CMFCore.utils import getToolByName
 _ = MessageFactory('plone')
 
+
 class WorkflowsVocabulary(object):
     """Vocabulary factory for workflows.
 
@@ -62,6 +63,7 @@ class WorkflowsVocabulary(object):
         return SimpleVocabulary(items)
 
 WorkflowsVocabularyFactory = WorkflowsVocabulary()
+
 
 class WorkflowStatesVocabulary(object):
     """Vocabulary factory for workflow states.
@@ -177,7 +179,7 @@ class WorkflowTransitionsVocabulary(object):
 
     def __call__(self, context):
         context = getattr(context, 'context', context)
-        
+
         wtool = getToolByName(context, 'portal_workflow', None)
         if wtool is None:
             return None
@@ -197,7 +199,7 @@ class WorkflowTransitionsVocabulary(object):
             item_title = ' // '.join(sorted(titles))
             items.append(SimpleTerm(value = transition_id,
                token = transition_id,
-               title = "%s [%s]" % (item_title, transition_id,)))
+               title = "%s [%s]" % (item_title, transition_id)))
 
         return SimpleVocabulary(sorted(items))
 

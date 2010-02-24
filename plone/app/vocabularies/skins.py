@@ -5,6 +5,7 @@ from zope.schema.vocabulary import SimpleVocabulary
 
 from Products.CMFCore.utils import getToolByName
 
+
 class SkinsVocabulary(object):
     """Vocabulary factory for skins.
 

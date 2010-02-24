@@ -8,6 +8,7 @@ from zope.testing.doctestunit import DocTestSuite
 
 import plone.app.vocabularies
 
+
 def configurationSetUp(self):
     setUp()
     XMLConfig('meta.zcml', zope.component)()

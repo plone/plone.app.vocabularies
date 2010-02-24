@@ -1,4 +1,3 @@
-import itertools
 from zope.interface import implements, classProvides
 from zope.schema.interfaces import ISource, IContextSourceBinder
 from zope.schema.vocabulary import SimpleTerm
@@ -7,6 +6,7 @@ from zope.app.form.browser.interfaces import ISourceQueryView, ITerms
 from zope.app.pagetemplate.viewpagetemplatefile import ViewPageTemplateFile
 
 from Products.CMFCore.utils import getToolByName
+
 
 class UsersSource(object):
     """
@@ -54,7 +54,7 @@ class UsersSource(object):
 
     def search(self, query):
         return [u['userid'] for u in self.users.searchUsers(fullname=query)]
-        
+
     def get(self, value):
         return self.users.getUserById(value, None)
 

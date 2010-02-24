@@ -1,9 +1,10 @@
 from zope.interface import Interface, Attribute
 
+
 class ITermWithDescription(Interface):
     """A term which carries an additional description
     """
-    
+
     description = Attribute(
         "description",
         """Description of the term, which will be displayed to distinguish

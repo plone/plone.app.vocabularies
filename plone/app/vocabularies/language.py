@@ -5,6 +5,7 @@ from zope.schema.vocabulary import SimpleVocabulary
 
 from Products.CMFCore.utils import getToolByName
 
+
 def sort_key(language):
     return language[1]
 
