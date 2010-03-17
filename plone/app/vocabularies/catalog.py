@@ -1,7 +1,8 @@
 import itertools
 from zope.browser.interfaces import ITerms
 from zope.interface import implements, classProvides
-from zope.schema.interfaces import ISource, IContextSourceBinder
+from zope.schema.interfaces import ISource, IContextSourceBinder, IVocabularyFactory
+from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 from zope.app.form.browser.interfaces import ISourceQueryView
 
@@ -366,3 +367,40 @@ class QuerySearchableTextSourceView(object):
             results = self.context.search(query)
 
         return results
+
+class KeywordsVocabulary(object):
+    """Vocabulary factory listing all catalog keywords from the "Subject" index
+
+        >>> from plone.app.vocabularies.tests.base import DummyCatalog
+        >>> from plone.app.vocabularies.tests.base import create_context
+        >>> from plone.app.vocabularies.tests.base import DummyContent
+        >>> from plone.app.vocabularies.tests.base import Request
+        >>> from Products.PluginIndexes.KeywordIndex.KeywordIndex import KeywordIndex
+        
+        >>> context = create_context()
+        
+        >>> rids = ('/1234', '/2345', '/dummy/1234')
+        >>> tool = DummyCatalog(rids)
+        >>> context.portal_catalog = tool
+        >>> index = KeywordIndex('Subject')
+        >>> done = index._index_object(1,DummyContent('ob1', ['foo', 'bar', 'baz']), attr='Subject')
+        >>> done = index._index_object(2,DummyContent('ob2', ['blee', 'bar']), attr='Subject')
+        >>> tool.indexes['Subject'] = index
+        >>> vocab = KeywordsVocabulary()
+        >>> result = vocab(context)
+        >>> result.by_token.keys()
+        ['blee', 'baz', 'foo', 'bar']
+    """
+    implements(IVocabularyFactory)
+
+    def __call__(self, context):
+        self.context = context
+        self.catalog = getToolByName(context, "portal_catalog")
+        if self.catalog is None:
+            return SimpleVocabulary([])
+        index = self.catalog._catalog.getIndex('Subject')
+        items = [SimpleTerm(i, i, i) for i in index._index]
+        return SimpleVocabulary(items)
+
+KeywordsVocabularyFactory = KeywordsVocabulary()
+

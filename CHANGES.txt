@@ -4,8 +4,12 @@ Changelog
 2.0b3 - unreleased
 ------------------
 
+- Add a vocabulary to list all Keywords (via the Subject index).
+  [esteele]
+
 - Avoid ConstraintNotSatisfied-error when GS-importing the default navigation
-portlet. Fixes https://dev.plone.org/plone/ticket/8380 [WouterVH]
+  portlet. Fixes https://dev.plone.org/plone/ticket/8380 
+  [WouterVH]
 
 
 2.0b2 - 2010-01-24

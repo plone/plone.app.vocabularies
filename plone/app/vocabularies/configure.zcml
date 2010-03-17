@@ -72,6 +72,11 @@
     name="plone.app.vocabularies.AvailableEditors" 
     />
 
+  <utility
+    component=".catalog.KeywordsVocabularyFactory"
+    name="plone.app.vocabularies.Keywords"
+    />
+
   <adapter
       for=".catalog.SearchableTextSource
            zope.publisher.interfaces.browser.IBrowserRequest"

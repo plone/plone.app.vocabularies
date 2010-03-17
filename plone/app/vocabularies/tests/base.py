@@ -77,6 +77,7 @@ class Brain(object):
 class DummyCatalog(dict):
 
     def __init__(self, values):
+        self.indexes = {}
         for r in values:
             self[r] = Brain(r)
 
@@ -93,3 +94,17 @@ class DummyCatalog(dict):
 
     def getrid(self, value):
         return value in self and value or None
+
+    def getIndex(self, name):
+        return self.indexes[name]
+        
+class DummyContent(object):
+    def __init__(self, title, subjects=[]):
+        self.title = title
+        self.subjects = subjects
+        
+    def Title(self):
+        return self.title
+    
+    def Subject(self):
+        return self.subjects
