@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.0b3 - unreleased
+2.0b3 - 2010-04-07
 ------------------
 
 - Add a vocabulary to list all Keywords (via the Subject index).
