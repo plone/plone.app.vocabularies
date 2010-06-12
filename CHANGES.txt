@@ -4,6 +4,9 @@ Changelog
 2.0b4 - Unreleased
 ------------------
 
+- Use the standard libraries doctest module.
+  [hannosch]
+
 2.0b3 - 2010-04-07
 ------------------
 
