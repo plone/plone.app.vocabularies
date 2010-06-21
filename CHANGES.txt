@@ -4,6 +4,8 @@ Changelog
 2.0b5 - unreleased
 ------------------
 
+- Internationalized editor label (especially for 'None' value)
+  [thomasdesvenain]
 
 2.0b4 - 2010-06-13
 ------------------
@@ -18,7 +20,7 @@ Changelog
   [esteele]
 
 - Avoid ConstraintNotSatisfied-error when GS-importing the default navigation
-  portlet. Fixes https://dev.plone.org/plone/ticket/8380 
+  portlet. Fixes https://dev.plone.org/plone/ticket/8380
   [WouterVH]
 
 
