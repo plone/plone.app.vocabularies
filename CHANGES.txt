@@ -4,7 +4,7 @@ Changelog
 2.0b5 - unreleased
 ------------------
 
-- Internationalized editor label (especially for 'None' value)
+- Internationalized editor label (especially for 'None' value).
   [thomasdesvenain]
 
 2.0b4 - 2010-06-13
