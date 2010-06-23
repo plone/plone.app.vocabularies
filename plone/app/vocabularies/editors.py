@@ -37,7 +37,7 @@ class AvailableEditorsVocabulary(object):
 
       >>> TinyMCE = editors.by_token['TinyMCE']
       >>> TinyMCE.title, TinyMCE.token, TinyMCE.value
-      ('TinyMCE', 'TinyMCE', 'TinyMCE')
+      (u'TinyMCE', 'TinyMCE', 'TinyMCE')
     """
     implements(IVocabularyFactory)
 
