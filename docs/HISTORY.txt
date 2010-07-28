@@ -1,14 +1,16 @@
 Changelog
 =========
 
-1.0.7 - Unreleased
-------------------
+1.0.7 - July 28, 2010
+---------------------
 
 - Removed the usage of the fromItems method for creating the
-  WorkflowTransistionVocabulary, see issue 6480. [jladage]
+  WorkflowTransistionVocabulary, see http://dev.plone.org/plone/ticket/6480.
+  [jladage]
 
 - Avoid ConstraintNotSatisfied-error when GS-importing the default navigation
-  portlet. Fixes https://dev.plone.org/plone/ticket/8380 [massimo]
+  portlet. Fixes http://dev.plone.org/plone/ticket/8380.
+  [massimo]
 
 
 1.0.6 - November 6, 2008
@@ -19,7 +21,8 @@ Changelog
 
 - The QuerySearchableTextSourceView made terms with string titles. However
   zope.app.form.browser.source assumes it to be unicode, with the result that
-  you get unicode errors if you have non-ascii characters. [regebro]
+  you get unicode errors if you have non-ascii characters.
+  [regebro]
 
 
 1.0.5 - August 18, 2008

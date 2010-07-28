@@ -1,5 +1,5 @@
 from setuptools import setup, find_packages
-import sys, os
+import os
 
 version = '1.0.7'
 
@@ -13,7 +13,6 @@ setup(name='plone.app.vocabularies',
         "Framework :: Zope2",
         "License :: OSI Approved :: GNU General Public License (GPL)",
         "Programming Language :: Python",
-        "Topic :: Software Development :: Libraries :: Python Modules",
         ],
       keywords='Plone Zope formlib vocabularies',
       author='Plone Foundation',
