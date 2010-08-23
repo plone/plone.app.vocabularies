@@ -4,17 +4,22 @@ Changelog
 1.0.8 - unreleased
 ------------------
 
+- Fixed failing test for ``by_token`` in the workflow transition
+  vocabulary, introduced in r31411.
+  Refs http://dev.plone.org/plone/ticket/6480
+  [maurits]
 
 
 1.0.7 - July 28, 2010
 ---------------------
 
 - Removed the usage of the fromItems method for creating the
-  WorkflowTransistionVocabulary, see http://dev.plone.org/plone/ticket/6480.
+  WorkflowTransistionVocabulary, see
+  http://dev.plone.org/plone/ticket/6480
   [jladage]
 
-- Avoid ConstraintNotSatisfied-error when GS-importing the default navigation
-  portlet. Fixes http://dev.plone.org/plone/ticket/8380.
+- Avoid ConstraintNotSatisfied-error when GS-importing the default
+  navigation portlet. Fixes http://dev.plone.org/plone/ticket/8380.
   [massimo]
 
 
