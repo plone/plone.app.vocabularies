@@ -1,12 +1,11 @@
 Changelog
 =========
 
-1.0.8 - unreleased
-------------------
+1.0.8 - September 3, 2010
+-------------------------
 
-- Fixed failing test for ``by_token`` in the workflow transition
-  vocabulary, introduced in r31411.
-  Refs http://dev.plone.org/plone/ticket/6480
+- Fixed failing test for ``by_token`` in the workflow transition vocabulary,
+  introduced in r31411. Refs http://dev.plone.org/plone/ticket/6480.
   [maurits]
 
 
