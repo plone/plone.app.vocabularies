@@ -16,8 +16,10 @@ from zope.interface import implements
 
 class TestVocabulary(object):
     implements(IVocabularyFactory)
+
     def __call__(self, context):
-        return SimpleVocabulary([SimpleVocabulary.createTerm('foo', 'foo', u'bar')])
+        return SimpleVocabulary([SimpleVocabulary.createTerm('foo',
+                                                             'foo', u'bar')])
 
 
 class TestRegistryReader(unittest.TestCase):
@@ -25,35 +27,36 @@ class TestRegistryReader(unittest.TestCase):
 
     def setUp(self):
         gsm = getGlobalSiteManager()
-        gsm.registerUtility(TestVocabulary(), IVocabularyFactory, 'plone.app.querystring.tests.testvocabulary')
+        gsm.registerUtility(TestVocabulary(), IVocabularyFactory,
+                            'plone.app.querystring.tests.testvocabulary')
 
     def getLogger(self, value):
         return 'plone.app.querystring'
 
     def shouldPurge(self):
         return False
-    
+
     def createRegistry(self, xml):
         """Create a registry from a minimal set of fields and operators"""
         from plone.app.registry.exportimport.handler import RegistryImporter
         gsm = getGlobalSiteManager()
         self.registry = Registry()
         gsm.registerUtility(self.registry, IRegistry)
-        
+
         importer = RegistryImporter(self.registry, self)
         importer.importDocument(xml)
         return self.registry
-    
+
     def test_dotted_dict(self):
         """test the dotted dict type which is used by the registry reader to
            access dicts in dicts by dotted names. (eg field.created.operations)
            it should raise a keyerror when an invalid key is used
            TODO : DottedDict should be in a separate package
         """
-        dd = DottedDict({'my' : {'dotted' : {'name' : 'value'}}})
+        dd = DottedDict({'my': {'dotted': {'name': 'value'}}})
         assert dd.get('my.dotted.name') == 'value'
         self.assertRaises(KeyError, dd.get, 'my.dotted.wrongname')
-    
+
     def test_parse_registry(self):
         """tests if the parsed registry data is correct"""
         registry = self.createRegistry(td.minimal_correct_xml)
@@ -69,7 +72,8 @@ class TestRegistryReader(unittest.TestCase):
         reader = IQuerystringRegistryReader(registry)
         result = reader.parseRegistry()
         result = reader.getVocabularyValues(result)
-        vocabulary_result = result.get('plone.app.querystring.field.reviewState.values')
+        vocabulary_result = result.get(
+            'plone.app.querystring.field.reviewState.values')
         assert vocabulary_result == {'foo': {'title': u'bar'}}
 
     def test_map_operations_clean(self):
@@ -78,8 +82,10 @@ class TestRegistryReader(unittest.TestCase):
         reader = IQuerystringRegistryReader(registry)
         result = reader.parseRegistry()
         result = reader.mapOperations(result)
-        operations = result.get('plone.app.querystring.field.created.operations')
-        operators = result.get('plone.app.querystring.field.created.operators')
+        operations = result.get(
+            'plone.app.querystring.field.created.operations')
+        operators = result.get(
+            'plone.app.querystring.field.created.operators')
         for operation in operations:
             assert operation in operators
 
@@ -89,9 +95,11 @@ class TestRegistryReader(unittest.TestCase):
         reader = IQuerystringRegistryReader(registry)
         result = reader.parseRegistry()
         result = reader.mapOperations(result)
-        operators = result.get('plone.app.querystring.field.created.operators').keys()
+        operators = result.get(
+            'plone.app.querystring.field.created.operators').keys()
         assert 'plone.app.querystring.operation.date.lessThan' in operators
-        assert 'plone.app.querystring.operation.date.largerThan' not in operators
+        assert 'plone.app.querystring.operation.date.largerThan' not in \
+            operators
 
     def test_sortable_indexes(self):
         """tests if sortable indexes from the registry will be available in

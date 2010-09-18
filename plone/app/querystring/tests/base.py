@@ -8,24 +8,25 @@ from collective.testcaselayer import ptc as tcl_ptc
 from collective.testcaselayer import common
 from collective.testcaselayer.layer import Layer as BaseLayer
 
-# What follows are the class definitions for the test case layers. Don't use 
+# What follows are the class definitions for the test case layers. Don't use
 # these directly, use the instances beneath
 
-class RegistryLayer(BaseLayer): 
-    """A unittest layer that provides a new plone.registry. """
 
-    def setUp(self): 
-        gsm = getGlobalSiteManager() 
+class RegistryLayer(BaseLayer):
+    """A unittest layer that provides a new plone.registry."""
+
+    def setUp(self):
+        gsm = getGlobalSiteManager()
         self.registry = Registry()
         gsm.registerUtility(self.registry, IRegistry)
-    
-    def tearDown(self): 
+
+    def tearDown(self):
         gsm = getGlobalSiteManager()
         gsm.unregisterUtility(provided=IRegistry)
 
 
 class QuerystringInstalled(tcl_ptc.BasePTCLayer):
-    """A PloneTestCase layer that loads the ZCML for plone.app.querystring and 
+    """A PloneTestCase layer that loads the ZCML for plone.app.querystring and
        installs the package into zope.
     """
 
@@ -36,7 +37,7 @@ class QuerystringInstalled(tcl_ptc.BasePTCLayer):
 
 
 class RealGSProfile(tcl_ptc.PTCLayer):
-    """A PloneTestCase layer that runs the plone.app.querystring GenericSetup 
+    """A PloneTestCase layer that runs the plone.app.querystring GenericSetup
        profile.
     """
 
@@ -45,7 +46,7 @@ class RealGSProfile(tcl_ptc.PTCLayer):
 
 
 class TestGSProfile(tcl_ptc.PTCLayer):
-    """A PloneTestCase layer that runs a GenericSetup profile containing test 
+    """A PloneTestCase layer that runs a GenericSetup profile containing test
        data.
     """
 
@@ -65,9 +66,11 @@ FullProfilelayer = RealGSProfile([InstalledLayer, ])
 
 # Convenient base classes for PloneTestCase
 
+
 class QuerystringTestCase(ptc.PloneTestCase):
     layer = FullProfilelayer
 
 
-class QuerystringFunctionalTestCase(ptc.FunctionalTestCase, QuerystringTestCase):
+class QuerystringFunctionalTestCase(ptc.FunctionalTestCase,
+                                    QuerystringTestCase):
     pass

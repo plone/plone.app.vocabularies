@@ -9,7 +9,7 @@ minimal_correct_xml = """
         <value key="operation">plone.app.querystring.queryparser:_equal</value>
         <value key="widget"></value>
     </records>
-  
+
     <records interface="plone.app.querystring.interfaces.IQueryOperation"
              prefix="plone.app.querystring.operation.date.lessThan">
         <value key="title">before</value>

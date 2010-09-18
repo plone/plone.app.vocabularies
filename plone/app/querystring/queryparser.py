@@ -11,6 +11,7 @@ import logging
 
 Row = namedtuple('Row', ['index', 'operator', 'values'])
 
+
 def parseFormquery(context, formquery):
     if not formquery:
         return {}
@@ -55,9 +56,11 @@ def parseFormquery(context, formquery):
     catalog = getToolByName(context, 'portal_catalog')
     valid_indexes = [index for index in query if index in catalog.indexes()]
 
-    # We'll ignore any invalid index, but will return an empty set if none of the indexes are valid.
+    # We'll ignore any invalid index, but will return an empty set if none of
+    # the indexes are valid.
     if not valid_indexes:
-        logger.warning("Using empty query because there are no valid indexes used.")
+        logger.warning(
+            "Using empty query because there are no valid indexes used.")
         return {}
 
     return query
@@ -68,8 +71,15 @@ def _contains(context, row):
     return _equal(context, row)
 
 
-# http://localhost:8080/Plone/@@querybuilder_html_results?query.i:records=Creator&query.o:records=plone.app.querystring.operation.string.is&query.v:records=admin
-# http://localhost:8080/Plone/@@querybuilder_html_results?query.i:records=Creator&query.o:records=plone.app.querystring.operation.string.is&query.v:records=joshenken
+# http://localhost:8080/Plone/@@querybuilder_html_results?
+# query.i:records=Creator&
+# query.o:records=plone.app.querystring.operation.string.is&
+# query.v:records=admin
+#
+# http://localhost:8080/Plone/@@querybuilder_html_results?
+# query.i:records=Creator&
+# query.o:records=plone.app.querystring.operation.string.is&
+# query.v:records=joshenken
 def _equal(context, row):
     return {row.index: {'query': row.values, }}
 
@@ -82,7 +92,10 @@ def _isFalse(context, row):
     return {row.index: {'query': False, }}
 
 
-# http://localhost:8080/Plone/@@querybuilder_html_results?query.i:records=modified&query.o:records=plone.app.querystring.operation.date.between&query.v:records:list=2010/03/18&query.v:records:list=2010/03/19
+# http://localhost:8080/Plone/@@querybuilder_html_results?
+# query.i:records=modified&
+# query.o:records=plone.app.querystring.operation.date.between&
+# query.v:records:list=2010/03/18&query.v:records:list=2010/03/19
 def _between(context, row):
     tmp = {row.index: {
               'query': sorted(row.values),
@@ -92,7 +105,10 @@ def _between(context, row):
     return tmp
 
 
-# http://localhost:8080/Plone/@@querybuilder_html_results?query.i:records=modified&query.o:records=plone.app.querystring.operation.date.largerThan&query.v:records=2010/03/18
+# http://localhost:8080/Plone/@@querybuilder_html_results?
+# query.i:records=modified&
+# query.o:records=plone.app.querystring.operation.date.largerThan&
+# query.v:records=2010/03/18
 def _largerThan(context, row):
     tmp = {row.index: {
               'query': row.values,
@@ -102,7 +118,10 @@ def _largerThan(context, row):
     return tmp
 
 
-# http://localhost:8080/Plone/@@querybuilder_html_results?query.i:records=modified&query.o:records=plone.app.querystring.operation.date.lessThan&query.v:records=2010/03/18
+# http://localhost:8080/Plone/@@querybuilder_html_results?
+# query.i:records=modified&
+# query.o:records=plone.app.querystring.operation.date.lessThan&
+# query.v:records=2010/03/18
 def _lessThan(context, row):
     tmp = {row.index: {
               'query': row.values,
@@ -112,7 +131,9 @@ def _lessThan(context, row):
     return tmp
 
 
-# http://localhost:8080/Plone/@@querybuilder_html_results?query.i:records=Creator&query.o:records=plone.app.querystring.operation.string.currentUser
+# http://localhost:8080/Plone/@@querybuilder_html_results?
+# query.i:records=Creator&
+# query.o:records=plone.app.querystring.operation.string.currentUser
 def _currentUser(context, row):
     mt = getToolByName(context, 'portal_membership')
     user = mt.getAuthenticatedMember()
@@ -124,8 +145,14 @@ def _currentUser(context, row):
           }
 
 
-# http://localhost:8080/Plone/@@querybuilder_html_results?query.i:records=modified&query.o:records=plone.app.querystring.operation.date.lessThanRelativeDate&query.v:records=-1
-# http://localhost:8080/Plone/@@querybuilder_html_results?query.i:records=modified&query.o:records=plone.app.querystring.operation.date.lessThanRelativeDate&query.v:records=1
+# http://localhost:8080/Plone/@@querybuilder_html_results?
+# query.i:records=modified&
+# query.o:records=plone.app.querystring.operation.date.lessThanRelativeDate&
+# query.v:records=-1
+# http://localhost:8080/Plone/@@querybuilder_html_results?
+# query.i:records=modified&
+# query.o:records=plone.app.querystring.operation.date.lessThanRelativeDate&
+# query.v:records=1
 def _lessThanRelativeDate(context, row):
     # values is the number of days
     values = int(row.values)
@@ -141,8 +168,14 @@ def _lessThanRelativeDate(context, row):
     return _lessThan(context, row)
 
 
-# http://localhost:8080/Plone/@@querybuilder_html_results?query.i:records=modified&query.o:records=plone.app.querystring.operation.date.moreThanRelativeDate&query.v:records=-1
-# http://localhost:8080/Plone/@@querybuilder_html_results?query.i:records=modified&query.o:records=plone.app.querystring.operation.date.moreThanRelativeDate&query.v:records=1
+# http://localhost:8080/Plone/@@querybuilder_html_results?
+# query.i:records=modified&
+# query.o:records=plone.app.querystring.operation.date.moreThanRelativeDate&
+# query.v:records=-1
+# http://localhost:8080/Plone/@@querybuilder_html_results?
+# query.i:records=modified&
+# query.o:records=plone.app.querystring.operation.date.moreThanRelativeDate&
+# query.v:records=1
 def _moreThanRelativeDate(context, row):
     values = int(row.values)
 
@@ -157,8 +190,14 @@ def _moreThanRelativeDate(context, row):
     return _largerThan(context, row)
 
 
-# http://localhost:8080/Plone/@@querybuilder_html_results?query.i:records=path&query.o:records=plone.app.querystring.operation.string.path&query.v:records=/Plone/news/
-# http://localhost:8080/Plone/@@querybuilder_html_results?query.i:records=path&query.o:records=plone.app.querystring.operation.string.path&query.v:records=718f66a14bda3688d64bb36309e0d76e
+# http://localhost:8080/Plone/@@querybuilder_html_results?
+# query.i:records=path&
+# query.o:records=plone.app.querystring.operation.string.path&
+# query.v:records=/Plone/news/
+# http://localhost:8080/Plone/@@querybuilder_html_results?
+# query.i:records=path&
+# query.o:records=plone.app.querystring.operation.string.path&
+# query.v:records=718f66a14bda3688d64bb36309e0d76e
 def _path(context, row):
     values = row.values
 
@@ -171,7 +210,10 @@ def _path(context, row):
     return tmp
 
 
-# http://localhost:8080/Plone/news/aggregator/@@querybuilder_html_results?query.i:records=path&query.o:records=plone.app.querystring.operation.string.relativePath&query.v:records=../
+# http://localhost:8080/Plone/news/aggregator/@@querybuilder_html_results?
+# query.i:records=path&
+# query.o:records=plone.app.querystring.operation.string.relativePath&
+# query.v:records=../
 def _relativePath(context, row):
     t = len([x for x in row.values.split('/') if x])
 

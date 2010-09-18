@@ -27,7 +27,14 @@ class MockCatalog(object):
         return MockObject(uid='00000000000000001', path="/site/foo")
 
     def indexes(self):
-        return ['Title', 'effectiveRange', 'object_provides', 'Type', 'id', 'cmf_uid', 'end', 'Description', 'is_folderish', 'getId', 'start', 'meta_type', 'is_default_page', 'Date', 'review_state', 'portal_type', 'expires', 'allowedRolesAndUsers', 'getObjPositionInParent', 'path', 'in_reply_to', 'UID', 'effective', 'created', 'Creator', 'modified', 'SearchableText', 'sortable_title', 'getRawRelatedItems', 'Subject']
+        return ['Title', 'effectiveRange', 'object_provides', 'Type', 'id',
+                'cmf_uid', 'end', 'Description', 'is_folderish', 'getId',
+                'start', 'meta_type', 'is_default_page', 'Date',
+                'review_state', 'portal_type', 'expires',
+                'allowedRolesAndUsers', 'getObjPositionInParent', 'path',
+                'in_reply_to', 'UID', 'effective', 'created', 'Creator',
+                'modified', 'SearchableText', 'sortable_title',
+                'getRawRelatedItems', 'Subject']
 
 
 class MockSite(object):
@@ -62,8 +69,12 @@ class TestQueryParserBase(unittest.TestCase):
     def setUp(self):
         super(TestQueryParserBase, self).setUp()
 
-        self.setFunctionForOperation('plone.app.querystring.operation.string.is.operation', 'plone.app.querystring.queryparser:_equal')
-        self.setFunctionForOperation('plone.app.querystring.operation.string.path.operation', 'plone.app.querystring.queryparser:_path')
+        self.setFunctionForOperation(
+            'plone.app.querystring.operation.string.is.operation',
+            'plone.app.querystring.queryparser:_equal')
+        self.setFunctionForOperation(
+            'plone.app.querystring.operation.string.path.operation',
+            'plone.app.querystring.queryparser:_path')
 
     def setFunctionForOperation(self, operation, function):
         function_field = field.ASCIILine(title=u"Operator")
@@ -212,8 +223,10 @@ class TestQueryGenerators(TestQueryParserBase):
 
     def test__relativePath(self):
         context = MockObject(uid='00000000000000001', path="/foo/bar/fizz")
-        context.__parent__ = MockObject(uid='00000000000000002', path="/foo/bar")
-        context.__parent__.__parent__ = MockObject(uid='00000000000000003', path="/foo")
+        context.__parent__ = MockObject(uid='00000000000000002',
+                                        path="/foo/bar")
+        context.__parent__.__parent__ = MockObject(uid='00000000000000003',
+                                                   path="/foo")
 
         data = Row(index='path',
                   operator='_relativePath',
