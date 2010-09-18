@@ -19,7 +19,7 @@
     />
 
   <adapter
-    factory=".registryreader.CollectionRegistryReader"
+    factory=".registryreader.QuerystringRegistryReader"
     />
 
   <browser:page
