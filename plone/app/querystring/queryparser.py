@@ -1,5 +1,4 @@
 from collections import namedtuple
-from copy import deepcopy
 
 from Acquisition import aq_parent
 from DateTime import DateTime
@@ -20,7 +19,6 @@ def parseFormquery(context, formquery):
     # make sure the things in formquery are dicts, not crazy things
     formquery = map(dict, formquery)
 
-    formquery = deepcopy(formquery)
     query = {}
     for row in formquery:
 
