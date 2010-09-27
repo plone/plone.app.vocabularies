@@ -56,6 +56,8 @@ class TestRegistryReader(unittest.TestCase):
         dd = DottedDict({'my': {'dotted': {'name': 'value'}}})
         assert dd.get('my.dotted.name') == 'value'
         self.assertRaises(KeyError, dd.get, 'my.dotted.wrongname')
+        dd = DottedDict({'my': 'value'})
+        assert dd.get('my') == 'value'
 
     def test_parse_registry(self):
         """tests if the parsed registry data is correct"""
@@ -118,6 +120,15 @@ class TestRegistryReader(unittest.TestCase):
         # confirm that every sortable really is sortable
         for field in sortables.values():
             assert field['sortable'] == True
+
+    def test_registry_adapter(self):
+        """tests the __call__ method of the IQuerystringRegistryReader
+           adapter
+        """
+        registry = self.createRegistry(td.minimal_correct_xml)
+        reader = IQuerystringRegistryReader(registry)
+        result = reader()
+        assert result.keys() == ['sortable_indexes', 'indexes']
 
 
 def test_suite():
