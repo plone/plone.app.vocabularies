@@ -5,8 +5,7 @@ from plone.app.querystring import queryparser
 from zope.component import getMultiAdapter, getUtility
 from plone.app.querystring.interfaces import IQuerystringRegistryReader
 from plone.app.contentlisting.interfaces import IContentListing
-from Products.ATContentTypes import ATCTMessageFactory as _
-
+from zope.i18n import translate as _
 import json
 
 
