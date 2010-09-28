@@ -151,7 +151,6 @@ class TestQueryGenerators(TestQueryParserBase):
         self.assertEqual(parsed, expected)
 
     def test__currentUser(self):
-
         # Anonymous user
         u = MockUser()
         pm = MockPortal_membership(user=u)

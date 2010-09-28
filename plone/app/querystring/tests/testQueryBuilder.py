@@ -34,6 +34,19 @@ class TestQuerybuilder(QuerystringTestCase):
         res = self.folder.restrictedTraverse('@@querybuildernumberofresults')
         res(self.query)
 
+    def testQueryBuilderNumberOfResults(self):
+        results = self.querybuilder.number_of_results(self.query)
+        numeric = int(results.split(' ')[0])
+        self.assertEqual(numeric, 1)
+
+    def testQueryBuilderNumberOfResultsView(self):
+        res = self.folder.restrictedTraverse('@@querybuildernumberofresults')
+        length_of_results = res.browserDefault(None)[0](self.query)
+        # apparently brower travelsal is different from the traversal we get
+        # from restrictedTraverse. This did hurt a bit.
+        numeric = int(length_of_results.split(' ')[0])
+        self.assertEqual(numeric, 1)
+
 
 class TestConfigurationFetcher(QuerystringTestCase):
 
