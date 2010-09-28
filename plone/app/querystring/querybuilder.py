@@ -5,7 +5,7 @@ from plone.app.querystring import queryparser
 from zope.component import getMultiAdapter, getUtility
 from plone.app.querystring.interfaces import IQuerystringRegistryReader
 from plone.app.contentlisting.interfaces import IContentListing
-from zope.i18n import translate as _
+from zope.i18n import translate
 import json
 
 
@@ -47,7 +47,7 @@ class QueryBuilder(BrowserView):
             name='searchResults')(query=parsedquery)
 
     def number_of_results(self, query):
-        return _(u"batch_x_items_matching_your_criteria",
+        return translate(u"batch_x_items_matching_your_criteria",
                  default=u"${number} items matching your search terms",
                  mapping={'number': len(self(query))})
 
