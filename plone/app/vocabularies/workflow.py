@@ -99,7 +99,8 @@ class WorkflowStatesVocabulary(object):
 
         # XXX This is evil. A vocabulary shouldn't be request specific.
         # The sorting should go into a separate widget.
-        request = aq_get(context, 'REQUEST', None)
+        request = aq_get(wtool, 'REQUEST', None)
+
         items = wtool.listWFStatesByTitle(filter_similar=True)
         items_dict = dict([(i[1], translate(_(i[0]), context=request)) for i in items])
         items_list = [(k, v) for k, v in items_dict.items()]

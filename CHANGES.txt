@@ -4,6 +4,8 @@ Changelog
 2.0.2 - unreleased
 ------------------
 
+- Translation of workflow states vocabularies didn't work in some contexts.
+  [thomasdesvenain]
 
 2.0.1 - 2010-07-18
 ------------------
