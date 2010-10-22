@@ -376,9 +376,9 @@ class KeywordsVocabulary(object):
         >>> from plone.app.vocabularies.tests.base import DummyContent
         >>> from plone.app.vocabularies.tests.base import Request
         >>> from Products.PluginIndexes.KeywordIndex.KeywordIndex import KeywordIndex
-        
+
         >>> context = create_context()
-        
+
         >>> rids = ('/1234', '/2345', '/dummy/1234')
         >>> tool = DummyCatalog(rids)
         >>> context.portal_catalog = tool

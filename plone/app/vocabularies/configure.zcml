@@ -54,7 +54,7 @@
     component=".workflow.WorkflowsVocabularyFactory"
     name="plone.app.vocabularies.Workflows"
     />
-    
+
   <utility
     component=".workflow.WorkflowStatesVocabularyFactory"
     name="plone.app.vocabularies.WorkflowStates"
@@ -65,9 +65,9 @@
     name="plone.app.vocabularies.WorkflowTransitions"
     />
 
-  <utility 
-    component=".editors.AvailableEditorsVocabularyFactory" 
-    name="plone.app.vocabularies.AvailableEditors" 
+  <utility
+    component=".editors.AvailableEditorsVocabularyFactory"
+    name="plone.app.vocabularies.AvailableEditors"
     />
 
   <utility
@@ -88,7 +88,7 @@
       factory=".catalog.QuerySearchableTextSourceView"
       provides="zope.app.form.browser.interfaces.ISourceQueryView"
       />
-      
+
   <adapter
       for=".users.UsersSource
            zope.publisher.interfaces.browser.IBrowserRequest"

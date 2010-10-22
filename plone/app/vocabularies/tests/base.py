@@ -97,14 +97,14 @@ class DummyCatalog(dict):
 
     def getIndex(self, name):
         return self.indexes[name]
-        
+
 class DummyContent(object):
     def __init__(self, title, subjects=[]):
         self.title = title
         self.subjects = subjects
-        
+
     def Title(self):
         return self.title
-    
+
     def Subject(self):
         return self.subjects
