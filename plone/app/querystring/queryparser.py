@@ -59,6 +59,7 @@ def parseFormquery(context, formquery):
     if not valid_indexes:
         logger.warning(
             "Using empty query because there are no valid indexes used.")
+        print query
         return {}
 
     return query
@@ -217,7 +218,9 @@ def _relativePath(context, row):
 
     obj = context
     for x in xrange(t):
-        obj = aq_parent(obj)
+        new = aq_parent(obj)
+        if 'getPhysicalPath' in new:  # prevent going further than siteroot
+            obj = new
 
     row = Row(index=row.index,
               operator=row.operator,
