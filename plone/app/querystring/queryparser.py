@@ -11,7 +11,7 @@ import logging
 Row = namedtuple('Row', ['index', 'operator', 'values'])
 
 
-def parseFormquery(context, formquery):
+def parseFormquery(context, formquery, sort_on=None, sort_order=None):
     if not formquery:
         return {}
     reg = getUtility(IRegistry)
@@ -59,8 +59,15 @@ def parseFormquery(context, formquery):
     if not valid_indexes:
         logger.warning(
             "Using empty query because there are no valid indexes used.")
-        print query
         return {}
+
+    # sorting
+    if sort_on:
+        query['sort_on'] = sort_on
+    if sort_order:
+        query['sort_order'] = sort_order
+
+    logger.info("Generated query: %s" % query)
 
     return query
 
