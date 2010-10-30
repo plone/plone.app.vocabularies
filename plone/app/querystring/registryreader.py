@@ -3,6 +3,7 @@ from zope.component import getUtility, adapts
 from zope.interface import implements
 from plone.registry.interfaces import IRegistry
 from interfaces import IQuerystringRegistryReader
+from operator import attrgetter
 
 
 class DottedDict(dict):
@@ -50,14 +51,15 @@ class QuerystringRegistryReader(object):
 
     def getVocabularyValues(self, values):
         """Get all vocabulary values if a vocabulary is defined"""
+
         for field in values.get(self.prefix + '.field').values():
             field['values'] = {}
             vocabulary = field.get('vocabulary', [])
             if vocabulary:
                 utility = getUtility(IVocabularyFactory, vocabulary)
-                for item in utility(self.context):
-                    field['values'][item.value] = \
-                        {'title': item.title}
+                for item in sorted(utility(self.context),
+                                   key=attrgetter('title')):
+                    field['values'][item.value] = {'title': item.title}
         return values
 
     def mapOperations(self, values):
