@@ -2,7 +2,8 @@
      the html snippet is loaded in directly so that is why there are no <html> and <body> tags -->
 <div tal:define="results context;
                  original_context nocall:options/original_context|nocall:context;
-                 toLocalizedTime nocall:original_context/@@plone/toLocalizedTime;">
+                 toLocalizedTime nocall:original_context/@@plone/toLocalizedTime;
+                 pas_member original_context/@@pas_member">
     <h2 class="searchResultsHeading">
         <span>
             Search results
@@ -20,7 +21,7 @@
     <div tal:condition="results">
         <dl class="searchResults">
             <tal:results repeat="item results">
-                <tal:entry>
+                <tal:entry tal:define="author python:pas_member.info(item.Creator())">
                     <dt>
                       <img tal:replace="structure item/getIcon" />
                        <a
@@ -29,7 +30,7 @@
                                          class item/review_state"
                          tal:content="item/Title" />
                         <span class="documentByLine">
-                            <span class="documentAuthor" tal:define="author item/Creator"
+                            <span class="documentAuthor"
                                 i18n:translate="label_by_author" tal:condition="author/fullname">
                             by
                                   <a href="#"
