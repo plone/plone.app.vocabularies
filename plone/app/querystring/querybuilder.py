@@ -28,7 +28,7 @@ class QueryBuilder(BrowserView):
         self.context = context
         self.request = request
 
-    def __call__(self, query, sort_on, sort_order):
+    def __call__(self, query, sort_on=None, sort_order=None):
         if self._results is None:
             self._results = self._makequery(query=query, sort_on=sort_on, sort_order=sort_order)
         return self._results
