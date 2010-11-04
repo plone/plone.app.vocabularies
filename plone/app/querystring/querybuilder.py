@@ -30,12 +30,13 @@ class QueryBuilder(BrowserView):
 
     def __call__(self, query, sort_on, sort_order):
         if self._results is None:
-            self._results = self._makequery(query=query, sort_on=sort_on, sort_order=None)
+            self._results = self._makequery(query=query, sort_on=sort_on, sort_order=sort_order)
         return self._results
 
     def html_results(self, query):
         options = dict(original_context=self.context)
         results = self(query, self.request.get('sort_on', None), self.request.get('sort_order', None))
+
         return getMultiAdapter((results, self.request),
             name='display_query_results')(
             **options)
