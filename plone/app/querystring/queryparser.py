@@ -6,6 +6,8 @@ from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
 from zope.component import getUtility
 
+from plone.app.layout.navigation.interfaces import INavigationRoot
+
 import logging
 
 Row = namedtuple('Row', ['index', 'operator', 'values'])
@@ -225,9 +227,9 @@ def _relativePath(context, row):
 
     obj = context
     for x in xrange(t):
-        new = aq_parent(obj)
-        if 'getPhysicalPath' in new:  # prevent going further than siteroot
-            obj = new
+        obj = aq_parent(obj)
+        if INavigationRoot.providedBy(obj):
+            break
 
     row = Row(index=row.index,
               operator=row.operator,

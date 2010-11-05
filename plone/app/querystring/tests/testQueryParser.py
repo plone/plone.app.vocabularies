@@ -7,6 +7,9 @@ from plone.registry import Record
 from base import UnittestWithRegistryLayer
 from plone.app.querystring.queryparser import Row
 
+from zope.interface import directlyProvides
+from plone.app.layout.navigation.interfaces import INavigationRoot
+
 from DateTime import DateTime
 
 
@@ -224,8 +227,15 @@ class TestQueryGenerators(TestQueryParserBase):
         context = MockObject(uid='00000000000000001', path="/foo/bar/fizz")
         context.__parent__ = MockObject(uid='00000000000000002',
                                         path="/foo/bar")
-        context.__parent__.__parent__ = MockObject(uid='00000000000000003',
-                                                   path="/foo")
+
+        # Plone root
+        root = MockObject(uid='00000000000000003', path="/foo")
+        directlyProvides(root, INavigationRoot)
+        context.__parent__.__parent__ = root
+
+        # Zope root
+        zoperoot = MockObject(uid='00000000000000004', path="/")
+        context.__parent__.__parent__.__parent__ = zoperoot
 
         data = Row(index='path',
                   operator='_relativePath',
