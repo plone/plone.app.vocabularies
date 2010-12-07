@@ -3,6 +3,8 @@ import os
 
 version = '0.1'
 
+tests_require = ['collective.testcaselayer']
+
 setup(name='plone.app.querystring',
       version=version,
       description="",
@@ -27,9 +29,10 @@ setup(name='plone.app.querystring',
           'plone.app.registry',
           'plone.app.contentlisting',
           'plone.app.vocabularies',
-          'collective.testcaselayer',
           'plone.directives.form',
       ],
+      tests_require=tests_require,
+      extras_require={'tests': tests_require},
       entry_points="""
       # -*- Entry points: -*-
       """,
