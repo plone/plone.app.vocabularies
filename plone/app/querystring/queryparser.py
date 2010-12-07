@@ -10,6 +10,8 @@ from plone.app.layout.navigation.interfaces import INavigationRoot
 
 import logging
 
+logger = logging.getLogger('plone.app.querystring')
+
 Row = namedtuple('Row', ['index', 'operator', 'values'])
 
 
@@ -52,7 +54,6 @@ def parseFormquery(context, formquery, sort_on=None, sort_order=None):
         query = _equal(context, row)
 
     # Check for valid indexes
-    logger = logging.getLogger('plone.app.querystring')
     catalog = getToolByName(context, 'portal_catalog')
     valid_indexes = [index for index in query if index in catalog.indexes()]
 
