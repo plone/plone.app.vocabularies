@@ -70,7 +70,7 @@ def parseFormquery(context, formquery, sort_on=None, sort_order=None):
     if sort_order:
         query['sort_order'] = sort_order
 
-    logger.info("Generated query: %s" % query)
+    logger.debug("Generated query: %s" % query)
 
     return query
 
