@@ -5,6 +5,7 @@ from DateTime import DateTime
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
 from zope.component import getUtility
+from zope.dottedname.resolve import resolve
 
 from plone.app.layout.navigation.interfaces import INavigationRoot
 
@@ -37,15 +38,8 @@ def parseFormquery(context, formquery, sort_on=None, sort_order=None):
 
         kwargs = {}
 
-        module, function = row.operator.split(":")
-        fromlist = module.split(".")[:-1]
-        try:
-            module = __import__(module, fromlist=fromlist)
-            parser = getattr(module, function)
-        except (ImportError, AttributeError):
-            raise  # XXX: Be more friendly
-        else:
-            kwargs = parser(context, row)
+        parser = resolve(row.operator)
+        kwargs = parser(context, row)
 
         query.update(kwargs)
 

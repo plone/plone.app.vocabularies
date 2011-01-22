@@ -5,7 +5,7 @@
              prefix="plone.app.querystring.operation.boolean.isTrue">
         <value key="title">Yes</value>
         <value key="description"></value>
-        <value key="operation">plone.app.querystring.queryparser:_isTrue</value>
+        <value key="operation">plone.app.querystring.queryparser._isTrue</value>
         <value key="widget"></value>
     </records>
 
@@ -13,7 +13,7 @@
              prefix="plone.app.querystring.operation.boolean.isFalse">
         <value key="title">No</value>
         <value key="description"></value>
-        <value key="operation">plone.app.querystring.queryparser:_isFalse</value>
+        <value key="operation">plone.app.querystring.queryparser._isFalse</value>
         <value key="widget"></value>
     </records>
 
@@ -21,7 +21,7 @@
              prefix="plone.app.querystring.operation.int.is">
         <value key="title">Equals</value>
         <value key="description"></value>
-        <value key="operation">plone.app.querystring.queryparser:_equal</value>
+        <value key="operation">plone.app.querystring.queryparser._equal</value>
         <value key="widget">StringWidget</value>
     </records>
 
@@ -29,7 +29,7 @@
              prefix="plone.app.querystring.operation.int.lessThan">
         <value key="title">Less than</value>
         <value key="description"></value>
-        <value key="operation">plone.app.querystring.queryparser:_lessThan</value>
+        <value key="operation">plone.app.querystring.queryparser._lessThan</value>
         <value key="widget">StringWidget</value>
     </records>
 
@@ -37,7 +37,7 @@
              prefix="plone.app.querystring.operation.int.largerThan">
         <value key="title">Larger than</value>
         <value key="description"></value>
-        <value key="operation">plone.app.querystring.queryparser:_largerThan</value>
+        <value key="operation">plone.app.querystring.queryparser._largerThan</value>
         <value key="widget">StringWidget</value>
     </records>
 
@@ -45,7 +45,7 @@
              prefix="plone.app.querystring.operation.date.lessThan">
         <value key="title">Before date</value>
         <value key="description">Please use YYYY/MM/DD.</value>
-        <value key="operation">plone.app.querystring.queryparser:_lessThan</value>
+        <value key="operation">plone.app.querystring.queryparser._lessThan</value>
         <value key="widget">DateWidget</value>
     </records>
 
@@ -53,7 +53,7 @@
              prefix="plone.app.querystring.operation.date.largerThan">
         <value key="title">After date</value>
         <value key="description">Please use YYYY/MM/DD.</value>
-        <value key="operation">plone.app.querystring.queryparser:_largerThan</value>
+        <value key="operation">plone.app.querystring.queryparser._largerThan</value>
         <value key="widget">DateWidget</value>
     </records>
 
@@ -61,7 +61,7 @@
              prefix="plone.app.querystring.operation.date.between">
         <value key="title">Between dates</value>
         <value key="description">Please use YYYY/MM/DD.</value>
-        <value key="operation">plone.app.querystring.queryparser:_between</value>
+        <value key="operation">plone.app.querystring.queryparser._between</value>
         <value key="widget">DateRangeWidget</value>
     </records>
 
@@ -69,7 +69,7 @@
              prefix="plone.app.querystring.operation.date.lessThanRelativeDate">
         <value key="title">More recently than</value>
         <value key="description"></value>
-        <value key="operation">plone.app.querystring.queryparser:_lessThanRelativeDate</value>
+        <value key="operation">plone.app.querystring.queryparser._lessThanRelativeDate</value>
         <value key="widget">DateWidget</value>
     </records>
 
@@ -77,7 +77,7 @@
              prefix="plone.app.querystring.operation.date.largerThanRelativeDate">
         <value key="title">Older than</value>
         <value key="description">Please use YYYY/MM/DD.</value>
-        <value key="operation">plone.app.querystring.queryparser:_moreThanRelativeDate</value>
+        <value key="operation">plone.app.querystring.queryparser._moreThanRelativeDate</value>
         <value key="widget">DateWidget</value>
     </records>
 
@@ -85,7 +85,7 @@
              prefix="plone.app.querystring.operation.list.contains">
         <value key="title">Contains</value>
         <value key="description"></value>
-        <value key="operation">plone.app.querystring.queryparser:_contains</value>
+        <value key="operation">plone.app.querystring.queryparser._contains</value>
         <value key="widget">ReferenceWidget</value>
     </records>
 
@@ -93,7 +93,7 @@
              prefix="plone.app.querystring.operation.path.isWithin">
         <value key="title">Is within</value>
         <value key="description"></value>
-        <value key="operation">plone.app.querystring.queryparser:_pathContains</value>
+        <value key="operation">plone.app.querystring.queryparser._pathContains</value>
         <value key="widget">ReferenceWidget</value>
     </records>
 
@@ -101,7 +101,7 @@
              prefix="plone.app.querystring.operation.path.isWithinRelative">
         <value key="title">Is within (relative)</value>
         <value key="description"></value>
-        <value key="operation">plone.app.querystring.queryparser:_pathContainsRelative</value>
+        <value key="operation">plone.app.querystring.queryparser._pathContainsRelative</value>
         <value key="widget">RelativePathWidget</value>
     </records>
 
@@ -109,7 +109,7 @@
              prefix="plone.app.querystring.operation.reference.is">
         <value key="title">Equals</value>
         <value key="description"></value>
-        <value key="operation">plone.app.querystring.queryparser:_referenceIs</value>
+        <value key="operation">plone.app.querystring.queryparser._referenceIs</value>
         <value key="widget">ReferenceWidget</value>
     </records>
 
@@ -117,7 +117,7 @@
              prefix="plone.app.querystring.operation.string.contains">
         <value key="title">Contains</value>
         <value key="description"></value>
-        <value key="operation">plone.app.querystring.queryparser:_contains</value>
+        <value key="operation">plone.app.querystring.queryparser._contains</value>
         <value key="widget">StringWidget</value>
     </records>
 
@@ -125,7 +125,7 @@
              prefix="plone.app.querystring.operation.string.currentUser">
         <value key="title">Current logged in user</value>
         <value key="description">The user viewing the querystring results</value>
-        <value key="operation">plone.app.querystring.queryparser:_currentUser</value>
+        <value key="operation">plone.app.querystring.queryparser._currentUser</value>
         <value key="widget"></value>
     </records>
 
@@ -133,7 +133,7 @@
              prefix="plone.app.querystring.operation.string.is">
         <value key="title">Is</value>
         <value key="description">Tip: you can use * to autocomplete.</value>
-        <value key="operation">plone.app.querystring.queryparser:_equal</value>
+        <value key="operation">plone.app.querystring.queryparser._equal</value>
         <value key="widget">StringWidget</value>
     </records>
 
@@ -141,7 +141,7 @@
              prefix="plone.app.querystring.operation.selection.is">
         <value key="title">Is</value>
         <value key="description">Tip: you can use * to autocomplete.</value>
-        <value key="operation">plone.app.querystring.queryparser:_equal</value>
+        <value key="operation">plone.app.querystring.queryparser._equal</value>
         <value key="widget">MultipleSelectionWidget</value>
     </records>
 
@@ -149,7 +149,7 @@
              prefix="plone.app.querystring.operation.string.path">
         <value key="title">Path (URL)</value>
         <value key="description">Location in the site structure</value>
-        <value key="operation">plone.app.querystring.queryparser:_path</value>
+        <value key="operation">plone.app.querystring.queryparser._path</value>
         <value key="widget">ReferenceWidget</value>
     </records>
 
@@ -157,7 +157,7 @@
              prefix="plone.app.querystring.operation.string.relativePath">
         <value key="title">Relative site path</value>
         <value key="description"></value>
-        <value key="operation">plone.app.querystring.queryparser:_relativePath</value>
+        <value key="operation">plone.app.querystring.queryparser._relativePath</value>
         <value key="widget">RelativePathWidget</value>
     </records>
 

@@ -74,10 +74,10 @@ class TestQueryParserBase(unittest.TestCase):
 
         self.setFunctionForOperation(
             'plone.app.querystring.operation.string.is.operation',
-            'plone.app.querystring.queryparser:_equal')
+            'plone.app.querystring.queryparser._equal')
         self.setFunctionForOperation(
             'plone.app.querystring.operation.string.path.operation',
-            'plone.app.querystring.queryparser:_path')
+            'plone.app.querystring.queryparser._path')
 
     def setFunctionForOperation(self, operation, function):
         function_field = field.ASCIILine(title=u"Operator")
