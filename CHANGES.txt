@@ -1,8 +1,8 @@
 Changelog
 =========
 
-2.0.3 - unreleased
-------------------
+2.1 - 2011-02-10
+----------------
 
 - Remove "Discussion Item" from BAD_TYPES vocabulary.
   [timo]
