@@ -42,6 +42,8 @@ class AllowableContentTypesVocabulary(object):
     def __call__(self, context):
         site = getSite()
         items = list(getAllowableContentTypes(site))
+        if 'text/x-plone-outputfilters-html' in items:
+            items.remove('text/x-plone-outputfilters-html')
         items.sort()
         items = [SimpleTerm(i, i, i) for i in items]
         return SimpleVocabulary(items)
