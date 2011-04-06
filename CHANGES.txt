@@ -4,6 +4,9 @@ Changelog
 2.1.2 - Unreleased
 ------------------
 
+- Transitions vocabulary is translated.
+  [thomasdesvenain]
+
 2.1.1 - 2011-03-02
 ------------------
 
