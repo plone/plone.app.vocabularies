@@ -178,7 +178,8 @@ class WorkflowTransitionsVocabulary(object):
             wf_name = wf.title or wf.id
             if transition_folder is not None:
                 for transition in transition_folder.values():
-                    transition_title = transition.actbox_name
+                    transition_title = translate(_(transition.actbox_name),
+                                                 context=wtool.REQUEST)
                     transitions.setdefault(transition.id, []).append(
                         dict(title=transition_title, wf_name=wf_name))
         items = []
