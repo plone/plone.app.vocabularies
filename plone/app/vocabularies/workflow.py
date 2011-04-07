@@ -162,7 +162,7 @@ class WorkflowTransitionsVocabulary(object):
 
       >>> pub = transitions.by_token['publish']
       >>> pub.title, pub.token, pub.value
-      ('Publish [publish]', 'publish', 'publish')
+      (u'Publish [publish]', 'publish', 'publish')
     """
     implements(IVocabularyFactory)
 
@@ -178,17 +178,20 @@ class WorkflowTransitionsVocabulary(object):
             wf_name = wf.title or wf.id
             if transition_folder is not None:
                 for transition in transition_folder.values():
-                    transition_title = translate(_(transition.actbox_name),
-                                                 context=wtool.REQUEST)
+                    transition_title = translate(
+                                        _(transition.actbox_name),
+                                        context=aq_get(wtool, 'REQUEST', None))
                     transitions.setdefault(transition.id, []).append(
                         dict(title=transition_title, wf_name=wf_name))
         items = []
-        for transition_id, info in transitions.items():
+        transition_items = transitions.items()
+        transition_items.sort(key=lambda transition: transition[0])
+        for transition_id, info in transition_items:
             titles = set([i['title'] for i in info])
             item_title = ' // '.join(sorted(titles))
             item_title = "%s [%s]" % (item_title, transition_id)
             items.append(SimpleTerm(transition_id, transition_id, item_title))
 
-        return SimpleVocabulary(sorted(items))
+        return SimpleVocabulary(items)
 
 WorkflowTransitionsVocabularyFactory = WorkflowTransitionsVocabulary()
