@@ -1,12 +1,15 @@
+from Acquisition import aq_get
 from zope.interface import implements
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleVocabulary
 from zope.schema.vocabulary import SimpleTerm
 from zope.site.hooks import getSite
+from zope.i18n import translate
 
 from Products.Archetypes.mimetype_utils import getAllowableContentTypes
 from Products.Archetypes.mimetype_utils import getAllowedContentTypes
 from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.utils import normalizeString
 
 
 class AllowableContentTypesVocabulary(object):
@@ -122,7 +125,7 @@ class PortalTypesVocabulary(object):
 
       >>> doc = types.by_token['Document']
       >>> doc.title, doc.token, doc.value
-      ('Page', 'Document', 'Document')
+      (u'Page', 'Document', 'Document')
     """
     implements(IVocabularyFactory)
 
@@ -131,7 +134,9 @@ class PortalTypesVocabulary(object):
         ttool = getToolByName(site, 'portal_types', None)
         if ttool is None:
             return SimpleVocabulary([])
-        items = [(ttool[t].Title(), t)
+
+        request = aq_get(ttool, 'REQUEST', None)
+        items = [(translate(ttool[t].Title(), context=request), t)
                  for t in ttool.listContentTypes()]
         items.sort()
         items = [SimpleTerm(i[1], i[1], i[0]) for i in items]
@@ -168,7 +173,7 @@ class UserFriendlyTypesVocabulary(object):
 
       >>> doc = types.by_token['Document']
       >>> doc.title, doc.token, doc.value
-      ('Page', 'Document', 'Document')
+      (u'Page', 'Document', 'Document')
     """
     implements(IVocabularyFactory)
 
@@ -178,7 +183,9 @@ class UserFriendlyTypesVocabulary(object):
         ttool = getToolByName(site, 'portal_types', None)
         if ptool is None or ttool is None:
             return SimpleVocabulary([])
-        items = [(ttool[t].Title(), t)
+
+        request = aq_get(ttool, 'REQUEST', None)
+        items = [(translate(ttool[t].Title(), context=request), t)
                  for t in ptool.getUserFriendlyTypes()]
         items.sort()
         items = [SimpleTerm(i[1], i[1], i[0]) for i in items]
@@ -190,8 +197,8 @@ UserFriendlyTypesVocabularyFactory = UserFriendlyTypesVocabulary()
 BAD_TYPES = ("ATBooleanCriterion", "ATDateCriteria", "ATDateRangeCriterion",
              "ATListCriterion", "ATPortalTypeCriterion", "ATReferenceCriterion",
              "ATSelectionCriterion", "ATSimpleIntCriterion", "Plone Site",
-             "ATSimpleStringCriterion", "ATSortCriterion", "TempFolder", 
-             "ATCurrentAuthorCriterion", "ATPathCriterion", 
+             "ATSimpleStringCriterion", "ATSortCriterion", "TempFolder",
+             "ATCurrentAuthorCriterion", "ATPathCriterion",
              "ATRelativePathCriterion", )
 
 
@@ -220,7 +227,7 @@ class ReallyUserFriendlyTypesVocabulary(object):
 
       >>> doc = types.by_token['Document']
       >>> doc.title, doc.token, doc.value
-      ('Page', 'Document', 'Document')
+      (u'Page', 'Document', 'Document')
     """
     implements(IVocabularyFactory)
 
@@ -229,9 +236,13 @@ class ReallyUserFriendlyTypesVocabulary(object):
         ttool = getToolByName(site, 'portal_types', None)
         if ttool is None:
             return SimpleVocabulary([])
-        items = [SimpleTerm(t, t, ttool[t].Title())
+
+        request = aq_get(ttool, 'REQUEST', None)
+        items = [(translate(ttool[t].Title(), context=request), t)
                  for t in ttool.listContentTypes()
                  if t not in BAD_TYPES]
+        items.sort()
+        items = [SimpleTerm(i[1], i[1], i[0]) for i in items]
         return SimpleVocabulary(items)
 
 ReallyUserFriendlyTypesVocabularyFactory = ReallyUserFriendlyTypesVocabulary()

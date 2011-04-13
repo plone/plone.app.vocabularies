@@ -4,6 +4,9 @@ Changelog
 2.1.2 - Unreleased
 ------------------
 
+- Types vocabularies are sorted by translated titles.
+  [thomasdesvenain]
+
 - Add MANIFEST.in.
   [WouterVH]
 
