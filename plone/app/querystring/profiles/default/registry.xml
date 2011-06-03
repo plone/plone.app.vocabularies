@@ -302,7 +302,7 @@
              prefix="plone.app.querystring.field.getRawRelatedItems">
         <value key="title">Related To</value>
         <value key="description">Find items related to the selected items</value>
-        <value key="enabled">True</value>
+        <value key="enabled">False</value>
         <value key="sortable">False</value>
         <value key="operations">
             <element>plone.app.querystring.operation.reference.is</element>
