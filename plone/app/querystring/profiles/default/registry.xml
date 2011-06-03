@@ -147,7 +147,7 @@
 
     <records interface="plone.app.querystring.interfaces.IQueryOperation"
              prefix="plone.app.querystring.operation.string.path">
-        <value key="title">Path (URL)</value>
+        <value key="title">Absolute path</value>
         <value key="description">Location in the site structure</value>
         <value key="operation">plone.app.querystring.queryparser._path</value>
         <value key="widget">ReferenceWidget</value>
@@ -155,8 +155,8 @@
 
     <records interface="plone.app.querystring.interfaces.IQueryOperation"
              prefix="plone.app.querystring.operation.string.relativePath">
-        <value key="title">Relative site path</value>
-        <value key="description"></value>
+        <value key="title">Relative path</value>
+        <value key="description">Use '../' to navigate to parent objects.</value>
         <value key="operation">plone.app.querystring.queryparser._relativePath</value>
         <value key="widget">RelativePathWidget</value>
     </records>
