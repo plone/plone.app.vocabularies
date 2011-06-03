@@ -218,11 +218,12 @@ def _path(context, row):
 # query.o:records=plone.app.querystring.operation.string.relativePath&
 # query.v:records=../
 def _relativePath(context, row):
-    t = len([x for x in row.values.split('/') if x])
-
+    # Walk up the tree untill we reach a navigationroot, or the root is reached
     obj = context
-    for x in xrange(t):
-        obj = aq_parent(obj)
+    for x in [x for x in row.values.split('/') if x]:
+        parent = aq_parent(obj)
+        if parent:
+            obj = parent
         if INavigationRoot.providedBy(obj):
             break
 
