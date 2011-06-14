@@ -79,6 +79,7 @@ class QuerystringRegistryReader(object):
         return values
 
     def mapSortableIndexes(self, values):
+        """Map sortable indexes"""
         sortables = {}
         for key, field in values.get('%s.field' % self.prefix).iteritems():
             if field['sortable']:
@@ -87,6 +88,9 @@ class QuerystringRegistryReader(object):
         return values
 
     def __call__(self):
+        """Get values from registry, map the operations and indexes,
+           and return them
+        """
         indexes = self.parseRegistry()
         indexes = self.getVocabularyValues(indexes)
         indexes = self.mapOperations(indexes)
