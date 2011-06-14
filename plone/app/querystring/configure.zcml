@@ -11,9 +11,9 @@
 
   <genericsetup:registerProfile
     name="default"
-    title="Querystring"
+    title="Querystring parser/builder"
     directory="profiles/default"
-    description="Add querystring functionality"
+    description="Querystring parser and builder, building block and transformer for the new style collections"
     provides="Products.GenericSetup.interfaces.EXTENSION"
     />
 
