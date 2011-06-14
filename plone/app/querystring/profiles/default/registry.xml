@@ -76,7 +76,7 @@
     <records interface="plone.app.querystring.interfaces.IQueryOperation"
              prefix="plone.app.querystring.operation.date.largerThanRelativeDate">
         <value key="title">Older than</value>
-        <value key="description">Please use YYYY/MM/DD.</value>
+        <value key="description">Please enter the number in days.</value>
         <value key="operation">plone.app.querystring.queryparser._moreThanRelativeDate</value>
         <value key="widget">DateWidget</value>
     </records>
