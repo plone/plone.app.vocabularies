@@ -1,6 +1,5 @@
-from collections import namedtuple
-
 from Acquisition import aq_parent
+from collections import namedtuple
 from DateTime import DateTime
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
@@ -17,11 +16,13 @@ Row = namedtuple('Row', ['index', 'operator', 'values'])
 
 
 def parseFormquery(context, formquery, sort_on=None, sort_order=None):
+    """Parse the formquery"""
     if not formquery:
         return {}
+    # Get the registry
     reg = getUtility(IRegistry)
 
-    # make sure the things in formquery are dicts, not crazy things
+    # Make sure the things in formquery are dictionaries
     formquery = map(dict, formquery)
 
     query = {}
@@ -58,31 +59,20 @@ def parseFormquery(context, formquery, sort_on=None, sort_order=None):
             "Using empty query because there are no valid indexes used.")
         return {}
 
-    # sorting
+    # Add sorting (sort_on and sort_oreder) to the query
     if sort_on:
         query['sort_on'] = sort_on
     if sort_order:
         query['sort_order'] = sort_order
 
-    logger.debug("Generated query: %s" % query)
-
     return query
 
 
-# operators
+# Query operators
 def _contains(context, row):
     return _equal(context, row)
 
 
-# http://localhost:8080/Plone/@@querybuilder_html_results?
-# query.i:records=Creator&
-# query.o:records=plone.app.querystring.operation.string.is&
-# query.v:records=admin
-#
-# http://localhost:8080/Plone/@@querybuilder_html_results?
-# query.i:records=Creator&
-# query.o:records=plone.app.querystring.operation.string.is&
-# query.v:records=joshenken
 def _equal(context, row):
     return {row.index: {'query': row.values, }}
 
@@ -95,10 +85,6 @@ def _isFalse(context, row):
     return {row.index: {'query': False, }}
 
 
-# http://localhost:8080/Plone/@@querybuilder_html_results?
-# query.i:records=modified&
-# query.o:records=plone.app.querystring.operation.date.between&
-# query.v:records:list=2010/03/18&query.v:records:list=2010/03/19
 def _between(context, row):
     tmp = {row.index: {
               'query': sorted(row.values),
@@ -108,10 +94,6 @@ def _between(context, row):
     return tmp
 
 
-# http://localhost:8080/Plone/@@querybuilder_html_results?
-# query.i:records=modified&
-# query.o:records=plone.app.querystring.operation.date.largerThan&
-# query.v:records=2010/03/18
 def _largerThan(context, row):
     tmp = {row.index: {
               'query': row.values,
@@ -121,10 +103,6 @@ def _largerThan(context, row):
     return tmp
 
 
-# http://localhost:8080/Plone/@@querybuilder_html_results?
-# query.i:records=modified&
-# query.o:records=plone.app.querystring.operation.date.lessThan&
-# query.v:records=2010/03/18
 def _lessThan(context, row):
     tmp = {row.index: {
               'query': row.values,
@@ -134,10 +112,8 @@ def _lessThan(context, row):
     return tmp
 
 
-# http://localhost:8080/Plone/@@querybuilder_html_results?
-# query.i:records=Creator&
-# query.o:records=plone.app.querystring.operation.string.currentUser
 def _currentUser(context, row):
+    """Current user lookup"""
     mt = getToolByName(context, 'portal_membership')
     user = mt.getAuthenticatedMember()
     username = user.getUserName()
@@ -148,16 +124,8 @@ def _currentUser(context, row):
           }
 
 
-# http://localhost:8080/Plone/@@querybuilder_html_results?
-# query.i:records=modified&
-# query.o:records=plone.app.querystring.operation.date.lessThanRelativeDate&
-# query.v:records=-1
-# http://localhost:8080/Plone/@@querybuilder_html_results?
-# query.i:records=modified&
-# query.o:records=plone.app.querystring.operation.date.lessThanRelativeDate&
-# query.v:records=1
 def _lessThanRelativeDate(context, row):
-    # values is the number of days
+    # INFO: Values is the number of days
     values = int(row.values)
 
     now = DateTime()
@@ -171,15 +139,8 @@ def _lessThanRelativeDate(context, row):
     return _lessThan(context, row)
 
 
-# http://localhost:8080/Plone/@@querybuilder_html_results?
-# query.i:records=modified&
-# query.o:records=plone.app.querystring.operation.date.moreThanRelativeDate&
-# query.v:records=-1
-# http://localhost:8080/Plone/@@querybuilder_html_results?
-# query.i:records=modified&
-# query.o:records=plone.app.querystring.operation.date.moreThanRelativeDate&
-# query.v:records=1
 def _moreThanRelativeDate(context, row):
+    # INFO: Values is the number of days
     values = int(row.values)
 
     now = DateTime()
@@ -193,30 +154,17 @@ def _moreThanRelativeDate(context, row):
     return _largerThan(context, row)
 
 
-# http://localhost:8080/Plone/@@querybuilder_html_results?
-# query.i:records=path&
-# query.o:records=plone.app.querystring.operation.string.path&
-# query.v:records=/Plone/news/
-# http://localhost:8080/Plone/@@querybuilder_html_results?
-# query.i:records=path&
-# query.o:records=plone.app.querystring.operation.string.path&
-# query.v:records=718f66a14bda3688d64bb36309e0d76e
 def _path(context, row):
     values = row.values
 
-    # UID
     if not '/' in values:
+        # It must be a UID
         values = '/'.join(getPathByUID(context, values))
 
     tmp = {row.index: {'query': values, }}
-
     return tmp
 
 
-# http://localhost:8080/Plone/news/aggregator/@@querybuilder_html_results?
-# query.i:records=path&
-# query.o:records=plone.app.querystring.operation.string.relativePath&
-# query.v:records=../
 def _relativePath(context, row):
     # Walk up the tree untill we reach a navigationroot, or the root is reached
     obj = context
@@ -237,11 +185,9 @@ def _relativePath(context, row):
 # Helper functions
 def getPathByUID(context, uid):
     """Returns the path of an object specified by UID"""
-
     reference_tool = getToolByName(context, 'reference_catalog')
     obj = reference_tool.lookupObject(uid)
 
     if obj:
         return obj.getPhysicalPath()
-
     return ""
