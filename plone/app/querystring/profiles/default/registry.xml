@@ -188,19 +188,6 @@
     </records>
 
     <records interface="plone.app.querystring.interfaces.IQueryField"
-             prefix="plone.app.querystring.field.allowedRolesAndUsers">
-       <value key="title">Allowed Roles and Users</value>
-       <value key="description">The roles and users with View permission on an item</value>
-       <value key="enabled">True</value>
-       <value key="sortable">False</value>
-       <value key="operations">
-           <element>plone.app.querystring.operation.string.is</element>
-           <element>plone.app.querystring.operation.string.isCurrentUser</element>
-       </value>
-       <value key="group">Metadata</value>
-    </records>
-
-    <records interface="plone.app.querystring.interfaces.IQueryField"
              prefix="plone.app.querystring.field.created">
        <value key="title">Creation date</value>
        <value key="description">The date an item was created</value>
