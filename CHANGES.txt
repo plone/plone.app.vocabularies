@@ -1,8 +1,14 @@
 Changelog
 =========
 
+
 2.1.3 - Unreleased
 ------------------
+
+- Roles vocabulary is translated and sorted by translated role id.
+  Fixes http://dev.plone.org/plone/ticket/11958.
+  [WouterVH]
+
 
 2.1.2 - 2011-04-21
 ------------------
