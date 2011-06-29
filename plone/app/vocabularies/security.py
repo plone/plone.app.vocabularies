@@ -1,10 +1,15 @@
+from zope.i18n import translate
+from zope.i18nmessageid import MessageFactory
 from zope.interface import implements
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 from zope.site.hooks import getSite
 
+from Acquisition import aq_get
 from Products.CMFCore.utils import getToolByName
+
+PMF = MessageFactory('plone')
 
 
 class RolesVocabulary(object):
@@ -36,18 +41,24 @@ class RolesVocabulary(object):
 
       >>> manager = roles.by_token['Manager']
       >>> manager.title, manager.token, manager.value
-      ('Manager', 'Manager', 'Manager')
+      (u'Manager', 'Manager', 'Manager')
     """
     implements(IVocabularyFactory)
 
     def __call__(self, context):
-        items = []
         site = getSite()
         mtool = getToolByName(site, 'portal_membership', None)
-        if mtool is not None:
-            items = list(mtool.getPortalRoles())
-            items.sort()
-            items = [SimpleTerm(i, i, i) for i in items]
+        if mtool is None:
+            return SimpleVocabulary([])
+
+        items = []
+        request = aq_get(mtool, 'REQUEST', None)
+        roles = mtool.getPortalRoles()
+        for role_id in roles:
+            role_title = translate(PMF(role_id), context=request)
+            items.append(SimpleTerm(role_id, role_id, role_title))
+
+        items.sort(key=lambda x: x.title)
         return SimpleVocabulary(items)
 
 RolesVocabularyFactory = RolesVocabulary()
