@@ -9,7 +9,7 @@ from zope.site.hooks import getSite
 from Acquisition import aq_get
 from Products.CMFCore.utils import getToolByName
 
-_ = MessageFactory('plone')
+PMF = MessageFactory('plone')
 
 
 class RolesVocabulary(object):
@@ -55,7 +55,7 @@ class RolesVocabulary(object):
         request = aq_get(mtool, 'REQUEST', None)
         roles = mtool.getPortalRoles()
         for role_id in roles:
-            role_title = translate(_(role_id), context=request)
+            role_title = translate(PMF(role_id), context=request)
             items.append(SimpleTerm(role_id, role_id, role_title))
 
         items.sort(key=lambda x: x.title)
