@@ -1,3 +1,5 @@
+from operator import attrgetter
+
 from zope.i18n import translate
 from zope.i18nmessageid import MessageFactory
 from zope.interface import implements
@@ -58,7 +60,7 @@ class RolesVocabulary(object):
             role_title = translate(PMF(role_id), context=request)
             items.append(SimpleTerm(role_id, role_id, role_title))
 
-        items.sort(key=lambda x: x.title)
+        items.sort(key=attrgetter('title'))
         return SimpleVocabulary(items)
 
 RolesVocabularyFactory = RolesVocabulary()
