@@ -74,8 +74,8 @@ def parse_query(query, path_prefix=""):
     text = " ".join(query['SearchableText'])
     for char in '?-+*()':
         text = text.replace(char, ' ')
-    query['SearchableText'] = " AND ".join(x+"*" for x in text.split())
-    if query.has_key('path'):
+    query['SearchableText'] = " AND ".join(x + "*" for x in text.split())
+    if 'path' in query:
         if query['SearchableText'] == '':
             del query['SearchableText']
             query["path"]["depth"] = 1
@@ -170,7 +170,7 @@ class SearchableTextSource(object):
         except ParseError:
             return []
 
-        if query.has_key('path'):
+        if 'path' in query:
             path = query['path']['query'][len(self.portal_path):]
             if path != '':
                 return itertools.chain((path, ), results)
@@ -348,25 +348,26 @@ class QuerySearchableTextSourceView(object):
         query = ''
 
         # check whether the normal search button was pressed
-        if name+".search" in self.request.form:
-            query_fieldname = name+".query"
+        if name + ".search" in self.request.form:
+            query_fieldname = name + ".query"
             if query_fieldname in self.request.form:
                 query = self.request.form[query_fieldname]
 
         # check whether a browse button was pressed
-        browse_prefix = name+".browse."
+        browse_prefix = name + ".browse."
         browse = tuple(x for x in self.request.form
                        if x.startswith(browse_prefix))
         if len(browse) == 1:
             path = browse[0][len(browse_prefix):]
             query = "path:" + path
             results = self.context.search(query)
-            if name+".omitbrowsedfolder" in self.request.form:
+            if name + ".omitbrowsedfolder" in self.request.form:
                 results = itertools.ifilter(lambda x: x != path, results)
         else:
             results = self.context.search(query)
 
         return results
+
 
 class KeywordsVocabulary(object):
     """Vocabulary factory listing all catalog keywords from the "Subject" index
@@ -403,4 +404,3 @@ class KeywordsVocabulary(object):
         return SimpleVocabulary(items)
 
 KeywordsVocabularyFactory = KeywordsVocabulary()
-

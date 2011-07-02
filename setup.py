@@ -21,7 +21,7 @@ setup(name='plone.app.vocabularies',
       url='http://pypi.python.org/pypi/plone.app.vocabularies',
       license='GPL version 2',
       packages=find_packages(exclude=['ez_setup']),
-      namespace_packages = ['plone', 'plone.app'],
+      namespace_packages=['plone', 'plone.app'],
       include_package_data=True,
       zip_safe=False,
       extras_require=dict(

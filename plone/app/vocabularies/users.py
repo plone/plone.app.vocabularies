@@ -147,8 +147,8 @@ class UsersSourceQueryView(object):
 
     def results(self, name):
         # check whether the normal search button was pressed
-        if name+".search" in self.request.form:
-            query_fieldname = name+".query"
+        if name + ".search" in self.request.form:
+            query_fieldname = name + ".query"
             if query_fieldname in self.request.form:
                 query = self.request.form[query_fieldname]
                 if query != '':

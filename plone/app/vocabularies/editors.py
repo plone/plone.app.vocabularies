@@ -9,6 +9,7 @@ from Products.CMFCore.utils import getToolByName
 
 _ = MessageFactory('plone')
 
+
 class AvailableEditorsVocabulary(object):
     """Vocabulary factory for available editors in the portal.
 

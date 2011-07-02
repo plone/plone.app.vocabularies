@@ -9,7 +9,6 @@ from zope.i18n import translate
 from Products.Archetypes.mimetype_utils import getAllowableContentTypes
 from Products.Archetypes.mimetype_utils import getAllowedContentTypes
 from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone.utils import normalizeString
 
 
 class AllowableContentTypesVocabulary(object):
