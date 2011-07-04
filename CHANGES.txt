@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.1.3 - Unreleased
+2.1.3 - 2011-07-04
 ------------------
 
 - Roles vocabulary is translated and sorted by translated role id.
