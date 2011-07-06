@@ -8,6 +8,7 @@
 
   <include package="plone.app.contentlisting" />
   <include package="plone.app.registry" />
+  <include package="plone.app.search" />
 
   <genericsetup:registerProfile
     name="default"

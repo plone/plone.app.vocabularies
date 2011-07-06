@@ -59,7 +59,7 @@ class QueryBuilder(BrowserView):
             return IContentListing([])
 
         return getMultiAdapter((self.context, self.request),
-            name='searchResults')(query=parsedquery)
+            name='search').results(query=parsedquery, batch=False)
 
     def number_of_results(self, query):
         """Get the number of results"""
