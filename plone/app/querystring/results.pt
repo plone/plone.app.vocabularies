@@ -1,25 +1,32 @@
-<!-- this is used for previewing the search results of plone.app.collection (in the selection screen)
-     the html snippet is loaded in directly so that is why there are no <html> and <body> tags -->
+<tal:comment replace="nothing">
+    this is used for previewing the search results of plone.app.collection (in
+    the selection screen). the html snippet is loaded in directly so that is why
+    there are no html and body tags
+</tal:comment
 <div tal:define="results context;
                  original_context nocall:options/original_context|nocall:context;
                  toLocalizedTime nocall:original_context/@@plone/toLocalizedTime;
-                 pas_member original_context/@@pas_member">
+                 pas_member original_context/@@pas_member"
+    i18n:domain="plone">
+
     <h2 class="searchResultsHeading">
-        <span>
-            Search results
-        </span>
-        <span class="discreet">
-            &mdash;
-            <span><tal:count content="python:len(results)">1</tal:count> items matching your search terms</span>
-        </span>
+        Search results
     </h2>
 
-    <div tal:condition="not: results">
-        <p><strong i18n:translate="description_no_results_found">No results were found.</strong></p>
-    </div>
+    <span i18n:translate="batch_x_items_matching_your_criteria">
+        <strong i18n:name="number" id="search-results-number"
+                tal:content="python:len(results)">234</strong>
+        items matching your search terms.
+    </span>
 
-    <div tal:condition="results">
-        <dl class="searchResults">
+    <div id="search-results">
+        <p tal:condition="not: results">
+            <strong i18n:translate="description_no_results_found">
+                No results were found.
+            </strong>
+        </p>
+
+        <dl class="searchResults" tal:condition="results">
             <tal:results repeat="item results">
                 <tal:entry tal:define="author python:pas_member.info(item.Creator())">
                     <dt>
