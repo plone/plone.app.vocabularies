@@ -2,7 +2,7 @@
     this is used for previewing the search results of plone.app.collection (in
     the selection screen). the html snippet is loaded in directly so that is why
     there are no html and body tags
-</tal:comment
+</tal:comment>
 <div tal:define="results context;
                  original_context nocall:options/original_context|nocall:context;
                  toLocalizedTime nocall:original_context/@@plone/toLocalizedTime;
