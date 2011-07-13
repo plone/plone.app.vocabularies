@@ -2,6 +2,8 @@ import json
 
 from plone.app.contentlisting.interfaces import IContentListing
 from plone.registry.interfaces import IRegistry
+from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.browser.navtree import getNavigationRoot
 from zope.component import getMultiAdapter, getUtility
 from zope.i18n import translate
 from zope.publisher.browser import BrowserView
@@ -25,12 +27,13 @@ class QueryBuilder(BrowserView):
         super(QueryBuilder, self).__init__(context, request)
         self._results = None
 
-    def __call__(self, query, sort_on=None, sort_order=None):
+    def __call__(self, query, sort_on=None, sort_order=None, limit=0):
         """If there are results, make the query and return the results"""
         if self._results is None:
             self._results = self._makequery(query=query,
                                             sort_on=sort_on,
-                                            sort_order=sort_order)
+                                            sort_order=sort_order,
+                                            limit=limit)
         return self._results
 
     def html_results(self, query):
@@ -43,15 +46,22 @@ class QueryBuilder(BrowserView):
         return getMultiAdapter((results, self.request),
             name='display_query_results')(**options)
 
-    def _makequery(self, query=None, sort_on=None, sort_order=None):
+    def _makequery(self, query=None, sort_on=None, sort_order=None, limit=0):
         """Parse the (form)query and return using multi-adapter"""
         parsedquery = queryparser.parseFormquery(
             self.context, query, sort_on, sort_order)
         if not parsedquery:
             return IContentListing([])
 
-        return getMultiAdapter((self.context, self.request),
-            name='search').results(query=parsedquery, batch=False)
+        catalog = getToolByName(self.context, 'portal_catalog')
+        if limit:
+            parsedquery['sort_limit'] = limit
+        parsedquery['show_inactive'] = False
+        if 'path' not in parsedquery:
+            parsedquery['path'] = getNavigationRoot(self.context)
+
+        results = catalog(parsedquery)
+        return IContentListing(results)
 
     def number_of_results(self, query):
         """Get the number of results"""
@@ -62,10 +72,6 @@ class QueryBuilder(BrowserView):
 
 
 class RegistryConfiguration(BrowserView):
-
-    def __init__(self, context, request):
-        super(RegistryConfiguration, self).__init__(context, request)
-        self._results = None
 
     def __call__(self):
         """Return the registry configuration in JSON format"""
