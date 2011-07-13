@@ -297,20 +297,6 @@
        <value key="group">Metadata</value>
     </records>
 
-<!--
-    TODO What sort of operations will this need?
--->
-    <records interface="plone.app.querystring.interfaces.IQueryField"
-             prefix="plone.app.querystring.field.inReplyTo">
-        <value key="title">In Reply To</value>
-        <value key="description"></value>
-        <value key="enabled">False</value>
-        <value key="sortable">False</value>
-        <value key="operations">
-        </value>
-       <value key="group">Metadata</value>
-    </records>
-
     <records interface="plone.app.querystring.interfaces.IQueryField"
              prefix="plone.app.querystring.field.isDefaultPage">
         <value key="title">Default Page</value>
