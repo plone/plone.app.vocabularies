@@ -170,9 +170,8 @@ def _relativePath(context, row):
 
 def getPathByUID(context, uid):
     """Returns the path of an object specified by UID"""
-    reference_tool = getToolByName(context, 'reference_catalog')
-    obj = reference_tool.lookupObject(uid)
-
-    if obj:
-        return obj.getPhysicalPath()
-    return ""
+    catalog = getToolByName(context, 'portal_catalog')
+    brains = catalog.unrestrictedSearchResults(dict(UID=uid))
+    if brains:
+        return brains[0].getPath()
+    return ''
