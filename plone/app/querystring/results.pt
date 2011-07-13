@@ -9,10 +9,6 @@
                  pas_member original_context/@@pas_member"
     i18n:domain="plone">
 
-    <h2 class="searchResultsHeading">
-        Search results
-    </h2>
-
     <span i18n:translate="batch_x_items_matching_your_criteria">
         <strong i18n:name="number" id="search-results-number"
                 tal:content="python:len(results)">234</strong>
