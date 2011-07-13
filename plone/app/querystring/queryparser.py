@@ -1,14 +1,13 @@
-from Acquisition import aq_parent
 from collections import namedtuple
+import logging
+
+from Acquisition import aq_parent
 from DateTime import DateTime
+from plone.app.layout.navigation.interfaces import INavigationRoot
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
 from zope.component import getUtility
 from zope.dottedname.resolve import resolve
-
-from plone.app.layout.navigation.interfaces import INavigationRoot
-
-import logging
 
 logger = logging.getLogger('plone.app.querystring')
 
@@ -16,10 +15,8 @@ Row = namedtuple('Row', ['index', 'operator', 'values'])
 
 
 def parseFormquery(context, formquery, sort_on=None, sort_order=None):
-    """Parse the formquery"""
     if not formquery:
         return {}
-    # Get the registry
     reg = getUtility(IRegistry)
 
     # Make sure the things in formquery are dictionaries
@@ -27,7 +24,6 @@ def parseFormquery(context, formquery, sort_on=None, sort_order=None):
 
     query = {}
     for row in formquery:
-
         operator = row.get('o', None)
         function_path = reg["%s.operation" % operator]
 
@@ -38,10 +34,8 @@ def parseFormquery(context, formquery, sort_on=None, sort_order=None):
                   values=row.get('v', None))
 
         kwargs = {}
-
         parser = resolve(row.operator)
         kwargs = parser(context, row)
-
         query.update(kwargs)
 
     if not query:
@@ -59,16 +53,16 @@ def parseFormquery(context, formquery, sort_on=None, sort_order=None):
             "Using empty query because there are no valid indexes used.")
         return {}
 
-    # Add sorting (sort_on and sort_oreder) to the query
+    # Add sorting (sort_on and sort_order) to the query
     if sort_on:
         query['sort_on'] = sort_on
     if sort_order:
         query['sort_order'] = sort_order
-
     return query
 
 
 # Query operators
+
 def _contains(context, row):
     return _equal(context, row)
 
@@ -116,10 +110,8 @@ def _currentUser(context, row):
     """Current user lookup"""
     mt = getToolByName(context, 'portal_membership')
     user = mt.getAuthenticatedMember()
-    username = user.getUserName()
-
     return {row.index: {
-              'query': username,
+              'query': user.getUserName(),
               },
           }
 
@@ -127,48 +119,40 @@ def _currentUser(context, row):
 def _lessThanRelativeDate(context, row):
     # INFO: Values is the number of days
     values = int(row.values)
-
     now = DateTime()
     my_date = now + values
-
     my_date = my_date.earliestTime()
     row = Row(index=row.index,
               operator=row.operator,
               values=my_date)
-
     return _lessThan(context, row)
 
 
 def _moreThanRelativeDate(context, row):
     # INFO: Values is the number of days
     values = int(row.values)
-
     now = DateTime()
     my_date = now + values
-
     my_date = my_date.latestTime()
     row = Row(index=row.index,
               operator=row.operator,
               values=my_date)
-
     return _largerThan(context, row)
 
 
 def _path(context, row):
     values = row.values
-
     if not '/' in values:
         # It must be a UID
         values = '/'.join(getPathByUID(context, values))
-
     tmp = {row.index: {'query': values, }}
     return tmp
 
 
 def _relativePath(context, row):
-    # Walk up the tree untill we reach a navigationroot, or the root is reached
+    # Walk up the tree until we reach a navigation root, or the root is reached
     obj = context
-    for x in [x for x in row.values.split('/') if x]:
+    for x in [r for r in row.values.split('/') if r]:
         parent = aq_parent(obj)
         if parent:
             obj = parent
@@ -183,6 +167,7 @@ def _relativePath(context, row):
 
 
 # Helper functions
+
 def getPathByUID(context, uid):
     """Returns the path of an object specified by UID"""
     reference_tool = getToolByName(context, 'reference_catalog')
