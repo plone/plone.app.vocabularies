@@ -25,7 +25,6 @@ setup(name='plone.app.querystring',
           'setuptools',
           'plone.app.registry',
           'plone.app.contentlisting',
-          'plone.app.search',
           'plone.app.vocabularies',
       ],
       entry_points="""
