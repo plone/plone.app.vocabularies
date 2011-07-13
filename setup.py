@@ -1,25 +1,22 @@
 from setuptools import setup, find_packages
-import os
 
-version = '0.1'
-
-tests_require = ['collective.testcaselayer']
+version = '1.0'
 
 setup(name='plone.app.querystring',
       version=version,
       description="",
       long_description=open("README.txt").read() + "\n" +
-                       open(os.path.join("docs", "HISTORY.txt")).read(),
+                       open("CHANGES.txt").read(),
       classifiers=[
         "Framework :: Plone",
+        "License :: OSI Approved :: GNU General Public License (GPL)",
         "Programming Language :: Python",
-        "Topic :: Software Development :: Libraries :: Python Modules",
         ],
       keywords='',
-      author='Rob Gietema',
-      author_email='rob@fourdigits.nl',
-      url='http://plone.org',
-      license='GPL',
+      author='Plone Foundation',
+      author_email='plone-developers@lists.sourceforge.net',
+      url='http://pypi.python.org/pypi/plone.app.querystring',
+      license='GPL version 2',
       packages=find_packages(exclude=['ez_setup']),
       namespace_packages=['plone', 'plone.app'],
       include_package_data=True,
@@ -31,9 +28,8 @@ setup(name='plone.app.querystring',
           'plone.app.search',
           'plone.app.vocabularies',
       ],
-      tests_require=tests_require,
-      extras_require={'tests': tests_require},
       entry_points="""
-      # -*- Entry points: -*-
+      [z3c.autoinclude.plugin]
+      target = plone
       """,
       )

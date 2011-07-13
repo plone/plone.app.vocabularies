@@ -1,9 +1,11 @@
-from zope.schema.interfaces import IVocabularyFactory
+from operator import attrgetter
+
+from plone.registry.interfaces import IRegistry
 from zope.component import getUtility, adapts
 from zope.interface import implements
-from plone.registry.interfaces import IRegistry
-from interfaces import IQuerystringRegistryReader
-from operator import attrgetter
+from zope.schema.interfaces import IVocabularyFactory
+
+from .interfaces import IQuerystringRegistryReader
 
 
 class DottedDict(dict):

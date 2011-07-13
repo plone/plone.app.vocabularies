@@ -1,8 +1,7 @@
-=====================
-plone.app.querystring
-=====================
+Overview
+========
 
 This package provides an queryparser, querybuilder and extra helper tools,
 to parse stored queries to actual results, used in new style collections.
-It includes a registryreader which reads operators, values and criteria
-from the plone registry.
+It includes a registry reader which reads operators, values and criteria
+from the Plone registry.
