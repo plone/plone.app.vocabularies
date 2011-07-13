@@ -1,19 +1,18 @@
 import unittest
 
+from DateTime import DateTime
+from plone.app.layout.navigation.interfaces import INavigationRoot
 from plone.app.querystring import queryparser
 from plone.registry import field
 from plone.registry import Record
-
-from base import UnittestWithRegistryLayer
-from plone.app.querystring.queryparser import Row
-
 from zope.interface import directlyProvides
-from plone.app.layout.navigation.interfaces import INavigationRoot
 
-from DateTime import DateTime
+from .base import UnittestWithRegistryLayer
+from plone.app.querystring.queryparser import Row
 
 
 class MockObject(object):
+
     def __init__(self, uid, path):
         self.uid = uid
         self.path = path.split("/")
@@ -26,6 +25,7 @@ class MockObject(object):
 
 
 class MockCatalog(object):
+
     def lookupObject(self, uid):
         return MockObject(uid='00000000000000001', path="/site/foo")
 
@@ -41,6 +41,7 @@ class MockCatalog(object):
 
 
 class MockSite(object):
+
     def __init__(self, portal_membership=None):
         self.reference_catalog = MockCatalog()
         self.portal_catalog = MockCatalog()
@@ -48,6 +49,7 @@ class MockSite(object):
 
 
 class MockUser(object):
+
     def __init__(self, username=None):
         self.username = 'Anonymous User'
         if username:
@@ -58,6 +60,7 @@ class MockUser(object):
 
 
 class MockPortal_membership(object):
+
     def __init__(self, user):
         self.user = user
 
@@ -71,7 +74,6 @@ class TestQueryParserBase(unittest.TestCase):
 
     def setUp(self):
         super(TestQueryParserBase, self).setUp()
-
         self.setFunctionForOperation(
             'plone.app.querystring.operation.string.is.operation',
             'plone.app.querystring.queryparser._equal')
@@ -247,10 +249,3 @@ class TestQueryGenerators(TestQueryParserBase):
     def test_getPathByUID(self):
         actual = queryparser.getPathByUID(MockSite(), '00000000000000001')
         self.assertEqual(actual, ['', 'site', 'foo'])
-
-
-def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestQueryParser))
-    suite.addTest(unittest.makeSuite(TestQueryGenerators))
-    return suite

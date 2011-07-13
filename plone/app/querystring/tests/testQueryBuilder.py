@@ -1,7 +1,7 @@
 from zope.component import getMultiAdapter
 from zope.publisher.browser import TestRequest
 
-from base import QuerystringTestCase
+from .base import QuerystringTestCase
 
 
 class TestQuerybuilder(QuerystringTestCase):
@@ -28,7 +28,7 @@ class TestQuerybuilder(QuerystringTestCase):
 
     def testQueryBuilderHTML(self):
         results = self.querybuilder.html_results(self.query)
-        self.failUnless('Collectionstestpage' in results)
+        self.assertTrue('Collectionstestpage' in results)
 
     def testGettingConfiguration(self):
         res = self.folder.restrictedTraverse('@@querybuildernumberofresults')

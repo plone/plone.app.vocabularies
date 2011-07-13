@@ -1,15 +1,11 @@
-from plone.registry.interfaces import IRegistry
+from collective.testcaselayer import common
+from collective.testcaselayer import ptc as tcl_ptc
+from collective.testcaselayer.layer import Layer as BaseLayer
 from plone.registry import Registry
-from zope.component import getGlobalSiteManager
+from plone.registry.interfaces import IRegistry
 from Products.PloneTestCase import PloneTestCase as ptc
 from Testing import ZopeTestCase as ztc
-
-from collective.testcaselayer import ptc as tcl_ptc
-from collective.testcaselayer import common
-from collective.testcaselayer.layer import Layer as BaseLayer
-
-# What follows are the class definitions for the test case layers. Don't use
-# these directly, use the instances beneath
+from zope.component import getGlobalSiteManager
 
 
 class RegistryLayer(BaseLayer):
@@ -63,8 +59,6 @@ UninstalledLayer = tcl_ptc.BasePTCLayer([common.common_layer, ])
 InstalledLayer = QuerystringInstalled([UninstalledLayer, ])
 TestProfileLayer = TestGSProfile([InstalledLayer, ])
 FullProfilelayer = RealGSProfile([InstalledLayer, ])
-
-# Convenient base classes for PloneTestCase
 
 
 class QuerystringTestCase(ptc.PloneTestCase):

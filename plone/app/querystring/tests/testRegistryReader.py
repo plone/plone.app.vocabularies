@@ -3,23 +3,22 @@ import unittest
 from plone.registry.interfaces import IRegistry
 from plone.registry import Registry
 from zope.component import getGlobalSiteManager
+from zope.interface import implements
+from zope.schema.interfaces import IVocabularyFactory
+from zope.schema.vocabulary import SimpleVocabulary
 
 from plone.app.querystring.interfaces import IQuerystringRegistryReader
-from plone.app.querystring.tests.base import InstalledLayer
-import plone.app.querystring.tests.registry_testdata as td
 from plone.app.querystring.registryreader import DottedDict
-
-from zope.schema.vocabulary import SimpleVocabulary
-from zope.schema.interfaces import IVocabularyFactory
-from zope.interface import implements
+from plone.app.querystring.tests import registry_testdata as td
+from plone.app.querystring.tests.base import InstalledLayer
 
 
 class TestVocabulary(object):
     implements(IVocabularyFactory)
 
     def __call__(self, context):
-        return SimpleVocabulary([SimpleVocabulary.createTerm('foo',
-                                                             'foo', u'bar')])
+        return SimpleVocabulary([
+            SimpleVocabulary.createTerm('foo', 'foo', u'bar')])
 
 
 class TestRegistryReader(unittest.TestCase):
@@ -54,10 +53,10 @@ class TestRegistryReader(unittest.TestCase):
            TODO : DottedDict should be in a separate package
         """
         dd = DottedDict({'my': {'dotted': {'name': 'value'}}})
-        assert dd.get('my.dotted.name') == 'value'
+        self.assertEqual(dd.get('my.dotted.name'), 'value')
         self.assertRaises(KeyError, dd.get, 'my.dotted.wrongname')
         dd = DottedDict({'my': 'value'})
-        assert dd.get('my') == 'value'
+        self.assertEqual(dd.get('my'), 'value')
 
     def test_parse_registry(self):
         """tests if the parsed registry data is correct"""
@@ -76,7 +75,7 @@ class TestRegistryReader(unittest.TestCase):
         result = reader.getVocabularyValues(result)
         vocabulary_result = result.get(
             'plone.app.querystring.field.reviewState.values')
-        assert vocabulary_result == {'foo': {'title': u'bar'}}
+        self.assertEqual(vocabulary_result, {'foo': {'title': u'bar'}})
 
     def test_map_operations_clean(self):
         """tests if mapOperations is getting all operators correctly"""
@@ -89,7 +88,7 @@ class TestRegistryReader(unittest.TestCase):
         operators = result.get(
             'plone.app.querystring.field.created.operators')
         for operation in operations:
-            assert operation in operators
+            self.assertTrue(operation in operators)
 
     def test_map_operations_missing(self):
         """tests if nonexisting referenced operations are properly skipped"""
@@ -99,9 +98,10 @@ class TestRegistryReader(unittest.TestCase):
         result = reader.mapOperations(result)
         operators = result.get(
             'plone.app.querystring.field.created.operators').keys()
-        assert 'plone.app.querystring.operation.date.lessThan' in operators
-        assert 'plone.app.querystring.operation.date.largerThan' not in \
-            operators
+        self.assertTrue('plone.app.querystring.operation.date.lessThan'
+            in operators)
+        self.assertFalse('plone.app.querystring.operation.date.largerThan'
+            in operators)
 
     def test_sortable_indexes(self):
         """tests if sortable indexes from the registry will be available in
@@ -115,11 +115,11 @@ class TestRegistryReader(unittest.TestCase):
         sortables = result['sortable']
 
         # there should be one sortable index
-        assert len(sortables) == 1
+        self.assertEqual(len(sortables), 1)
 
         # confirm that every sortable really is sortable
         for field in sortables.values():
-            assert field['sortable'] == True
+            self.assertEqual(field['sortable'], True)
 
     def test_registry_adapter(self):
         """tests the __call__ method of the IQuerystringRegistryReader
@@ -128,10 +128,4 @@ class TestRegistryReader(unittest.TestCase):
         registry = self.createRegistry(td.minimal_correct_xml)
         reader = IQuerystringRegistryReader(registry)
         result = reader()
-        assert result.keys() == ['sortable_indexes', 'indexes']
-
-
-def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestRegistryReader))
-    return suite
+        self.assertEqual(result.keys(), ['sortable_indexes', 'indexes'])

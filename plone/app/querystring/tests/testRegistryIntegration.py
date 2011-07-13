@@ -1,7 +1,4 @@
-import unittest
-
-from plone.app.querystring.tests.base import QuerystringTestCase, \
-                                             TestProfileLayer, ptc
+from .base import QuerystringTestCase, TestProfileLayer, ptc
 
 
 class TestOperationDefinitions(ptc.PloneTestCase):
@@ -12,7 +9,7 @@ class TestOperationDefinitions(ptc.PloneTestCase):
         registry = self.portal.portal_registry
 
         prefix = "plone.app.querystring.operation.string.is"
-        assert prefix + '.title' in registry
+        self.assertTrue(prefix + '.title' in registry)
 
         self.assertEqual(registry[prefix + ".title"], "Is")
         self.assertEqual(registry[prefix + ".description"],
@@ -24,7 +21,7 @@ class TestOperationDefinitions(ptc.PloneTestCase):
         registry = self.portal.portal_registry
         prefix = 'plone.app.querystring.operation.date.lessThan'
 
-        assert prefix + ".title" in registry
+        self.assertTrue(prefix + ".title" in registry)
 
         self.assertEqual(registry[prefix + ".title"], "Before date")
         self.assertEqual(registry[prefix + ".description"],
@@ -40,7 +37,7 @@ class TestFieldDefinitions(QuerystringTestCase):
     def test_getId(self):
         registry = self.portal.portal_registry
         prefix = 'plone.app.querystring.field.getId'
-        assert prefix + ".title" in registry
+        self.assertTrue(prefix + ".title" in registry)
 
         self.assertEqual(registry[prefix + ".title"], "Short name (id)")
 
@@ -48,17 +45,10 @@ class TestFieldDefinitions(QuerystringTestCase):
         self.assertEqual(len(operations), 1)
 
         equal = 'plone.app.querystring.operation.string.is'
-        assert equal in operations
+        self.assertTrue(equal in operations)
 
         self.assertEqual(registry[prefix + ".description"],
                          "The short name of an item (used in the url)")
         self.assertEqual(registry[prefix + ".enabled"], True)
         self.assertEqual(registry[prefix + ".sortable"], True)
         self.assertEqual(registry[prefix + ".group"], "Metadata")
-
-
-def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestOperationDefinitions))
-    suite.addTest(unittest.makeSuite(TestFieldDefinitions))
-    return suite
