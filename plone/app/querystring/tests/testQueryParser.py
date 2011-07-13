@@ -17,6 +17,9 @@ class MockObject(object):
         self.uid = uid
         self.path = path.split("/")
 
+    def getPath(self):
+        return self.path
+
     def getPhysicalPath(self):
         return self.path
 
@@ -26,16 +29,19 @@ class MockObject(object):
 
 class MockCatalog(object):
 
-    def lookupObject(self, uid):
-        return MockObject(uid='00000000000000001', path="/site/foo")
+    def unrestrictedSearchResults(self, query):
+        uid = query.get('UID')
+        if uid == '00000000000000001':
+            return [MockObject(uid='00000000000000001', path="/site/foo")]
+        raise NotImplementedError
 
     def indexes(self):
-        return ['Title', 'effectiveRange', 'object_provides', 'Type', 'id',
-                'cmf_uid', 'end', 'Description', 'is_folderish', 'getId',
+        return ['Title', 'effectiveRange', 'object_provides',
+                'end', 'Description', 'is_folderish', 'getId',
                 'start', 'meta_type', 'is_default_page', 'Date',
                 'review_state', 'portal_type', 'expires',
                 'allowedRolesAndUsers', 'getObjPositionInParent', 'path',
-                'in_reply_to', 'UID', 'effective', 'created', 'Creator',
+                'UID', 'effective', 'created', 'Creator',
                 'modified', 'SearchableText', 'sortable_title',
                 'getRawRelatedItems', 'Subject']
 
