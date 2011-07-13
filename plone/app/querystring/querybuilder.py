@@ -41,7 +41,8 @@ class QueryBuilder(BrowserView):
            used in the live update results"""
         options = dict(original_context=self.context)
         results = self(query, self.request.get('sort_on', None),
-                       self.request.get('sort_order', None))
+                       self.request.get('sort_order', None),
+                       limit=10)
 
         return getMultiAdapter((results, self.request),
             name='display_query_results')(**options)
@@ -65,10 +66,10 @@ class QueryBuilder(BrowserView):
 
     def number_of_results(self, query):
         """Get the number of results"""
-        results = self(query, None, None)
+        results = self(query, None, None, limit=1)
         return translate(u"batch_x_items_matching_your_criteria",
                  default=u"${number} items matching your search terms",
-                 mapping={'number': len(results)})
+                 mapping={'number': results.actual_result_count})
 
 
 class RegistryConfiguration(BrowserView):
