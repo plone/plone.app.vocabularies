@@ -62,7 +62,6 @@ class QueryBuilder(BrowserView):
             parsedquery['b_size'] = b_size
         elif limit:
             parsedquery['sort_limit'] = limit
-        parsedquery['show_inactive'] = False
         if 'path' not in parsedquery:
             parsedquery['path'] = getNavigationRoot(self.context)
 

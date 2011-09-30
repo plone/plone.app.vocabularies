@@ -4,6 +4,9 @@ Changelog
 1.0.1 (Unreleased)
 ------------------
 
+* Ensure inactive content is only shown to users with the appropriate 
+  permission.
+
 1.0 (2011-07-19)
 ----------------
 
