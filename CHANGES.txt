@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.0.1 (Unreleased)
+1.0.1 (2011-10-17)
 ------------------
 
 * Ensure inactive content is only shown to users with the appropriate 
