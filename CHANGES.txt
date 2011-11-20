@@ -4,8 +4,10 @@ Changelog
 1.0.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+* Change the Creator field to use the correct query operation for filtering
+  on the current logged in user.
+  This fixes https://dev.plone.org/ticket/12052
+  [jcerjak]
 
 1.0.1 (2011-10-17)
 ------------------

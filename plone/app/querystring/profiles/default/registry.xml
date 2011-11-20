@@ -211,7 +211,7 @@
         <value key="sortable">True</value>
         <value key="operations">
             <element>plone.app.querystring.operation.string.is</element>
-            <element>plone.app.querystring.operation.string.isCurrentUser</element>
+            <element>plone.app.querystring.operation.string.currentUser</element>
         </value>
        <value key="group">Metadata</value>
     </records>
