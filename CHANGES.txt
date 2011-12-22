@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.5 - unreleased
+2.1.5 - 2011-12-22
 ------------------
 
 - Ensure that the keywords vocabulary term titles are unicove values,
