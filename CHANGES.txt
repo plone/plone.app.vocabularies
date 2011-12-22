@@ -4,6 +4,10 @@ Changelog
 2.1.5 - unreleased
 ------------------
 
+- Ensure that the keywords vocabulary term titles are unicove values,
+  as per zope.schema.interfaces.ITitledTokenizedTerm.
+  [mj]
+
 
 2.1.4 - 2011-12-22
 ------------------

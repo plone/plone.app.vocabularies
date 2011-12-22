@@ -8,6 +8,7 @@ from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 from zope.app.form.browser.interfaces import ISourceQueryView
 
 from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.utils import safe_unicode
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.ZCTextIndex.ParseTree import ParseError
 
@@ -392,6 +393,8 @@ class KeywordsVocabulary(object):
         >>> result = vocab(context)
         >>> result.by_token.keys()
         ['blee', 'baz', 'foo', 'bar', 'non-=C3=A5scii']
+        >>> result.getTermByToken('non-=C3=A5scii').title
+        u'non-\\xe5scii'
     """
     implements(IVocabularyFactory)
 
@@ -401,8 +404,8 @@ class KeywordsVocabulary(object):
         if self.catalog is None:
             return SimpleVocabulary([])
         index = self.catalog._catalog.getIndex('Subject')
-        # Vocabulary term tokens *must* be 7 bit values
-        items = [SimpleTerm(i, b2a_qp(i), i) for i in index._index]
+        # Vocabulary term tokens *must* be 7 bit values, titles *must* be unicode
+        items = [SimpleTerm(i, b2a_qp(i), safe_unicode(i)) for i in index._index]
         return SimpleVocabulary(items)
 
 KeywordsVocabularyFactory = KeywordsVocabulary()
