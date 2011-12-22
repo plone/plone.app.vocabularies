@@ -1,4 +1,5 @@
 import itertools
+from binascii import b2a_qp
 from zope.browser.interfaces import ITerms
 from zope.interface import implements, classProvides
 from zope.schema.interfaces import ISource, IContextSourceBinder, IVocabularyFactory
@@ -385,12 +386,12 @@ class KeywordsVocabulary(object):
         >>> context.portal_catalog = tool
         >>> index = KeywordIndex('Subject')
         >>> done = index._index_object(1,DummyContent('ob1', ['foo', 'bar', 'baz']), attr='Subject')
-        >>> done = index._index_object(2,DummyContent('ob2', ['blee', 'bar']), attr='Subject')
+        >>> done = index._index_object(2,DummyContent('ob2', ['blee', 'bar', 'non-\xc3\xa5scii']), attr='Subject')
         >>> tool.indexes['Subject'] = index
         >>> vocab = KeywordsVocabulary()
         >>> result = vocab(context)
         >>> result.by_token.keys()
-        ['blee', 'baz', 'foo', 'bar']
+        ['blee', 'baz', 'foo', 'bar', 'non-=C3=A5scii']
     """
     implements(IVocabularyFactory)
 
@@ -400,7 +401,8 @@ class KeywordsVocabulary(object):
         if self.catalog is None:
             return SimpleVocabulary([])
         index = self.catalog._catalog.getIndex('Subject')
-        items = [SimpleTerm(i, i, i) for i in index._index]
+        # Vocabulary term tokens *must* be 7 bit values
+        items = [SimpleTerm(i, b2a_qp(i), i) for i in index._index]
         return SimpleVocabulary(items)
 
 KeywordsVocabularyFactory = KeywordsVocabulary()

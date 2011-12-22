@@ -4,6 +4,10 @@ Changelog
 2.1.4 - unreleased
 ------------------
 
+- Ensure that the keywords vocabulary term tokens are 7-bit values,
+  as per zope.schema.interfaces.ITokenizedTerm.
+  [mj]
+
 
 2.1.3 - 2011-07-04
 ------------------
