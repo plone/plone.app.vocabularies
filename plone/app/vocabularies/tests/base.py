@@ -18,8 +18,13 @@ class DummyContext(object):
     def getSiteManager(self):
         return self
 
-    def queryUtility(*args, **kwargs):
-        return None
+    def queryUtility(self, iface, name='', default=None):
+        """Query for a utility.
+
+        Note that earlier zope.component versions had 'provided'
+        instead of 'iface', but that should not matter.
+        """
+        return default
 
 
 class DummyTool(object):
