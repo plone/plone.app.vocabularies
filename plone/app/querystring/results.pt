@@ -4,6 +4,7 @@
     there are no html and body tags
 </tal:comment>
 <div tal:define="results context;
+                 limited_results python:context[:25];
                  original_context nocall:options/original_context|nocall:context;
                  toLocalizedTime nocall:original_context/@@plone/toLocalizedTime;
                  pas_member original_context/@@pas_member"
@@ -22,8 +23,8 @@
             </strong>
         </p>
 
-        <dl class="searchResults" tal:condition="results">
-            <tal:results repeat="item results">
+        <dl class="searchResults" tal:condition="limited_results">
+            <tal:results repeat="item limited_results">
                 <tal:entry tal:define="author python:pas_member.info(item.Creator())">
                     <dt>
                       <img tal:replace="structure item/getIcon" />

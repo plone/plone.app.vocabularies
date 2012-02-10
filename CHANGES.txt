@@ -9,6 +9,13 @@ Changelog
   This fixes https://dev.plone.org/ticket/12052
   [jcerjak]
 
+* Limit number of items that show up in the preview of the edit view to 25.
+  If we do not limit these results all items in the query will be rendered in 
+  the preview which leads to problems when the collection contains > 10k 
+  results.
+  [timo]
+
+
 1.0.1 (2011-10-17)
 ------------------
 
