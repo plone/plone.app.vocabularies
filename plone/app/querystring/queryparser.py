@@ -118,7 +118,10 @@ def _currentUser(context, row):
 
 def _lessThanRelativeDate(context, row):
     # INFO: Values is the number of days
-    values = int(row.values)
+    try:
+        values = int(row.values)
+    except ValueError:
+        values = 0
     now = DateTime()
     my_date = now + values
     my_date = my_date.earliestTime()
@@ -130,7 +133,10 @@ def _lessThanRelativeDate(context, row):
 
 def _moreThanRelativeDate(context, row):
     # INFO: Values is the number of days
-    values = int(row.values)
+    try:
+        values = int(row.values)
+    except ValueError:
+        values = 0
     now = DateTime()
     my_date = now + values
     my_date = my_date.latestTime()
