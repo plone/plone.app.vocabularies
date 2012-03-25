@@ -70,7 +70,7 @@
         <value key="title">More recently than</value>
         <value key="description"></value>
         <value key="operation">plone.app.querystring.queryparser._lessThanRelativeDate</value>
-        <value key="widget">DateWidget</value>
+        <value key="widget">RelativeDateWidget</value>
     </records>
 
     <records interface="plone.app.querystring.interfaces.IQueryOperation"
@@ -78,7 +78,7 @@
         <value key="title">Older than</value>
         <value key="description">Please enter the number in days.</value>
         <value key="operation">plone.app.querystring.queryparser._moreThanRelativeDate</value>
-        <value key="widget">DateWidget</value>
+        <value key="widget">RelativeDateWidget</value>
     </records>
 
     <records interface="plone.app.querystring.interfaces.IQueryOperation"
