@@ -4,7 +4,8 @@ Changelog
 1.0.3 (unreleased)
 ------------------
 
-*
+* Internationalize strings in the registry.
+  [davisagli]
 
 
 1.0.2 (2012-02-10)

@@ -23,7 +23,7 @@ setup(name='plone.app.querystring',
       zip_safe=False,
       install_requires=[
           'setuptools',
-          'plone.app.registry',
+          'plone.app.registry>=1.1dev',
           'plone.app.contentlisting',
           'plone.app.vocabularies',
       ],

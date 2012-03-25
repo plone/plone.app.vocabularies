@@ -3,7 +3,10 @@ from operator import attrgetter
 from plone.registry.interfaces import IRegistry
 from zope.component import getUtility, adapts
 from zope.interface import implements
+from zope.i18nmessageid import Message
+from zope.i18n import translate
 from zope.schema.interfaces import IVocabularyFactory
+from zope.globalrequest import getRequest
 
 from .interfaces import IQuerystringRegistryReader
 
@@ -47,7 +50,10 @@ class QuerystringRegistryReader(object):
 
             # store actual key/value
             key = splitted[-1]
-            current[key] = self.context.records[record].value
+            value = self.context.records[record].value
+            if isinstance(value, Message):
+                value = translate(value, context=getRequest())
+            current[key] = value
 
         return result
 
