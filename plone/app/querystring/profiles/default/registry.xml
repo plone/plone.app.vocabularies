@@ -257,7 +257,7 @@
 
     <records interface="plone.app.querystring.interfaces.IQueryField"
              prefix="plone.app.querystring.field.end">
-        <value key="title">End date</value>
+        <value key="title">Event end date</value>
         <value key="description">The end date and time of an event</value>
         <value key="enabled">True</value>
         <value key="sortable">True</value>
