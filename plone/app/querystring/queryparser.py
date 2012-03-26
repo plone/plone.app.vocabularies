@@ -118,26 +118,56 @@ def _currentUser(context, row):
 
 def _lessThanRelativeDate(context, row):
     # INFO: Values is the number of days
-    values = int(row.values)
+    try:
+        values = int(row.values)
+    except ValueError:
+        values = 0
     now = DateTime()
-    my_date = now + values
-    my_date = my_date.earliestTime()
+    end_date = now + values
+    end_date = end_date.latestTime()
     row = Row(index=row.index,
               operator=row.operator,
-              values=my_date)
-    return _lessThan(context, row)
+              values=(now, end_date))
+    return _between(context, row)
 
 
 def _moreThanRelativeDate(context, row):
     # INFO: Values is the number of days
-    values = int(row.values)
+    try:
+        values = int(row.values)
+    except ValueError:
+        values = 0
     now = DateTime()
-    my_date = now + values
-    my_date = my_date.latestTime()
+    start_date = now - values
+    start_date = start_date.earliestTime()
     row = Row(index=row.index,
               operator=row.operator,
-              values=my_date)
+              values=(start_date, now))
+    return _between(context, row)
+
+
+def _today(context, row):
+    now = DateTime()
+    start_date = now.earliestTime()
+    end_date = now.latestTime()
+    row = Row(index=row.index,
+              operator=row.operator,
+              values=(start_date, end_date))
+    return _between(context, row)
+
+
+def _afterToday(context, row):
+    row = Row(index=row.index,
+              operator=row.operator,
+              values=DateTime())
     return _largerThan(context, row)
+
+
+def _beforeToday(context, row):
+    row = Row(index=row.index,
+              operator=row.operator,
+              values=DateTime())
+    return _lessThan(context, row)
 
 
 def _path(context, row):
