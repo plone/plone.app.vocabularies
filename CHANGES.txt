@@ -4,7 +4,8 @@ Changelog
 1.0.3 (unreleased)
 ------------------
 
-* Declare all dependencies in setup.py.
+* Declare all dependencies in setup.py to resolve a dependeny problem in 
+  test setups, where the Plone stack isn't fully loaded.
   [thet]
 
 * Add a "today" date operator
