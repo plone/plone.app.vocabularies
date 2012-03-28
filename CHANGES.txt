@@ -4,6 +4,9 @@ Changelog
 1.0.3 (unreleased)
 ------------------
 
+* Declare all dependencies in setup.py.
+  [thet]
+
 * Add a "today" date operator
   [esteele]
 

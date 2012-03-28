@@ -23,10 +23,29 @@ setup(name='plone.app.querystring',
       zip_safe=False,
       install_requires=[
           'setuptools',
-          'plone.app.registry>=1.1dev',
+          'DateTime',
+          'Products.CMFCore',
+          'Products.CMFPlone',
           'plone.app.contentlisting',
+          'plone.app.layout',
+          'plone.app.registry>=1.1dev',
           'plone.app.vocabularies',
+          'plone.registry',
+          'zope.component',
+          'zope.dottedname',
+          'zope.globalrequest',
+          'zope.i18n',
+          'zope.i18nmessageid',
+          'zope.interface',
+          'zope.publisher',
+          'zope.schema',
       ],
+      extras_require={
+          'test': [
+              'collective.testcaselayer',
+              'Products.PloneTestCase',
+          ]
+      },
       entry_points="""
       [z3c.autoinclude.plugin]
       target = plone
