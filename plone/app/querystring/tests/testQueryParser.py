@@ -185,34 +185,28 @@ class TestQueryGenerators(TestQueryParserBase):
         self.assertEqual(parsed, expected)
 
     def test__lessThanRelativeDate(self):
-        def test(days):
-            now = DateTime()
-            mydate = now + days
-            mydate = mydate.earliestTime()
-            data = Row(index='modified',
-                      operator='_lessThanRelativeDate',
-                      values=days)
-            parsed = queryparser._lessThanRelativeDate(MockSite(), data)
-            expected = {'modified': {'query': mydate, 'range': 'max'}}
-            self.assertEqual(parsed, expected)
-
-        test(2)
-        test(-2)
+        days = 2
+        now = DateTime()
+        mydate = now + days
+        expected_dates = [now.earliestTime(), mydate.latestTime()]
+        expected = {'modified': {'query': expected_dates, 'range': 'minmax'}}
+        data = Row(index='modified',
+                  operator='_lessThanRelativeDate',
+                  values=days)
+        parsed = queryparser._lessThanRelativeDate(MockSite(), data)
+        self.assertEqual(parsed, expected)
 
     def test__moreThanRelativeDate(self):
-        def test(days):
-            now = DateTime()
-            mydate = now + days
-            mydate = mydate.latestTime()
-            data = Row(index='modified',
-                      operator='_moreThanRelativeDate',
-                      values=days)
-            parsed = queryparser._moreThanRelativeDate(MockSite(), data)
-            expected = {'modified': {'query': mydate, 'range': 'min'}}
-            self.assertEqual(parsed, expected)
-
-        test(2)
-        test(-2)
+        days = 2
+        now = DateTime()
+        mydate = now - days
+        expected_dates = [mydate.earliestTime(), now.latestTime()]
+        expected = {'modified': {'query': expected_dates, 'range': 'minmax'}}
+        data = Row(index='modified',
+                  operator='_moreThanRelativeDate',
+                  values=days)
+        parsed = queryparser._moreThanRelativeDate(MockSite(), data)
+        self.assertEqual(parsed, expected)
 
     def test__path(self):
         # normal path
