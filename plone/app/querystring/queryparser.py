@@ -117,21 +117,24 @@ def _currentUser(context, row):
 
 
 def _lessThanRelativeDate(context, row):
+    """ "Between now and N days from now." """
     # INFO: Values is the number of days
     try:
         values = int(row.values)
     except ValueError:
         values = 0
     now = DateTime()
+    start_date = now.earliestTime()
     end_date = now + values
     end_date = end_date.latestTime()
     row = Row(index=row.index,
               operator=row.operator,
-              values=(now, end_date))
+              values=(start_date, end_date))
     return _between(context, row)
 
 
 def _moreThanRelativeDate(context, row):
+    """ "Between now and N days ago." """
     # INFO: Values is the number of days
     try:
         values = int(row.values)
@@ -140,9 +143,10 @@ def _moreThanRelativeDate(context, row):
     now = DateTime()
     start_date = now - values
     start_date = start_date.earliestTime()
+    end_date = now.latestTime()
     row = Row(index=row.index,
               operator=row.operator,
-              values=(start_date, now))
+              values=(start_date, end_date))
     return _between(context, row)
 
 
