@@ -208,6 +208,16 @@ class TestQueryGenerators(TestQueryParserBase):
         parsed = queryparser._moreThanRelativeDate(MockSite(), data)
         self.assertEqual(parsed, expected)
 
+    def test__today(self):
+        now = DateTime()
+        expected_dates = [now.earliestTime(), now.latestTime()]
+        expected = {'modified': {'query': expected_dates, 'range': 'minmax'}}
+        data = Row(index='modified',
+                  operator='_today', 
+                  values=expected_dates)
+        parsed = queryparser._today(MockSite(), data)
+        self.assertEqual(parsed, expected)
+
     def test__path(self):
         # normal path
         data = Row(index='path',
