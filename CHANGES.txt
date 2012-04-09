@@ -4,6 +4,10 @@ Changelog
 1.0.3 (unreleased)
 ------------------
 
+* Add an optional 'brains' parameter to the query builder to obtain
+  results not wrapped as an IContentListing.
+  [davisagli]
+
 * Declare all dependencies in setup.py to resolve a dependeny problem in 
   test setups, where the Plone stack isn't fully loaded.
   [thet]

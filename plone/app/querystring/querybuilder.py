@@ -29,12 +29,12 @@ class QueryBuilder(BrowserView):
         self._results = None
 
     def __call__(self, query, batch=False, b_start=0, b_size=30,
-                 sort_on=None, sort_order=None, limit=0):
+                 sort_on=None, sort_order=None, limit=0, brains=False):
         """If there are results, make the query and return the results"""
         if self._results is None:
             self._results = self._makequery(query=query, batch=batch,
                 b_start=b_start, b_size=b_size, sort_on=sort_on,
-                sort_order=sort_order, limit=limit)
+                sort_order=sort_order, limit=limit, brains=brains)
         return self._results
 
     def html_results(self, query):
@@ -49,12 +49,15 @@ class QueryBuilder(BrowserView):
             name='display_query_results')(**options)
 
     def _makequery(self, query=None, batch=False, b_start=0, b_size=30,
-                   sort_on=None, sort_order=None, limit=0):
+                   sort_on=None, sort_order=None, limit=0, brains=False):
         """Parse the (form)query and return using multi-adapter"""
         parsedquery = queryparser.parseFormquery(
             self.context, query, sort_on, sort_order)
         if not parsedquery:
-            return IContentListing([])
+            if brains:
+                return []
+            else:
+                return IContentListing([])
 
         catalog = getToolByName(self.context, 'portal_catalog')
         if batch:
@@ -65,7 +68,9 @@ class QueryBuilder(BrowserView):
         if 'path' not in parsedquery:
             parsedquery['path'] = getNavigationRoot(self.context)
 
-        results = IContentListing(catalog(parsedquery))
+        results = catalog(parsedquery)
+        if not brains:
+            results = IContentListing(results)
         if batch:
             results = Batch(results, b_size, b_start)
         return results
