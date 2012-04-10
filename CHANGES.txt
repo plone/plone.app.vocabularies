@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.6 - unreleased
+2.1.6 (2012-04-09)
 ------------------
 
 - Made our mock queryUtility in the tests more life like.  This avoids
