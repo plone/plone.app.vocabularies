@@ -100,7 +100,7 @@
 
     <records interface="plone.app.querystring.interfaces.IQueryOperation"
              prefix="plone.app.querystring.operation.date.beforeToday">
-        <value key="title">Before today</value>
+        <value key="title" i18n:translate="">Before today</value>
         <value key="description" i18n:translate="">Before the current day</value>
         <value key="operation">plone.app.querystring.queryparser._beforeToday</value>
         <value key="widget"></value>
