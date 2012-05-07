@@ -7,10 +7,13 @@ from Products.CMFPlone.browser.navtree import getNavigationRoot
 from Products.CMFPlone.PloneBatch import Batch
 from zope.component import getMultiAdapter, getUtility
 from zope.i18n import translate
+from zope.i18nmessageid import MessageFactory
 from zope.publisher.browser import BrowserView
 
 from plone.app.querystring import queryparser
 from plone.app.querystring.interfaces import IQuerystringRegistryReader
+
+_ = MessageFactory('plone')
 
 
 class ContentListingView(BrowserView):
@@ -78,9 +81,10 @@ class QueryBuilder(BrowserView):
     def number_of_results(self, query):
         """Get the number of results"""
         results = self(query, sort_on=None, sort_order=None, limit=1)
-        return translate(u"batch_x_items_matching_your_criteria",
-                 default=u"${number} items matching your search terms",
-                 mapping={'number': results.actual_result_count})
+        return translate(_(u"batch_x_items_matching_your_criteria",
+                 default=u"${number} items matching your search terms.",
+                 mapping={'number': results.actual_result_count}),
+                 context=self.request)
 
 
 class RegistryConfiguration(BrowserView):
