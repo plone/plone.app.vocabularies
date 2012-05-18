@@ -4,14 +4,12 @@ Changelog
 2.1.7 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Remove hard dependency on Archetypes.
+  [davisagli]
 
 
 2.1.6 (2012-04-09)
 ------------------
-
-- Remove hard dependency on Archetypes.
-  [davisagli]
 
 - Made our mock queryUtility in the tests more life like.  This avoids
   test failures in combination with zope.pagetemplate 3.6.0 or higher.
