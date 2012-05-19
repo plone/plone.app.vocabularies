@@ -4,6 +4,9 @@ Changelog
 2.1.7 (unreleased)
 ------------------
 
+- Depend on zope.formlib instead of zope.app.form.
+  [davisagli]
+
 - Remove hard dependency on Archetypes.
   [davisagli]
 
@@ -19,7 +22,7 @@ Changelog
 2.1.5 - 2011-12-22
 ------------------
 
-- Ensure that the keywords vocabulary term titles are unicove values,
+- Ensure that the keywords vocabulary term titles are unicode values,
   as per zope.schema.interfaces.ITitledTokenizedTerm.
   [mj]
 

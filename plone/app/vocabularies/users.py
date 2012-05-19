@@ -3,7 +3,7 @@ from zope.interface import implements, classProvides
 from zope.schema.interfaces import ISource, IContextSourceBinder
 from zope.schema.vocabulary import SimpleTerm
 
-from zope.app.form.browser.interfaces import ISourceQueryView
+from zope.formlib.interfaces import ISourceQueryView
 
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile

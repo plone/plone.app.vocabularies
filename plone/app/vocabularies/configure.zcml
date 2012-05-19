@@ -86,7 +86,7 @@
       for=".catalog.SearchableTextSource
            zope.publisher.interfaces.browser.IBrowserRequest"
       factory=".catalog.QuerySearchableTextSourceView"
-      provides="zope.app.form.browser.interfaces.ISourceQueryView"
+      provides="zope.formlib.interfaces.ISourceQueryView"
       />
 
   <adapter
@@ -100,7 +100,7 @@
       for=".users.UsersSource
            zope.publisher.interfaces.browser.IBrowserRequest"
       factory=".users.UsersSourceQueryView"
-      provides="zope.app.form.browser.interfaces.ISourceQueryView"
+      provides="zope.formlib.interfaces.ISourceQueryView"
       />
 
   <adapter
@@ -114,7 +114,7 @@
       for=".groups.GroupsSource
            zope.publisher.interfaces.browser.IBrowserRequest"
       factory=".groups.GroupsSourceQueryView"
-      provides="zope.app.form.browser.interfaces.ISourceQueryView"
+      provides="zope.formlib.interfaces.ISourceQueryView"
       />
 
 </configure>
