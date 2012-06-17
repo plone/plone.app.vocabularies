@@ -21,8 +21,10 @@ class SyndicationFeedTypesVocabulary(object):
         settings = registry.forInterface(ISiteSyndicationSettings)
         items = []
         for _type in settings.allowed_feed_types:
-            name, title = _type.split('|')
-            items.append(SimpleTerm(name, name, title))
+            split = _type.split('|')
+            if len(split) == 2:
+                name, title = split
+                items.append(SimpleTerm(name, name, title))
         return SimpleVocabulary(items)
 
 SyndicationFeedTypesVocabularyFactory = SyndicationFeedTypesVocabulary()
