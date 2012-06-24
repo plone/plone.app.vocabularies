@@ -68,8 +68,11 @@ class QueryBuilder(BrowserView):
             parsedquery['b_size'] = b_size
         elif limit:
             parsedquery['sort_limit'] = limit
+
         if 'path' not in parsedquery:
-            parsedquery['path'] = getNavigationRoot(self.context)
+            parsedquery['path'] = {'query': ''}
+        parsedquery['path']['query'] = getNavigationRoot(self.context) + \
+                parsedquery['path']['query']
 
         results = catalog(parsedquery)
         if not brains:
