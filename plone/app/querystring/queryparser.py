@@ -187,11 +187,11 @@ def _relativePath(context, row):
     # Walk up the tree until we reach a navigation root, or the root is reached
     obj = context
     for x in [r for r in row.values.split('/') if r]:
+        if INavigationRoot.providedBy(obj):
+            break
         parent = aq_parent(obj)
         if parent:
             obj = parent
-        if INavigationRoot.providedBy(obj):
-            break
 
     row = Row(index=row.index,
               operator=row.operator,
