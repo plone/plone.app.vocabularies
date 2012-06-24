@@ -213,7 +213,7 @@ class TestQueryGenerators(TestQueryParserBase):
         expected_dates = [now.earliestTime(), now.latestTime()]
         expected = {'modified': {'query': expected_dates, 'range': 'minmax'}}
         data = Row(index='modified',
-                  operator='_today', 
+                  operator='_today',
                   values=expected_dates)
         parsed = queryparser._today(MockSite(), data)
         self.assertEqual(parsed, expected)
