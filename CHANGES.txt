@@ -4,7 +4,13 @@ Changelog
 1.0.5 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Date ranges now use the _betweenDates handler, which is much more forgiving
+  of empty field values, defaulting to an all-encompassing date range if neither
+  value is provided, an "everything after" range if only the start date is 
+  provided, and a min/max range if both are provided.
+  
+  Fixes http://dev.plone.org/ticket/12965
+  [esteele]
 
 
 1.0.4 (2012-05-07)

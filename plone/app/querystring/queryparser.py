@@ -150,6 +150,26 @@ def _moreThanRelativeDate(context, row):
     return _between(context, row)
 
 
+def _betweenDates(context, row):
+    try:
+        start_date = DateTime(row.values[0])
+    except DateTime.DateTimeError:
+        start_date = DateTime(0)
+    try:
+        end_date = DateTime(row.values[1])
+    except DateTime.DateTimeError:
+        row = Row(index=row.index,
+                  operator=row.operator,
+                  values=start_date)
+        return _largerThan(context, row)
+    else:
+        row = Row(index=row.index,
+                  operator=row.operator,
+                  values=(start_date, end_date))
+
+        return _between(context, row)
+
+
 def _today(context, row):
     now = DateTime()
     start_date = now.earliestTime()
