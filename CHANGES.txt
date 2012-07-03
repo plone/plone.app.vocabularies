@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.7 (unreleased)
+2.1.7 (2012-07-02)
 ------------------
 
 - Depend on zope.formlib instead of zope.app.form.
