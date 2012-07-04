@@ -8,6 +8,7 @@ from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
 from zope.component import getUtility
 from zope.dottedname.resolve import resolve
+from zope.component._api import getMultiAdapter
 
 logger = logging.getLogger('plone.app.querystring')
 
@@ -209,13 +210,20 @@ def _relativePath(context, row):
     for x in [r for r in row.values.split('/') if r]:
         if INavigationRoot.providedBy(obj):
             break
-        parent = aq_parent(obj)
-        if parent:
-            obj = parent
+        if x == "..":
+            parent = aq_parent(obj)
+            if parent:
+                obj = parent
+        else:
+            if x in obj.objectIds():
+                obj = obj.get(x)
+
+    root_path = getMultiAdapter((obj, obj.REQUEST),
+        name="plone_portal_state").navigation_root_path()
 
     row = Row(index=row.index,
               operator=row.operator,
-              values='/'.join(obj.getPhysicalPath()))
+              values='/'.join(obj.getPhysicalPath())[len(root_path):])
 
     return _path(context, row)
 
