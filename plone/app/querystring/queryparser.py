@@ -205,25 +205,23 @@ def _path(context, row):
 
 
 def _relativePath(context, row):
-    # Walk up the tree until we reach a navigation root, or the root is reached
-    obj = context
-    for x in [r for r in row.values.split('/') if r]:
-        if INavigationRoot.providedBy(obj):
-            break
-        if x == "..":
-            parent = aq_parent(obj)
-            if parent:
-                obj = parent
-        else:
-            if x in obj.objectIds():
-                obj = obj.get(x)
+    # walk through the relative paths
+    rel_path = list(context.getPhysicalPath())
+    root_path = getMultiAdapter((context, context.REQUEST),
+        name="plone_portal_state").navigation_root_path().split("/")
 
-    root_path = getMultiAdapter((obj, obj.REQUEST),
-        name="plone_portal_state").navigation_root_path()
+    for x in [r for r in row.values.split('/') if r]:
+        if x == "..":
+            if len(rel_path) <= len(root_path):
+                # don't go beyond navroot
+                break
+            rel_path = rel_path[:-1]
+        else:
+            rel_path.append(x)
 
     row = Row(index=row.index,
               operator=row.operator,
-              values='/'.join(obj.getPhysicalPath())[len(root_path):])
+              values='/' + '/'.join(rel_path[len(root_path):]))
 
     return _path(context, row)
 
