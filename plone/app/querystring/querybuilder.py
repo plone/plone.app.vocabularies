@@ -12,7 +12,6 @@ from zope.publisher.browser import BrowserView
 
 from plone.app.querystring import queryparser
 from plone.app.querystring.interfaces import IQuerystringRegistryReader
-import logging
 
 _ = MessageFactory('plone')
 
