@@ -177,9 +177,21 @@ class WorkflowTransitionsVocabulary(object):
             transition_folder = getattr(wf, 'transitions', None)
             wf_name = wf.title or wf.id
             if transition_folder is not None:
+
                 for transition in transition_folder.values():
+
+                    # zope.i18nmessageid will choke
+                    # if undecoded UTF-8 bytestrings slip through
+                    # which we may encounter on international sites
+                    # where transition names are in local language.
+                    # This may break overlying functionality even
+                    # if the terms themselves are never used
+                    name = transition.actbox_name
+                    if type(name) == str:
+                        name = name.decode("utf-8")
+
                     transition_title = translate(
-                                        _(transition.actbox_name),
+                                        _(name),
                                         context=aq_get(wtool, 'REQUEST', None))
                     transitions.setdefault(transition.id, []).append(
                         dict(title=transition_title, wf_name=wf_name))
