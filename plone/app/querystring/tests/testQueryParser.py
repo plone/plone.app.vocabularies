@@ -256,6 +256,29 @@ class TestQueryGenerators(TestQueryParserBase):
         expected = {'path': {'query': '/foo'}}
         self.assertEqual(parsed, expected)
 
+        # reach a subfolder on Plone root
+        plonesub = MockObject(uid='00000000000000005', path="/foo/ham")
+        context.__parent__.__parent__.ham = plonesub
+
+        data = Row(index='path',
+                   operator='_relativePath',
+                   values='../../ham')
+        parsed = queryparser._relativePath(context, data)
+        expected = {'path': {'query': '/foo/ham'}}
+        self.assertEqual(parsed, expected)
+
+        # reach a subfolder on parent of collection
+        collectionsub = MockObject(uid='00000000000000006',
+                                   path="/foo/bar/egg")
+        context.__parent__.egg = collectionsub
+
+        data = Row(index='path',
+                   operator='_relativePath',
+                   values='../egg')
+        parsed = queryparser._relativePath(context, data)
+        expected = {'path': {'query': '/foo/bar/egg'}}
+        self.assertEqual(parsed, expected)
+
     def test_getPathByUID(self):
         actual = queryparser.getPathByUID(MockSite(), '00000000000000001')
         self.assertEqual(actual, ['', 'site', 'foo'])

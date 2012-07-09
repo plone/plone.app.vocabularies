@@ -1,7 +1,7 @@
 from collections import namedtuple
 import logging
 
-from Acquisition import aq_parent
+from Acquisition import aq_parent, aq_inner, aq_base
 from DateTime import DateTime
 from plone.app.layout.navigation.interfaces import INavigationRoot
 from plone.registry.interfaces import IRegistry
@@ -205,23 +205,23 @@ def _path(context, row):
 
 
 def _relativePath(context, row):
-    # walk through the relative paths
-    rel_path = list(context.getPhysicalPath())
-    root_path = getMultiAdapter((context, context.REQUEST),
-        name="plone_portal_state").navigation_root_path().split("/")
-
+    # Walk through the tree
+    obj = context
     for x in [r for r in row.values.split('/') if r]:
         if x == "..":
-            if len(rel_path) <= len(root_path):
-                # don't go beyond navroot
+            if INavigationRoot.providedBy(obj):
                 break
-            rel_path = rel_path[:-1]
+            parent = aq_parent(obj)
+            if parent:
+                obj = parent
         else:
-            rel_path.append(x)
+            child = getattr(aq_base(aq_inner(obj)), x, None)
+            if child and hasattr(aq_base(child), "getPhysicalPath"):
+                obj = child
 
     row = Row(index=row.index,
               operator=row.operator,
-              values='/' + '/'.join(rel_path[len(root_path):]))
+              values='/'.join(obj.getPhysicalPath()))
 
     return _path(context, row)
 
