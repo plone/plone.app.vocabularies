@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import itertools
 from binascii import b2a_qp
 from zope.browser.interfaces import ITerms
@@ -395,6 +396,22 @@ class KeywordsVocabulary(object):
         ['blee', 'baz', 'foo', 'bar', 'non-=C3=A5scii']
         >>> result.getTermByToken('non-=C3=A5scii').title
         u'non-\\xe5scii'
+
+        Testing unicode vocabularies
+        First clear the index. Comparing non-unicode to unicode objects fails.
+        >>> index.clear()
+        >>> done = index._index_object(1, DummyContent('obj1', [u'äüö', u'nix']), attr="Subject")
+        >>> tool.indexes['Subject'] = index
+        >>> vocab = KeywordsVocabulary()
+        >>> result = vocab(context)
+        >>> result.by_token.keys()
+        ['nix', '=C3=83=C2=A4=C3=83=C2=BC=C3=83=C2=B6']
+        >>> result.by_value.keys() == [u'äüö', u'nix']
+        True
+        >>> test_title = result.getTermByToken('=C3=83=C2=A4=C3=83=C2=BC=C3=83=C2=B6').title
+        >>> test_title == u'äüö'
+        True
+
     """
     implements(IVocabularyFactory)
 
@@ -404,8 +421,18 @@ class KeywordsVocabulary(object):
         if self.catalog is None:
             return SimpleVocabulary([])
         index = self.catalog._catalog.getIndex('Subject')
-        # Vocabulary term tokens *must* be 7 bit values, titles *must* be unicode
-        items = [SimpleTerm(i, b2a_qp(i), safe_unicode(i)) for i in index._index]
+
+        def safe_encode(term):
+            if isinstance(term, unicode):
+                # no need to use portal encoding for transitional encoding from
+                # unicode to ascii. utf-8 should be fine.
+                term = term.encode('utf-8')
+            return term
+
+        # Vocabulary term tokens *must* be 7 bit values, titles *must* be
+        # unicode
+        items = [SimpleTerm(i, b2a_qp(safe_encode(i)), safe_unicode(i))
+                 for i in index._index]
         return SimpleVocabulary(items)
 
 KeywordsVocabularyFactory = KeywordsVocabulary()

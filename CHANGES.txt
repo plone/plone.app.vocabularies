@@ -4,6 +4,9 @@ Changelog
 2.1.8 (unreleased)
 ------------------
 
+- Make KeywordsVocabulary work with unicode and non-unicode vocabularies.
+  [thet]
+
 - Fix exception with workflow vocabulary when workflow titles contained UTF-8 encoded
   characters [miohtama]
 
