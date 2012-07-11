@@ -3,7 +3,6 @@ import json
 from plone.app.contentlisting.interfaces import IContentListing
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone.browser.navtree import getNavigationRoot
 from Products.CMFPlone.PloneBatch import Batch
 from zope.component import getMultiAdapter, getUtility
 from zope.i18n import translate
@@ -71,8 +70,6 @@ class QueryBuilder(BrowserView):
 
         if 'path' not in parsedquery:
             parsedquery['path'] = {'query': ''}
-        parsedquery['path']['query'] = getNavigationRoot(self.context) + \
-                parsedquery['path']['query']
 
         results = catalog(parsedquery)
         if not brains:

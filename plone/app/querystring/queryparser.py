@@ -1,14 +1,15 @@
 from collections import namedtuple
 import logging
 
-from Acquisition import aq_parent, aq_inner, aq_base
+from Acquisition import aq_parent
 from DateTime import DateTime
 from plone.app.layout.navigation.interfaces import INavigationRoot
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.browser.navtree import getNavigationRoot
+from Products.CMFPlone.utils import base_hasattr
 from zope.component import getUtility
 from zope.dottedname.resolve import resolve
-from zope.component._api import getMultiAdapter
 
 logger = logging.getLogger('plone.app.querystring')
 
@@ -200,6 +201,10 @@ def _path(context, row):
     if not '/' in values:
         # It must be a UID
         values = '/'.join(getPathByUID(context, values))
+    # take care of absolute paths without nav_root
+    nav_root = getNavigationRoot(context)
+    if not values.startswith(nav_root):
+        values = nav_root + values
     tmp = {row.index: {'query': values, }}
     return tmp
 
@@ -215,9 +220,10 @@ def _relativePath(context, row):
             if parent:
                 obj = parent
         else:
-            child = getattr(aq_base(aq_inner(obj)), x, None)
-            if child and hasattr(aq_base(child), "getPhysicalPath"):
-                obj = child
+            if base_hasattr(obj, x):
+                child = getattr(obj, x, None)
+                if child and base_hasattr(child, "getPhysicalPath"):
+                    obj = child
 
     row = Row(index=row.index,
               operator=row.operator,
