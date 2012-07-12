@@ -298,6 +298,14 @@ class TestQueryGenerators(TestQueryParserBase):
         expected = {'path': {'query': '/%s' % MOCK_SITE_ID}}
         self.assertEqual(parsed, expected)
 
+        # if you walk beyond INavigatinRoot it should stop and return
+        data = Row(index='path',
+                  operator='_relativePath',
+                  values='../../../')
+        parsed = queryparser._relativePath(context, data)
+        expected = {'path': {'query': '/%s' % MOCK_SITE_ID}}
+        self.assertEqual(parsed, expected)
+
         # reach a subfolder on Plone root
         data = Row(index='path',
                    operator='_relativePath',
