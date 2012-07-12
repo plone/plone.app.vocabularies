@@ -282,6 +282,14 @@ class TestQueryGenerators(TestQueryParserBase):
         context.__parent__.egg = MockObject(uid='00000000000000006',
                                             path="/%s/bar/egg" % MOCK_SITE_ID)
 
+        # show my siblings
+        data = Row(index='path',
+                  operator='_relativePath',
+                  values='..')
+        parsed = queryparser._relativePath(context, data)
+        expected = {'path': {'query': '/%s/bar' % MOCK_SITE_ID}}
+        self.assertEqual(parsed, expected)
+
         # walk upwards
         data = Row(index='path',
                   operator='_relativePath',
