@@ -6,6 +6,8 @@ from DateTime import DateTime
 from plone.app.layout.navigation.interfaces import INavigationRoot
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.browser.navtree import getNavigationRoot
+from Products.CMFPlone.utils import base_hasattr
 from zope.component import getUtility
 from zope.dottedname.resolve import resolve
 
@@ -199,19 +201,29 @@ def _path(context, row):
     if not '/' in values:
         # It must be a UID
         values = '/'.join(getPathByUID(context, values))
+    # take care of absolute paths without nav_root
+    nav_root = getNavigationRoot(context)
+    if not values.startswith(nav_root):
+        values = nav_root + values
     tmp = {row.index: {'query': values, }}
     return tmp
 
 
 def _relativePath(context, row):
-    # Walk up the tree until we reach a navigation root, or the root is reached
+    # Walk through the tree
     obj = context
     for x in [r for r in row.values.split('/') if r]:
-        if INavigationRoot.providedBy(obj):
-            break
-        parent = aq_parent(obj)
-        if parent:
-            obj = parent
+        if x == "..":
+            if INavigationRoot.providedBy(obj):
+                break
+            parent = aq_parent(obj)
+            if parent:
+                obj = parent
+        else:
+            if base_hasattr(obj, x):
+                child = getattr(obj, x, None)
+                if child and base_hasattr(child, "getPhysicalPath"):
+                    obj = child
 
     row = Row(index=row.index,
               operator=row.operator,

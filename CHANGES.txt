@@ -4,7 +4,9 @@ Changelog
 1.0.6 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- _relativePath handler can now walk through the site structure (not only upwards)
+  _path handler respects absolute paths without leading nav_root path
+  [petschki]
 
 
 1.0.5 (2012-06-29)
@@ -12,9 +14,9 @@ Changelog
 
 - Date ranges now use the _betweenDates handler, which is much more forgiving
   of empty field values, defaulting to an all-encompassing date range if neither
-  value is provided, an "everything after" range if only the start date is 
+  value is provided, an "everything after" range if only the start date is
   provided, and a min/max range if both are provided.
-  
+
   Fixes http://dev.plone.org/ticket/12965
   [esteele]
 
@@ -34,7 +36,7 @@ Changelog
   results not wrapped as an IContentListing.
   [davisagli]
 
-* Declare all dependencies in setup.py to resolve a dependeny problem in 
+* Declare all dependencies in setup.py to resolve a dependeny problem in
   test setups, where the Plone stack isn't fully loaded.
   [thet]
 

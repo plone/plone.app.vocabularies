@@ -5,10 +5,12 @@ from plone.app.layout.navigation.interfaces import INavigationRoot
 from plone.app.querystring import queryparser
 from plone.registry import field
 from plone.registry import Record
-from zope.interface import directlyProvides
 
 from .base import UnittestWithRegistryLayer
 from plone.app.querystring.queryparser import Row
+from zope.interface.declarations import implements
+
+MOCK_SITE_ID = "site"
 
 
 class MockObject(object):
@@ -32,7 +34,8 @@ class MockCatalog(object):
     def unrestrictedSearchResults(self, query):
         uid = query.get('UID')
         if uid == '00000000000000001':
-            return [MockObject(uid='00000000000000001', path="/site/foo")]
+            return [MockObject(uid='00000000000000001',
+                               path="/%s/foo" % MOCK_SITE_ID)]
         raise NotImplementedError
 
     def indexes(self):
@@ -46,12 +49,37 @@ class MockCatalog(object):
                 'getRawRelatedItems', 'Subject']
 
 
+class MockPortalUrl(object):
+
+    def getPortalPath(self):
+        return "/%s" % MOCK_SITE_ID
+
+    def getPortalObject(self):
+        return MockObject(uid='00000000000000000', path="/%s" % MOCK_SITE_ID)
+
+
+class MockNavtreeProperties(object):
+
+    def getProperty(self, name, default=""):
+        return ""
+
+
+class MockSiteProperties(object):
+    navtree_properties = MockNavtreeProperties()
+
+
 class MockSite(object):
+    implements(INavigationRoot)
 
     def __init__(self, portal_membership=None):
         self.reference_catalog = MockCatalog()
         self.portal_catalog = MockCatalog()
         self.portal_membership = portal_membership
+        self.portal_url = MockPortalUrl()
+        self.portal_properties = MockSiteProperties()
+
+    def getPhysicalPath(self):
+        return ["", MOCK_SITE_ID]
 
 
 class MockUser(object):
@@ -109,10 +137,10 @@ class TestQueryParser(TestQueryParserBase):
         data = {
             'i': 'path',
             'o': 'plone.app.querystring.operation.string.path',
-            'v': '/site/foo',
+            'v': '/foo',
         }
         parsed = queryparser.parseFormquery(MockSite(), [data, ])
-        self.assertEqual(parsed, {'path': {'query': '/site/foo'}})
+        self.assertEqual(parsed, {'path': {'query': '/%s/foo' % MOCK_SITE_ID}})
 
     def test_path_computed(self):
         data = {
@@ -122,7 +150,7 @@ class TestQueryParser(TestQueryParserBase):
         }
 
         parsed = queryparser.parseFormquery(MockSite(), [data, ])
-        self.assertEqual(parsed, {'path': {'query': '/site/foo'}})
+        self.assertEqual(parsed, {'path': {'query': '/%s/foo' % MOCK_SITE_ID}})
 
 
 class TestQueryGenerators(TestQueryParserBase):
@@ -222,9 +250,9 @@ class TestQueryGenerators(TestQueryParserBase):
         # normal path
         data = Row(index='path',
                   operator='_path',
-                  values='/Plone/news/')
+                  values='/news/')
         parsed = queryparser._path(MockSite(), data)
-        expected = {'path': {'query': '/Plone/news/'}}
+        expected = {'path': {'query': '/%s/news/' % MOCK_SITE_ID}}
         self.assertEqual(parsed, expected)
 
         # by uid
@@ -232,28 +260,66 @@ class TestQueryGenerators(TestQueryParserBase):
                   operator='_path',
                   values='00000000000000001')
         parsed = queryparser._path(MockSite(), data)
-        expected = {'path': {'query': '/site/foo'}}
+        expected = {'path': {'query': '/%s/foo' % MOCK_SITE_ID}}
         self.assertEqual(parsed, expected)
 
     def test__relativePath(self):
-        context = MockObject(uid='00000000000000001', path="/foo/bar/fizz")
+        # build test navtree
+        context = MockObject(uid='00000000000000001',
+                             path="/%s/bar/fizz" % MOCK_SITE_ID)
         context.__parent__ = MockObject(uid='00000000000000002',
-                                        path="/foo/bar")
-
+                                        path="/%s/bar" % MOCK_SITE_ID)
         # Plone root
-        root = MockObject(uid='00000000000000003', path="/foo")
-        directlyProvides(root, INavigationRoot)
-        context.__parent__.__parent__ = root
-
+        context.__parent__.__parent__ = MockSite()
         # Zope root
-        zoperoot = MockObject(uid='00000000000000004', path="/")
-        context.__parent__.__parent__.__parent__ = zoperoot
+        context.__parent__.__parent__.__parent__ = \
+            MockObject(uid='00000000000000004', path="/")
+        # ploneroot sub folder
+        context.__parent__.__parent__.ham = \
+            MockObject(uid='00000000000000005',
+                       path="/%s/ham" % MOCK_SITE_ID)
+        # collection subfolder
+        context.__parent__.egg = MockObject(uid='00000000000000006',
+                                            path="/%s/bar/egg" % MOCK_SITE_ID)
 
+        # show my siblings
+        data = Row(index='path',
+                  operator='_relativePath',
+                  values='..')
+        parsed = queryparser._relativePath(context, data)
+        expected = {'path': {'query': '/%s/bar' % MOCK_SITE_ID}}
+        self.assertEqual(parsed, expected)
+
+        # walk upwards
         data = Row(index='path',
                   operator='_relativePath',
                   values='../../')
         parsed = queryparser._relativePath(context, data)
-        expected = {'path': {'query': '/foo'}}
+        expected = {'path': {'query': '/%s' % MOCK_SITE_ID}}
+        self.assertEqual(parsed, expected)
+
+        # if you walk beyond INavigatinRoot it should stop and return
+        data = Row(index='path',
+                  operator='_relativePath',
+                  values='../../../')
+        parsed = queryparser._relativePath(context, data)
+        expected = {'path': {'query': '/%s' % MOCK_SITE_ID}}
+        self.assertEqual(parsed, expected)
+
+        # reach a subfolder on Plone root
+        data = Row(index='path',
+                   operator='_relativePath',
+                   values='../../ham')
+        parsed = queryparser._relativePath(context, data)
+        expected = {'path': {'query': '/%s/ham' % MOCK_SITE_ID}}
+        self.assertEqual(parsed, expected)
+
+        # reach a subfolder on parent of collection
+        data = Row(index='path',
+                   operator='_relativePath',
+                   values='../egg')
+        parsed = queryparser._relativePath(context, data)
+        expected = {'path': {'query': '/%s/bar/egg' % MOCK_SITE_ID}}
         self.assertEqual(parsed, expected)
 
     def test_getPathByUID(self):
