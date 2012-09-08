@@ -9,9 +9,6 @@ from zope.schema.vocabulary import SimpleVocabulary
 from Products.CMFPlone.interfaces.syndication import ISiteSyndicationSettings
 from zope.component import getUtility
 from plone.registry.interfaces import IRegistry
-from Products.ATContentTypes.interface.topic import IATTopic
-from plone.app.collection.interfaces import ICollection
-from Products.CMFCore.interfaces._content import IFolderish
 
 _ = MessageFactory('plone')
 
@@ -21,7 +18,10 @@ class SyndicationFeedTypesVocabulary(object):
 
     def __call__(self, context):
         registry = getUtility(IRegistry)
-        settings = registry.forInterface(ISiteSyndicationSettings)
+        try:
+            settings = registry.forInterface(ISiteSyndicationSettings)
+        except KeyError:
+            return SimpleVocabulary([])
         items = []
         for _type in settings.allowed_feed_types:
             split = _type.split('|')
