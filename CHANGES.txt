@@ -10,6 +10,10 @@ Changelog
 - Fix exception with workflow vocabulary when workflow titles contained UTF-8 encoded
   characters [miohtama]
 
+- Add syndication feed types vocabulary
+  [vangheem]
+
+
 2.1.7 (2012-07-02)
 ------------------
 

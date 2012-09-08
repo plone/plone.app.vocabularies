@@ -75,6 +75,16 @@
     name="plone.app.vocabularies.Keywords"
     />
 
+  <utility
+    component=".syndication.SyndicationFeedTypesVocabularyFactory"
+    name="plone.app.vocabularies.SyndicationFeedTypes"
+    />
+
+  <utility
+    component=".syndication.SyndicatableFeedItemsFactory"
+    name="plone.app.vocabularies.SyndicatableFeedItems"
+    />
+
   <adapter
       for=".catalog.SearchableTextSource
            zope.publisher.interfaces.browser.IBrowserRequest"
