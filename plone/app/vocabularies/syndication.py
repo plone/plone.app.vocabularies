@@ -6,7 +6,13 @@ from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 
-from Products.CMFPlone.interfaces.syndication import ISiteSyndicationSettings
+try:
+    from Products.CMFPlone.interfaces.syndication import \
+        ISiteSyndicationSettings
+    HAS_SYNDICATION = True
+except ImportError:
+    # new syndication not available
+    HAS_SYNDICATION = False
 from zope.component import getUtility
 from plone.registry.interfaces import IRegistry
 
@@ -17,6 +23,8 @@ class SyndicationFeedTypesVocabulary(object):
     implements(IVocabularyFactory)
 
     def __call__(self, context):
+        if not HAS_SYNDICATION:
+            return SimpleVocabulary([])
         registry = getUtility(IRegistry)
         try:
             settings = registry.forInterface(ISiteSyndicationSettings)
