@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 from zope.i18n import translate
 from zope.i18nmessageid import MessageFactory
 from zope.interface import implements
@@ -31,7 +32,8 @@ class WorkflowsVocabulary(object):
       >>> tool = DummyTool('portal_workflow')
       >>> def values():
       ...     return (Workflow('default', 'Default Workflow'),
-      ...             Workflow('intranet', 'Intranet Workflow'))
+      ...             Workflow('intranet', 'Intranet Workflow'),
+      ...             Workflow('noticias', 'Workflow de Notícias'),)
       >>> tool.values = values
       >>> context.portal_workflow = tool
 
@@ -40,11 +42,15 @@ class WorkflowsVocabulary(object):
       <zope.schema.vocabulary.SimpleVocabulary object at ...>
 
       >>> len(workflows.by_token)
-      2
+      3
 
       >>> intranet = workflows.by_token['intranet']
       >>> intranet.title, intranet.token, intranet.value
-      ('Intranet Workflow', 'intranet', 'intranet')
+      (u'Intranet Workflow', 'intranet', 'intranet')
+
+      >>> noticias = workflows.by_token['noticias']
+      >>> noticias.title == 'Workflow de Notícias'.decode('utf-8')
+      True
     """
     implements(IVocabularyFactory)
 
@@ -55,7 +61,9 @@ class WorkflowsVocabulary(object):
         if wtool is not None:
             items = [(w.title, w.id) for w in wtool.values()]
             items.sort()
-            items = [SimpleTerm(i[1], i[1], i[0]) for i in items]
+            # All vocabularies return theirs term title as unicode
+            items = [SimpleTerm(i[1], i[1], i[0].decode('utf-8'))
+                                                 for i in items]
         return SimpleVocabulary(items)
 
 WorkflowsVocabularyFactory = WorkflowsVocabulary()
