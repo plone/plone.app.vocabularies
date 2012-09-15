@@ -7,6 +7,9 @@ Changelog
 - Make KeywordsVocabulary work with unicode and non-unicode vocabularies.
   [thet]
 
+- Fix exceptions with workflow states/transitions titles when their titles 
+  contained encoded characters [ericof]
+
 - Fix exception with workflow vocabulary when workflow titles contained UTF-8 encoded
   characters [miohtama]
 
