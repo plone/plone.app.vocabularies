@@ -161,12 +161,14 @@ class WorkflowTransitionsVocabulary(object):
       >>> tool = DummyTool('portal_workflow')
       >>> t1 = Transition('publish', 'Publish')
       >>> t2 = Transition('reject', 'Reject')
+      >>> t3 = Transition('publicacao', 'Publicação')
 
       >>> wf1 = Workflow('default', 'Default Workflow', (t1, t2))
       >>> wf2 = Workflow('intranet', 'Intranet Workflow', (t1, ))
+      >>> wf3 = Workflow('noticias', 'Workflow de Notícias', (t2, t3))
 
       >>> def values():
-      ...     return (wf1, wf2)
+      ...     return (wf1, wf2, wf3)
       >>> tool.values = values
       >>> context.portal_workflow = tool
 
@@ -175,11 +177,15 @@ class WorkflowTransitionsVocabulary(object):
       <zope.schema.vocabulary.SimpleVocabulary object at ...>
 
       >>> len(transitions.by_token)
-      2
+      3
 
       >>> pub = transitions.by_token['publish']
       >>> pub.title, pub.token, pub.value
       (u'Publish [publish]', 'publish', 'publish')
+
+      >>> publ = transitions.by_token['publicacao']
+      >>> publ.title == 'Publicação [publicacao]'.decode('utf-8')
+      True
     """
     implements(IVocabularyFactory)
 
