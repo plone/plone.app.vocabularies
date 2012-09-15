@@ -82,7 +82,9 @@ class WorkflowStatesVocabulary(object):
 
       >>> tool = DummyTool('portal_workflow')
       >>> def listWFStatesByTitle(filter_similar=None):
-      ...     return (('Private', 'private'), ('Published', 'published'))
+      ...     return (('Private', 'private'),
+      ...             ('Revisão', 'revisao'),
+      ...             ('Published', 'published'))
       >>> tool.listWFStatesByTitle = listWFStatesByTitle
       >>> context.portal_workflow = tool
 
@@ -91,11 +93,15 @@ class WorkflowStatesVocabulary(object):
       <zope.schema.vocabulary.SimpleVocabulary object at ...>
 
       >>> len(states.by_token)
-      2
+      3
 
       >>> pub = states.by_token['published']
       >>> pub.title, pub.token, pub.value
       (u'Published [published]', 'published', 'published')
+
+      >>> rev = states.by_token['revisao']
+      >>> rev.title == 'Revisão [revisao]'.decode('utf-8')
+      True
     """
     implements(IVocabularyFactory)
 
@@ -112,10 +118,13 @@ class WorkflowStatesVocabulary(object):
         request = aq_get(wtool, 'REQUEST', None)
 
         items = wtool.listWFStatesByTitle(filter_similar=True)
-        items_dict = dict([(i[1], translate(_(i[0]), context=request)) for i in items])
+        items = [(i[0].decode('utf-8'), i[1]) for i in items]
+        items_dict = dict([(i[1], translate(_(i[0]), context=request))
+                                                  for i in items])
         items_list = [(k, v) for k, v in items_dict.items()]
         items_list.sort(lambda x, y: cmp(x[1], y[1]))
-        terms = [SimpleTerm(k, title=u'%s [%s]' % (v, k)) for k, v in items_list]
+        terms = [SimpleTerm(k, title=u'%s [%s]' % (v, k))
+                                                  for k, v in items_list]
         return SimpleVocabulary(terms)
 
 WorkflowStatesVocabularyFactory = WorkflowStatesVocabulary()
