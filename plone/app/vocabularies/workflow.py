@@ -9,6 +9,7 @@ from zope.site.hooks import getSite
 
 from Acquisition import aq_get
 from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.utils import safe_unicode
 
 _ = MessageFactory('plone')
 
@@ -62,7 +63,7 @@ class WorkflowsVocabulary(object):
             items = [(w.title, w.id) for w in wtool.values()]
             items.sort()
             # All vocabularies return theirs term title as unicode
-            items = [SimpleTerm(i[1], i[1], i[0].decode('utf-8'))
+            items = [SimpleTerm(i[1], i[1], safe_unicode(i[0]))
                                                  for i in items]
         return SimpleVocabulary(items)
 
@@ -118,7 +119,7 @@ class WorkflowStatesVocabulary(object):
         request = aq_get(wtool, 'REQUEST', None)
 
         items = wtool.listWFStatesByTitle(filter_similar=True)
-        items = [(i[0].decode('utf-8'), i[1]) for i in items]
+        items = [(safe_unicode(i[0]), i[1]) for i in items]
         items_dict = dict([(i[1], translate(_(i[0]), context=request))
                                                   for i in items])
         items_list = [(k, v) for k, v in items_dict.items()]
@@ -209,9 +210,7 @@ class WorkflowTransitionsVocabulary(object):
                     # where transition names are in local language.
                     # This may break overlying functionality even
                     # if the terms themselves are never used
-                    name = transition.actbox_name
-                    if type(name) == str:
-                        name = name.decode("utf-8")
+                    name = safe_unicode(transition.actbox_name)
 
                     transition_title = translate(
                                         _(name),
