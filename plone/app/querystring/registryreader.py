@@ -67,7 +67,13 @@ class QuerystringRegistryReader(object):
                 utility = getUtility(IVocabularyFactory, vocabulary)
                 for item in sorted(utility(self.context),
                                    key=attrgetter('title')):
-                    field['values'][item.value] = {'title': item.title}
+
+                    if isinstance(item.title, Message):
+                        title = translate(item.title, context=getRequest())
+                    else:
+                        title = item.title
+
+                    field['values'][item.value] = {'title': title}
         return values
 
     def mapOperations(self, values):
