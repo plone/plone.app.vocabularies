@@ -1,7 +1,7 @@
 from operator import attrgetter
 
 from plone.registry.interfaces import IRegistry
-from zope.component import getUtility, adapts
+from zope.component import queryUtility, adapts
 from zope.interface import implements
 from zope.i18nmessageid import Message
 from zope.i18n import translate
@@ -64,16 +64,16 @@ class QuerystringRegistryReader(object):
             field['values'] = {}
             vocabulary = field.get('vocabulary', [])
             if vocabulary:
-                utility = getUtility(IVocabularyFactory, vocabulary)
-                for item in sorted(utility(self.context),
-                                   key=attrgetter('title')):
+                utility = queryUtility(IVocabularyFactory, vocabulary)
+                if utility is not None:
+                    for item in sorted(utility(self.context),
+                                       key=attrgetter('title')):
+                        if isinstance(item.title, Message):
+                            title = translate(item.title, context=getRequest())
+                        else:
+                            title = item.title
 
-                    if isinstance(item.title, Message):
-                        title = translate(item.title, context=getRequest())
-                    else:
-                        title = item.title
-
-                    field['values'][item.value] = {'title': title}
+                        field['values'][item.value] = {'title': title}
         return values
 
     def mapOperations(self, values):
