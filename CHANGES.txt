@@ -4,7 +4,10 @@ Changelog
 1.0.7 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- getVocabularyValues now checks if the vocabulary utility is missing, 
+  if it is the utility is just ignored. This makes the module tollarant to
+  missing vocabulary utilities. 
+  [bosim]
 
 
 1.0.6 (2012-10-03)
@@ -13,10 +16,6 @@ Changelog
 - _relativePath handler can now walk through the site structure (not only upwards)
   _path handler respects absolute paths without leading nav_root path
   [petschki]
-- getVocabularyValues now checks if the vocabulary utility is missing, 
-  if it is the utility is just ignored. This makes the module tollarant to
-  missing vocabulary utilities. 
-  [bosim]
 
 
 1.0.5 (2012-06-29)
