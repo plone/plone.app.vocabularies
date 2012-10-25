@@ -3,7 +3,10 @@ from zope.schema import TextLine, Text, Bool, List, DottedName
 
 
 class IQuerystringRegistryReader(Interface):
-    """Marker interface for the registry adapter"""
+    """Adapts a registry object to parse the querystring data"""
+
+    def __call__():
+        """Return query string in dict-format."""
 
 
 class IQueryOperation(Interface):

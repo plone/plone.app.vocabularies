@@ -16,6 +16,13 @@
     />
 
   <adapter
+    for="plone.registry.interfaces.IRegistry"
+    factory=".registryreader.QuerystringRegistryReader"
+    />
+
+  <adapter
+    for="plone.registry.interfaces.IRegistry
+         zope.publisher.interfaces.http.IHTTPRequest"
     factory=".registryreader.QuerystringRegistryReader"
     />
 

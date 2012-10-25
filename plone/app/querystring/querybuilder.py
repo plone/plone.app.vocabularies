@@ -1,16 +1,20 @@
 import json
 
-from plone.app.contentlisting.interfaces import IContentListing
-from plone.registry.interfaces import IRegistry
-from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone.PloneBatch import Batch
 from zope.component import getMultiAdapter, getUtility
 from zope.i18n import translate
+
 from zope.i18nmessageid import MessageFactory
 from zope.publisher.browser import BrowserView
 
+
+from plone.app.contentlisting.interfaces import IContentListing
+from plone.registry.interfaces import IRegistry
 from plone.app.querystring import queryparser
-from plone.app.querystring.interfaces import IQuerystringRegistryReader
+
+from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.PloneBatch import Batch
+
+from .interfaces import IQuerystringRegistryReader
 
 _ = MessageFactory('plone')
 
@@ -88,7 +92,9 @@ class QueryBuilder(BrowserView):
 
 
 class RegistryConfiguration(BrowserView):
-
     def __call__(self):
-        """Return the registry configuration in JSON format"""
-        return json.dumps(IQuerystringRegistryReader(getUtility(IRegistry))())
+        registry = getUtility(IRegistry)
+        reader = getMultiAdapter(
+            (registry, self.request), IQuerystringRegistryReader)
+        data = reader()
+        return json.dumps(data)

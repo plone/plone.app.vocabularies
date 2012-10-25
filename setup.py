@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '1.0.6.dev0'
+version = '1.0.7.dev0'
 
 setup(name='plone.app.querystring',
       version=version,

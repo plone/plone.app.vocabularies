@@ -2,12 +2,13 @@ from operator import attrgetter
 import logging
 
 from plone.registry.interfaces import IRegistry
-from zope.component import queryUtility, adapts
+from zope.component import queryUtility
+from zope.component import adapts
 from zope.interface import implements
-from zope.i18nmessageid import Message
-from zope.i18n import translate
-from zope.schema.interfaces import IVocabularyFactory
 from zope.globalrequest import getRequest
+from zope.i18n import translate
+from zope.i18nmessageid import Message
+from zope.schema.interfaces import IVocabularyFactory
 
 from .interfaces import IQuerystringRegistryReader
 
@@ -26,18 +27,24 @@ class DottedDict(dict):
 
 
 class QuerystringRegistryReader(object):
-    """Adapts a registry object to parse the querystring data"""
+    """Adapts a registry object to parse the querystring data."""
 
     implements(IQuerystringRegistryReader)
-    adapts(IRegistry)
+
     prefix = "plone.app.querystring"
 
-    def __init__(self, context):
+    def __init__(self, context, request=None):
+        if request is None:
+            request = getRequest()
+
         self.context = context
+        self.request = request
 
     def parseRegistry(self):
         """Make a dictionary structure for the values in the registry"""
+
         result = DottedDict()
+
         for record in self.context.records:
             if not record.startswith(self.prefix):
                 continue
@@ -54,7 +61,7 @@ class QuerystringRegistryReader(object):
             key = splitted[-1]
             value = self.context.records[record].value
             if isinstance(value, Message):
-                value = translate(value, context=getRequest())
+                value = translate(value, context=self.request)
             current[key] = value
 
         return result
@@ -71,7 +78,7 @@ class QuerystringRegistryReader(object):
                     for item in sorted(utility(self.context),
                                        key=attrgetter('title')):
                         if isinstance(item.title, Message):
-                            title = translate(item.title, context=getRequest())
+                            title = translate(item.title, context=self.request)
                         else:
                             title = item.title
 
@@ -106,9 +113,8 @@ class QuerystringRegistryReader(object):
         return values
 
     def __call__(self):
-        """Get values from registry, map the operations and indexes,
-           and return them
-        """
+        """Return the registry configuration in JSON format"""
+
         indexes = self.parseRegistry()
         indexes = self.getVocabularyValues(indexes)
         indexes = self.mapOperations(indexes)
