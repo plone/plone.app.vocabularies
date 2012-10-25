@@ -1,4 +1,5 @@
 from operator import attrgetter
+import logging
 
 from plone.registry.interfaces import IRegistry
 from zope.component import queryUtility, adapts
@@ -10,6 +11,7 @@ from zope.globalrequest import getRequest
 
 from .interfaces import IQuerystringRegistryReader
 
+logger = logging.getLogger("plone.app.querystring")
 
 class DottedDict(dict):
     """A dictionary where you can access nested dicts with dotted names"""
@@ -74,6 +76,8 @@ class QuerystringRegistryReader(object):
                             title = item.title
 
                         field['values'][item.value] = {'title': title}
+                else:
+                    logger.info("%s is missing, ignored." % vocabulary)
         return values
 
     def mapOperations(self, values):
