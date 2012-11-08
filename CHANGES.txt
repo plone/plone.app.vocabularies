@@ -4,9 +4,9 @@ Changelog
 1.0.7 (unreleased)
 ------------------
 
-- getVocabularyValues now checks if the vocabulary utility is missing, 
+- getVocabularyValues now checks if the vocabulary utility is missing,
   if it is the utility is just ignored. This makes the module tollarant to
-  missing vocabulary utilities. 
+  missing vocabulary utilities.
   [bosim]
 
 
