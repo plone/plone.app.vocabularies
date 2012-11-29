@@ -5,6 +5,7 @@ from zope.browser.interfaces import ITerms
 from zope.interface import implements, classProvides
 from zope.schema.interfaces import ISource, IContextSourceBinder, IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
+from zope.site.hooks import getSite
 
 from zope.formlib.interfaces import ISourceQueryView
 
@@ -416,8 +417,8 @@ class KeywordsVocabulary(object):
     implements(IVocabularyFactory)
 
     def __call__(self, context):
-        self.context = context
-        self.catalog = getToolByName(context, "portal_catalog")
+        site = getSite()
+        self.catalog = getToolByName(site, "portal_catalog", None)
         if self.catalog is None:
             return SimpleVocabulary([])
         index = self.catalog._catalog.getIndex('Subject')
