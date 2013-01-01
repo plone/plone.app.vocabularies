@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.0.7 (unreleased)
+1.0.7 (2013-01-01)
 ------------------
 
 - getVocabularyValues now checks if the vocabulary utility is missing,
