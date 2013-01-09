@@ -85,6 +85,11 @@
     name="plone.app.vocabularies.SyndicatableFeedItems"
     />
 
+  <utility
+    factory=".users.UsersFactory"
+    name="plone.app.vocabularies.Users"
+    />
+
   <adapter
       for=".catalog.SearchableTextSource
            zope.publisher.interfaces.browser.IBrowserRequest"

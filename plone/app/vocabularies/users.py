@@ -1,6 +1,9 @@
 from zope.browser.interfaces import ITerms
+from zope.interface import directlyProvides
 from zope.interface import implements, classProvides
 from zope.schema.interfaces import ISource, IContextSourceBinder
+from zope.schema.interfaces import IVocabularyTokenized
+from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 
 from zope.formlib.interfaces import ISourceQueryView
@@ -58,6 +61,56 @@ class UsersSource(object):
 
     def get(self, value):
         return self.users.getUserById(value, None)
+
+
+class UsersVocabulary(object):
+    """
+    """
+    implements(IVocabularyTokenized)
+
+    def __init__(self, terms, context, *interfaces):
+        self._terms = terms
+        self._context = context
+        self._users = getToolByName(context, "acl_users")
+        if interfaces:
+            directlyProvides(self, *interfaces)
+
+    @classmethod
+    def fromItems(cls, items, context, *interfaces):
+        def lazy(items):
+            for item in items:
+                yield cls.createTerm(item['userid'], context)
+        return cls(lazy(items), context, *interfaces)
+    fromValues = fromItems
+
+    @classmethod
+    def createTerm(cls, userid, context):
+        users = getToolByName(context, "acl_users")
+        return SimpleTerm(userid, userid, users.getUserById(userid, None))
+
+    def __contains__(self, value):
+        return self._users.getUserById(value, None) and True or False
+
+    def getTerm(self, value):
+        return SimpleTerm(value, value, self._users.getUserById(value, None))
+    getTermByToken = getTerm
+
+    def __iter__(self):
+        for item in self._terms:
+            yield self.getTerm(item['userid'])
+
+    def __len__(self):
+        return len(self._terms)
+
+
+class UsersFactory(object):
+    """
+    """
+    implements(IVocabularyFactory)
+
+    def __call__(self, context, query=''):
+        users = getToolByName(context, "acl_users")
+        return UsersVocabulary(users.searchUsers(name=query), context)
 
 
 class UsersSourceQueryView(object):
