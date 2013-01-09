@@ -4,7 +4,9 @@ Changelog
 2.1.9 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- adding users vocabulary (lazy loading of users) also supports searching over
+  users.
+  [garbas]
 
 
 2.1.8 (2012-10-03)
