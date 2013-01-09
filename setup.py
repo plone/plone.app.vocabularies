@@ -5,8 +5,8 @@ version = '2.1.9.dev0'
 setup(name='plone.app.vocabularies',
       version=version,
       description="A collection of generally useful vocabularies.",
-      long_description=open("README.txt").read() + "\n" +
-                       open("CHANGES.txt").read(),
+      long_description=open("README.rst").read() + "\n" +
+                       open("CHANGES.rst").read(),
       classifiers=[
           "Environment :: Web Environment",
           "Framework :: Plone",
