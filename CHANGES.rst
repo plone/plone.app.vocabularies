@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.9 (unreleased)
+2.1.9 (2013-01-13)
 ------------------
 
 - adding users vocabulary (lazy loading of users) also supports searching over
