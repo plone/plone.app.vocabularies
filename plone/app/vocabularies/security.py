@@ -88,7 +88,7 @@ class GroupsVocabulary(object):
       ...     def getGroupId(self):
       ...         return self.id
       ...
-      ...     def getGroupName(self):
+      ...     def getGroupTitleOrName(self):
       ...         return self.name
 
       >>> tool = DummyTool('portal_groups')
@@ -117,7 +117,7 @@ class GroupsVocabulary(object):
         gtool = getToolByName(site, 'portal_groups', None)
         if gtool is not None:
             groups = gtool.listGroups()
-            items = [(g.getGroupId(), g.getGroupName()) for g in groups]
+            items = [(g.getGroupId(), g.getGroupTitleOrName()) for g in groups]
             items.sort()
             items = [SimpleTerm(i[0], i[0], i[1]) for i in items]
         return SimpleVocabulary(items)
