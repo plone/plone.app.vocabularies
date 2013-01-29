@@ -4,7 +4,8 @@ Changelog
 2.1.10 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- UsersVocabulary should search on fullname .
+  [garbas]
 
 
 2.1.9 (2013-01-13)
