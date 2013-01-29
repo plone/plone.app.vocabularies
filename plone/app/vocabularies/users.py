@@ -86,13 +86,21 @@ class UsersVocabulary(object):
     @classmethod
     def createTerm(cls, userid, context):
         users = getToolByName(context, "acl_users")
-        return SimpleTerm(userid, userid, users.getUserById(userid, None))
+        user = users.getUserById(userid, None)
+        fullname = userid
+        if user:
+            fullname = user.getProperty('fullname', None) or userid
+        return SimpleTerm(userid, userid, fullname)
 
     def __contains__(self, value):
         return self._users.getUserById(value, None) and True or False
 
-    def getTerm(self, value):
-        return SimpleTerm(value, value, self._users.getUserById(value, None))
+    def getTerm(self, userid):
+        fullname = userid
+        user = self._users.getUserById(userid, None)
+        if user:
+            fullname = user.getProperty('fullname', None) or userid
+        return SimpleTerm(userid, userid, fullname)
     getTermByToken = getTerm
 
     def __iter__(self):
@@ -110,7 +118,7 @@ class UsersFactory(object):
 
     def __call__(self, context, query=''):
         users = getToolByName(context, "acl_users")
-        return UsersVocabulary(users.searchUsers(name=query), context)
+        return UsersVocabulary(users.searchUsers(fullname=query), context)
 
 
 class UsersSourceQueryView(object):
