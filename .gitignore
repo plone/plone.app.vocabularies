@@ -1,3 +1,4 @@
 *.py?
 
 /plone.app.vocabularies.egg-info/
+/dist/
