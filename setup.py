@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '2.1.10.dev0'
+version = '2.1.10'
 
 setup(
     name='plone.app.vocabularies',
@@ -21,7 +21,7 @@ setup(
     keywords='Plone Zope formlib vocabularies',
     author='Plone Foundation',
     author_email='plone-developers@lists.sourceforge.net',
-    url='http://pypi.python.org/pypi/plone.app.vocabularies',
+    url='https://github.com/plone/plone.app.vocabularies',
     license='GPL version 2',
     packages=find_packages(exclude=['ez_setup']),
     namespace_packages=['plone', 'plone.app'],

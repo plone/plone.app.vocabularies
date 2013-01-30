@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.10 (unreleased)
+2.1.10 (2013-01-30)
 -------------------
 
 - UsersVocabulary should search on fullname .
