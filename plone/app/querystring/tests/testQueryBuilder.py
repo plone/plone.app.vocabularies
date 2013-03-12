@@ -1,3 +1,5 @@
+ # -*- coding: utf-8 -*-
+
 from zope.component import getMultiAdapter
 from zope.publisher.browser import TestRequest
 
@@ -12,6 +14,7 @@ class TestQuerybuilder(QuerystringTestCase):
                                   "collectionstestpage",
                                   title="Collectionstestpage")
         testpage = self.portal['collectionstestpage']
+        self.testpage = testpage
         self.portal.portal_workflow.doActionFor(testpage, 'publish')
         self.request = TestRequest()
         self.querybuilder = getMultiAdapter((self.portal, self.request),
@@ -46,6 +49,92 @@ class TestQuerybuilder(QuerystringTestCase):
         # from restrictedTraverse. This did hurt a bit.
         numeric = int(length_of_results.split(' ')[0])
         self.assertEqual(numeric, 1)
+
+    def testMakeQuery(self):
+        results = self.querybuilder._makequery(query=self.query)
+        self.assertEqual(len(results), 1)
+        self.assertEqual(
+            results[0].getURL(),
+            'http://nohost/plone/collectionstestpage')
+
+    def testMakeQueryWithSubject(self):
+        self.testpage.setSubject(['Lorem'])
+        self.testpage.reindexObject()
+        query = [{
+            'i': 'Subject',
+            'o': 'plone.app.querystring.operation.selection.is',
+            'v': 'Lorem',
+        }]
+        results = self.querybuilder._makequery(query=query)
+        self.assertEqual(len(results), 1)
+        self.assertEqual(
+            results[0].getURL(),
+            'http://nohost/plone/collectionstestpage')
+
+    def testMakeQueryWithMultipleSubject(self):
+        self.testpage.setSubject(['Lorem'])
+        self.testpage.reindexObject()
+        query = [{
+            'i': 'Subject',
+            'o': 'plone.app.querystring.operation.selection.is',
+            'v': ['Lorem', 'Ipsum'],
+        }]
+        results = self.querybuilder._makequery(query=query)
+        self.assertEqual(len(results), 1)
+        self.assertEqual(
+            results[0].getURL(),
+            'http://nohost/plone/collectionstestpage')
+
+    def testMakeQueryWithSubjectWithSpecialCharacters(self):
+        self.testpage.setSubject(['Äüö'])
+        self.testpage.reindexObject()
+        query = [{
+            'i': 'Subject',
+            'o': 'plone.app.querystring.operation.selection.is',
+            'v': 'Äüö',
+        }]
+        results = self.querybuilder._makequery(query=query)
+        self.assertEqual(len(results), 1)
+        self.assertEqual(
+            results[0].getURL(),
+            'http://nohost/plone/collectionstestpage')
+        self.assertEqual(
+            results[0].getObject().Subject(),
+            ('Äüö',))
+
+    def testMakeQueryWithUnicodeSubjectWithSpecialCharacters(self):
+        self.testpage.setSubject(['Äüö'])
+        self.testpage.reindexObject()
+        query = [{
+            'i': 'Subject',
+            'o': 'plone.app.querystring.operation.selection.is',
+            'v': u'Äüö',
+        }]
+        results = self.querybuilder._makequery(query=query)
+        self.assertEqual(len(results), 1)
+        self.assertEqual(
+            results[0].getURL(),
+            'http://nohost/plone/collectionstestpage')
+        self.assertEqual(
+            results[0].getObject().Subject(),
+            ('Äüö',))
+
+    def testMakeQueryWithUnicodeSubjectWithMultipleSubjects(self):
+        self.testpage.setSubject(['Äüö'])
+        self.testpage.reindexObject()
+        query = [{
+            'i': 'Subject',
+            'o': 'plone.app.querystring.operation.selection.is',
+            'v': [u'Äüö', u'Üöß'],
+        }]
+        results = self.querybuilder._makequery(query=query)
+        self.assertEqual(len(results), 1)
+        self.assertEqual(
+            results[0].getURL(),
+            'http://nohost/plone/collectionstestpage')
+        self.assertEqual(
+            results[0].getObject().Subject(),
+            ('Äüö',))
 
 
 class TestConfigurationFetcher(QuerystringTestCase):
