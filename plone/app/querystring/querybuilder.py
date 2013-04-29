@@ -12,7 +12,7 @@ from plone.registry.interfaces import IRegistry
 from plone.app.querystring import queryparser
 
 from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone.PloneBatch import Batch
+from plone.batching import Batch
 
 from .interfaces import IQuerystringRegistryReader
 
@@ -106,7 +106,7 @@ class QueryBuilder(BrowserView):
         if not brains:
             results = IContentListing(results)
         if batch:
-            results = Batch(results, b_size, b_start)
+            results = Batch(results, b_size, start=b_start)
         return results
 
     def number_of_results(self, query):

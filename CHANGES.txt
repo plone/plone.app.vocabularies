@@ -4,7 +4,8 @@ Changelog
 1.0.9 (unreleased)
 ------------------
 
--
+- Use plone.batching.
+  [khink]
 
 
 1.0.8 (2013-03-14)

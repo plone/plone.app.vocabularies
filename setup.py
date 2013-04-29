@@ -30,6 +30,7 @@ setup(name='plone.app.querystring',
           'plone.app.layout',
           'plone.app.registry>=1.1dev',
           'plone.app.vocabularies',
+          'plone.batching'
           'plone.registry',
           'zope.component',
           'zope.dottedname',
