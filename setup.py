@@ -5,7 +5,7 @@ version = '1.0.9dev'
 setup(name='plone.app.querystring',
       version=version,
       description="",
-      long_description=open("README.txt").read() + "\n" +
+      long_description=open("README.rst").read() + "\n" +
                        open("CHANGES.txt").read(),
       classifiers=[
         "Framework :: Plone",
