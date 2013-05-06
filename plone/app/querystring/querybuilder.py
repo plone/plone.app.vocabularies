@@ -38,9 +38,15 @@ class QueryBuilder(BrowserView):
                  sort_on=None, sort_order=None, limit=0, brains=False):
         """If there are results, make the query and return the results"""
         if self._results is None:
-            self._results = self._makequery(query=query, batch=batch,
-                b_start=b_start, b_size=b_size, sort_on=sort_on,
-                sort_order=sort_order, limit=limit, brains=brains)
+            self._results = self._makequery(
+                query=query,
+                batch=batch,
+                b_start=b_start,
+                b_size=b_size,
+                sort_on=sort_on,
+                sort_order=sort_order,
+                limit=limit,
+                brains=brains)
         return self._results
 
     def html_results(self, query):
