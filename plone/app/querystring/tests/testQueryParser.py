@@ -46,7 +46,7 @@ class MockCatalog(object):
                 'allowedRolesAndUsers', 'getObjPositionInParent', 'path',
                 'UID', 'effective', 'created', 'Creator',
                 'modified', 'SearchableText', 'sortable_title',
-                'getRawRelatedItems', 'Subject']
+                'getRawRelatedItems', 'Subject', 'total_comments']
 
 
 class MockPortalUrl(object):
@@ -194,8 +194,7 @@ class TestQueryGenerators(TestQueryParserBase):
                   operator='_largerThanInt',
                   values='2')
         parsed = queryparser._largerThanInt(MockSite(), data)
-        expected = {'modified': {'query': 2, 'range': 'min'}}
-        import pdb; pdb.set_trace()
+        expected = {'total_comments': {'query': 2, 'range': 'min'}}
         self.assertEqual(parsed, expected)
 
     def test__lessThanInt(self):
@@ -203,8 +202,7 @@ class TestQueryGenerators(TestQueryParserBase):
                   operator='_lessThanInt',
                   values='4')
         parsed = queryparser._lessThanInt(MockSite(), data)
-        expected = {'modified': {'query': 4, 'range': 'max'}}
-        import pdb; pdb.set_trace()
+        expected = {'total_comments': {'query': 4, 'range': 'max'}}
         self.assertEqual(parsed, expected)    
         
     def test__currentUser(self):
