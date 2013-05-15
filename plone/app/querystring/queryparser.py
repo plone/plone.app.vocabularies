@@ -52,7 +52,7 @@ def parseFormquery(context, formquery, sort_on=None, sort_order=None):
     # the indexes are valid.
     if not valid_indexes:
         logger.warning(
-            "Using empty query because there are no validc indexes used.")
+            "Using empty query because there are no valid indexes used.")
         return {}
 
     # Add sorting (sort_on and sort_order) to the query
@@ -60,7 +60,6 @@ def parseFormquery(context, formquery, sort_on=None, sort_order=None):
         query['sort_on'] = sort_on
     if sort_order:
         query['sort_order'] = sort_order
-
     return query
 
 
@@ -73,11 +72,6 @@ def _contains(context, row):
 def _equal(context, row):
     return {row.index: {'query': row.values, }}
 
-def _equalInt(context, row):
-    if not row.values.isdigit():
-        return {}
-    
-    return {row.index: {'query': int(row.values), }}
 
 def _isTrue(context, row):
     return {row.index: {'query': True, }}
@@ -104,17 +98,6 @@ def _largerThan(context, row):
           }
     return tmp
 
-def _largerThanInt(context, row):
-    
-    if not row.values.isdigit():
-        return {}
-    
-    tmp = {row.index: {
-              'query': int(row.values),
-              'range': 'min',
-              },
-          }
-    return tmp
 
 def _lessThan(context, row):
     tmp = {row.index: {
@@ -124,17 +107,6 @@ def _lessThan(context, row):
           }
     return tmp
 
-
-def _lessThanInt(context, row):
-    if not row.values.isdigit():
-        return {}
-    
-    tmp = {row.index: {
-              'query': int(row.values),
-              'range': 'max',
-              },
-          }
-    return tmp
 
 def _currentUser(context, row):
     """Current user lookup"""

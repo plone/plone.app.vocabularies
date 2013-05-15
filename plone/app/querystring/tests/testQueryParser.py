@@ -188,25 +188,7 @@ class TestQueryGenerators(TestQueryParserBase):
         parsed = queryparser._lessThan(MockSite(), data)
         expected = {'modified': {'query': '2010/03/18', 'range': 'max'}}
         self.assertEqual(parsed, expected)
-        
-    def test__largerThanInt(self):
-        data = Row(index='total_comments',
-                  operator='_largerThanInt',
-                  values='2')
-        parsed = queryparser._largerThanInt(MockSite(), data)
-        expected = {'modified': {'query': 2, 'range': 'min'}}
-        import pdb; pdb.set_trace()
-        self.assertEqual(parsed, expected)
 
-    def test__lessThanInt(self):
-        data = Row(index='total_comments',
-                  operator='_lessThanInt',
-                  values='4')
-        parsed = queryparser._lessThanInt(MockSite(), data)
-        expected = {'modified': {'query': 4, 'range': 'max'}}
-        import pdb; pdb.set_trace()
-        self.assertEqual(parsed, expected)    
-        
     def test__currentUser(self):
         # Anonymous user
         u = MockUser()
