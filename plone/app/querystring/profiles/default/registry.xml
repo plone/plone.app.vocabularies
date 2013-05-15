@@ -22,7 +22,7 @@
              prefix="plone.app.querystring.operation.int.is">
         <value key="title" i18n:translate="">Equals</value>
         <value key="description"></value>
-        <value key="operation">plone.app.querystring.queryparser._equal</value>
+        <value key="operation">plone.app.querystring.queryparser._equalInt</value>
         <value key="widget">StringWidget</value>
     </records>
 
@@ -30,7 +30,7 @@
              prefix="plone.app.querystring.operation.int.lessThan">
         <value key="title" i18n:translate="">Less than</value>
         <value key="description"></value>
-        <value key="operation">plone.app.querystring.queryparser._lessThan</value>
+        <value key="operation">plone.app.querystring.queryparser._lessThanInt</value>
         <value key="widget">StringWidget</value>
     </records>
 
@@ -38,7 +38,7 @@
              prefix="plone.app.querystring.operation.int.largerThan">
         <value key="title" i18n:translate="">Larger than</value>
         <value key="description"></value>
-        <value key="operation">plone.app.querystring.queryparser._largerThan</value>
+        <value key="operation">plone.app.querystring.queryparser._largerThanInt</value>
         <value key="widget">StringWidget</value>
     </records>
 

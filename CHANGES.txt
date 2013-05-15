@@ -6,7 +6,9 @@ Changelog
 
 - Use plone.batching.
   [khink]
-
+- Updated queryparser.py so it works with integers. Added methods 
+  _largerThanInt, _lessThanInt and _equalInt 
+  [nordendavid]
 
 1.0.8 (2013-03-14)
 ------------------
