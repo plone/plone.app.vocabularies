@@ -92,7 +92,7 @@
 
   <utility
     factory=".catalog.CatalogVocabularyFactory"
-    name="plone.app.vocabularies.catalog"
+    name="plone.app.vocabularies.Catalog"
     />
 
   <!-- All source implementations will be deprecated -->

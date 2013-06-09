@@ -1,4 +1,5 @@
 from zope.interface import Interface, Attribute
+from zope.schema.interfaces import IVocabularyTokenized
 
 
 class ITermWithDescription(Interface):
@@ -34,3 +35,9 @@ class IBrowsableTerm(Interface):
         The value of this attribute must be a non-empty 7-bit string.
         Control characters are not allowed.
         """)
+
+
+class ISlicableVocabulary(IVocabularyTokenized):
+    def __getitem__(start, stop):
+        """ return a slice of the results"""
+

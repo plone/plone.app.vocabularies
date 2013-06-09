@@ -18,6 +18,7 @@ from Products.ZCTextIndex.ParseTree import ParseError
 
 from plone.app.vocabularies.terms import BrowsableTerm
 from plone.app.querystring import queryparser
+from plone.app.vocabularies import SlicableVocabulary
 
 
 def parse_query(query, path_prefix=""):
@@ -442,17 +443,7 @@ class KeywordsVocabulary(object):
 KeywordsVocabularyFactory = KeywordsVocabulary()
 
 
-
-class CatalogVocabulary(object):
-    """
-    """
-    implements(IVocabularyTokenized)
-
-    def __init__(self, terms, context, *interfaces):
-        self._terms = terms
-        self._context = context
-        if interfaces:
-            directlyProvides(self, *interfaces)
+class CatalogVocabulary(SlicableVocabulary):
 
     @classmethod
     def fromItems(cls, items, context, *interfaces):
@@ -473,9 +464,6 @@ class CatalogVocabulary(object):
     def __iter__(self):
         for item in self._terms:
             yield self.getTerm(item)
-
-    def __len__(self):
-        return len(self._terms)
 
 
 class CatalogVocabularyFactory(object):
