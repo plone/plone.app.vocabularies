@@ -11,6 +11,8 @@ from zope.formlib.interfaces import ISourceQueryView
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
+from plone.app.vocabularies import SlicableVocabulary
+
 
 class UsersSource(object):
     """
@@ -63,17 +65,11 @@ class UsersSource(object):
         return self.users.getUserById(value, None)
 
 
-class UsersVocabulary(object):
-    """
-    """
-    implements(IVocabularyTokenized)
+class UsersVocabulary(SlicableVocabulary):
 
     def __init__(self, terms, context, *interfaces):
-        self._terms = terms
-        self._context = context
-        self._users = getToolByName(context, "acl_users")
-        if interfaces:
-            directlyProvides(self, *interfaces)
+        super(UsersVocabulary, self).__init__(terms, context, *interfaces)
+        self._users = getToolByName(self._context, "acl_users")
 
     @classmethod
     def fromItems(cls, items, context, *interfaces):
@@ -106,9 +102,6 @@ class UsersVocabulary(object):
     def __iter__(self):
         for item in self._terms:
             yield self.getTerm(item['userid'])
-
-    def __len__(self):
-        return len(self._terms)
 
 
 class UsersFactory(object):
