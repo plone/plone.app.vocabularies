@@ -6,6 +6,8 @@ from zope.interface import implements, classProvides
 from zope.schema.interfaces import ISource, IContextSourceBinder, IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 from zope.site.hooks import getSite
+from zope.schema.interfaces import IVocabularyTokenized
+from zope.interface import directlyProvides
 
 from zope.formlib.interfaces import ISourceQueryView
 
@@ -15,6 +17,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.ZCTextIndex.ParseTree import ParseError
 
 from plone.app.vocabularies.terms import BrowsableTerm
+from plone.app.querystring import queryparser
 
 
 def parse_query(query, path_prefix=""):
@@ -437,3 +440,50 @@ class KeywordsVocabulary(object):
         return SimpleVocabulary(items)
 
 KeywordsVocabularyFactory = KeywordsVocabulary()
+
+
+
+class CatalogVocabulary(object):
+    """
+    """
+    implements(IVocabularyTokenized)
+
+    def __init__(self, terms, context, *interfaces):
+        self._terms = terms
+        self._context = context
+        if interfaces:
+            directlyProvides(self, *interfaces)
+
+    @classmethod
+    def fromItems(cls, items, context, *interfaces):
+        def lazy(items):
+            for item in items:
+                yield cls.createTerm(item, context)
+        return cls(lazy(items), context, *interfaces)
+    fromValues = fromItems
+
+    @classmethod
+    def createTerm(cls, brain, context):
+        return SimpleTerm(brain, brain.UID, brain.UID)
+
+    def getTerm(self, brain):
+        return SimpleTerm(brain, brain.UID, brain.UID)
+    getTermByToken = getTerm
+
+    def __iter__(self):
+        for item in self._terms:
+            yield self.getTerm(item)
+
+    def __len__(self):
+        return len(self._terms)
+
+
+class CatalogVocabularyFactory(object):
+    implements(IVocabularyFactory)
+
+    def __call__(self, context, query):
+        parsed = queryparser.parseFormquery(context, query['criteria'])
+        catalog = getToolByName(context, 'portal_catalog')
+        brains = catalog(**parsed)
+        return CatalogVocabulary(brains, context)
+

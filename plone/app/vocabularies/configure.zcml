@@ -90,6 +90,12 @@
     name="plone.app.vocabularies.Users"
     />
 
+  <utility
+    factory=".catalog.CatalogVocabularyFactory"
+    name="plone.app.vocabularies.catalog"
+    />
+
+  <!-- All source implementations will be deprecated -->
   <adapter
       for=".catalog.SearchableTextSource
            zope.publisher.interfaces.browser.IBrowserRequest"

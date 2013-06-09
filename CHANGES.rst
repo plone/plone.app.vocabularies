@@ -4,7 +4,8 @@ Changelog
 2.1.11 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- add support for a catalog vocabulary
+  [vangheem]
 
 
 2.1.10 (2013-01-30)
