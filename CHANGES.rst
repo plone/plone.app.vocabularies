@@ -4,6 +4,12 @@ Changelog
 2.1.11 (unreleased)
 -------------------
 
+- SlicableVocabulary context is not needed when initialing
+  [garbas]
+
+- KeywordsVocabularyFactory now accepts query which filters keywords listed in vocabulary
+  [garbas]
+
 - add support for a catalog vocabulary
   [vangheem]
 
