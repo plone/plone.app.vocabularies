@@ -420,7 +420,7 @@ class KeywordsVocabulary(object):
     """
     implements(IVocabularyFactory)
 
-    def __call__(self, context):
+    def __call__(self, context, query=None):
         site = getSite()
         self.catalog = getToolByName(site, "portal_catalog", None)
         if self.catalog is None:
@@ -436,8 +436,11 @@ class KeywordsVocabulary(object):
 
         # Vocabulary term tokens *must* be 7 bit values, titles *must* be
         # unicode
-        items = [SimpleTerm(i, b2a_qp(safe_encode(i)), safe_unicode(i))
-                 for i in index._index]
+        items = [
+            SimpleTerm(i, b2a_qp(safe_encode(i)), safe_unicode(i))
+            for i in index._index
+            if query is None or safe_encode(query) in safe_encode(i)
+        ]
         return SimpleVocabulary(items)
 
 KeywordsVocabularyFactory = KeywordsVocabulary()
