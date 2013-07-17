@@ -476,5 +476,4 @@ class CatalogVocabularyFactory(object):
         parsed = queryparser.parseFormquery(context, query['criteria'])
         catalog = getToolByName(context, 'portal_catalog')
         brains = catalog(**parsed)
-        return CatalogVocabulary(brains, context)
-
+        return CatalogVocabulary(brains)

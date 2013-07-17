@@ -68,8 +68,8 @@ class UsersSource(object):
 class UsersVocabulary(SlicableVocabulary):
 
     def __init__(self, terms, context, *interfaces):
-        super(UsersVocabulary, self).__init__(terms, context, *interfaces)
-        self._users = getToolByName(self._context, "acl_users")
+        super(UsersVocabulary, self).__init__(terms, *interfaces)
+        self._users = getToolByName(context, "acl_users")
 
     @classmethod
     def fromItems(cls, items, context, *interfaces):
