@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.11 (unreleased)
+2.1.11 (2013-07-18)
 -------------------
 
 - SlicableVocabulary context is not needed when initialing
