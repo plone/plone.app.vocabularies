@@ -108,7 +108,14 @@ class QueryBuilder(BrowserView):
             else:
                 pass
 
+        if limit and parsedquery.get('b_size', limit) >= limit:
+            parsedquery['b_size'] = limit
+
         results = catalog(parsedquery)
+
+        if results and limit and results.actual_result_count > limit:
+            results.actual_result_count = limit
+
         if not brains:
             results = IContentListing(results)
         if batch:
