@@ -4,6 +4,9 @@ Changelog
 2.1.11 (2013-07-18)
 -------------------
 
+- Add documentation to SlicableVocabulary, fix handling of internal structure
+  [do3cc]
+
 - SlicableVocabulary context is not needed when initialing
   [garbas]
 
@@ -35,7 +38,7 @@ Changelog
 - Make KeywordsVocabulary work with unicode and non-unicode vocabularies.
   [thet]
 
-- Fix exceptions with workflow states/transitions titles when their titles 
+- Fix exceptions with workflow states/transitions titles when their titles
   contained encoded characters [ericof]
 
 - Fix exception with workflow vocabulary when workflow titles contained UTF-8 encoded
