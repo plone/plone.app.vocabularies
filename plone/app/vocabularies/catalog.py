@@ -449,24 +449,48 @@ KeywordsVocabularyFactory = KeywordsVocabulary()
 class CatalogVocabulary(SlicableVocabulary):
 
     @classmethod
-    def fromItems(cls, items, context, *interfaces):
-        def lazy(items):
-            for item in items:
-                yield cls.createTerm(item, context)
-        return cls(lazy(items), context, *interfaces)
+    def fromItems(cls, brains, context, *interfaces):
+        return cls(brains)
     fromValues = fromItems
 
     @classmethod
     def createTerm(cls, brain, context):
         return SimpleTerm(brain, brain.UID, brain.UID)
 
+    def __init__(self, brains, *interfaces):
+        self._brains = brains
+
     def getTerm(self, brain):
         return SimpleTerm(brain, brain.UID, brain.UID)
     getTermByToken = getTerm
 
     def __iter__(self):
-        for item in self._terms:
-            yield self.getTerm(item)
+        return iter(self._terms)
+
+    def __len__(self):
+        return len(self._brains)
+
+    def __getitem__(self, index):
+        if isinstance(index, slice):
+            slice_inst = index
+            start = slice_inst.start
+            stop = slice_inst.stop
+            if not hasattr(self, "__terms"):
+                return [self.createTerm(brain, None)
+                        for brain in self._brains[start:stop]]
+            else:
+                return self.__terms[start:stop]
+        else:
+            if not hasattr(self, "__terms"):
+                return self.createTerm(self._brains[index], None)
+            else:
+                return self.__terms[index]
+
+    @property
+    def _terms(self):
+        if not hasattr(self, "__terms"):
+            self.__terms = [self.createTerm(brain, None) for brain in self._brains]
+        return self.__terms
 
 
 class CatalogVocabularyFactory(object):
@@ -476,4 +500,4 @@ class CatalogVocabularyFactory(object):
         parsed = queryparser.parseFormquery(context, query['criteria'])
         catalog = getToolByName(context, 'portal_catalog')
         brains = catalog(**parsed)
-        return CatalogVocabulary(brains)
+        return CatalogVocabulary.fromItems(brains, context)

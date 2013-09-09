@@ -6,6 +6,10 @@ from plone.app.vocabularies.interfaces import ISlicableVocabulary
 class SlicableVocabulary(object):
     """
     A tokenized voacabulary in which the results can be sliced.
+    This class does not implement a complete vocabulary. Instead you use
+    this class as a mixin to your vocabulary class.
+    This mixin class expects to be used with something resembling
+    a SimpleVocabulary. It accesses internal members like _terms
     """
     implements(ISlicableVocabulary)
 
@@ -16,17 +20,14 @@ class SlicableVocabulary(object):
 
     def __getitem__(self, start, stop=None):
         if isinstance(start, slice):
-            slic = start
-            start = slic.start
-            stop = slic.stop
+            slice_inst = start
+            start = slice_inst.start
+            stop = slice_inst.stop
         elif not stop:
             return self._terms[start]
 
         # sliced up
-        results = []
-        for item in self._terms[start:stop]:
-            results.append(self.getTerm(item))
-        return results
+        return self._terms[start:stop]
 
     def __len__(self):
         return len(self._terms)
