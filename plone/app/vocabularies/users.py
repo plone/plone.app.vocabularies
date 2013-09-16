@@ -100,8 +100,7 @@ class UsersVocabulary(SlicableVocabulary):
     getTermByToken = getTerm
 
     def __iter__(self):
-        for item in self._terms:
-            yield self.getTerm(item['userid'])
+        return self._terms
 
 
 class UsersFactory(object):
@@ -111,7 +110,7 @@ class UsersFactory(object):
 
     def __call__(self, context, query=''):
         users = getToolByName(context, "acl_users")
-        return UsersVocabulary(users.searchUsers(fullname=query), context)
+        return UsersVocabulary.fromItems(users.searchUsers(fullname=query), context)
 
 
 class UsersSourceQueryView(object):
