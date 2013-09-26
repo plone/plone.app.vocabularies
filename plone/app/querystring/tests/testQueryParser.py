@@ -152,6 +152,21 @@ class TestQueryParser(TestQueryParserBase):
         parsed = queryparser.parseFormquery(MockSite(), [data, ])
         self.assertEqual(parsed, {'path': {'query': '/%s/foo' % MOCK_SITE_ID}})
 
+    def test_path_with_depth_computed(self):
+        data = {
+            'i': 'path',
+            'o': 'plone.app.querystring.operation.string.path',
+            'v': '/foo::2',
+        }
+
+        parsed = queryparser.parseFormquery(MockSite(), [data, ])
+        self.assertEqual(parsed, {
+            'path': {
+                'query': '/%s/foo' % MOCK_SITE_ID,
+                'depth': 2
+            }
+        })
+
 
 class TestQueryGenerators(TestQueryParserBase):
 

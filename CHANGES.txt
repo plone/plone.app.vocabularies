@@ -4,6 +4,9 @@ Changelog
 1.1.0 (unreleased)
 ------------------
 
+- be able to include a depth value onto path query string
+  [vangheem]
+
 - Use plone.batching.
   [khink]
 

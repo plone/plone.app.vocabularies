@@ -198,6 +198,13 @@ def _beforeToday(context, row):
 
 def _path(context, row):
     values = row.values
+    depth = None
+    if '::' in values:
+        values, _depth = values.split('::', 1)
+        try:
+            depth = int(_depth)
+        except ValueError:
+            pass
     if not '/' in values:
         # It must be a UID
         values = '/'.join(getPathByUID(context, values))
@@ -205,7 +212,10 @@ def _path(context, row):
     nav_root = getNavigationRoot(context)
     if not values.startswith(nav_root):
         values = nav_root + values
-    tmp = {row.index: {'query': values, }}
+    query = {'query': values}
+    if depth is not None:
+        query['depth'] = depth
+    tmp = {row.index: query}
     return tmp
 
 
