@@ -212,9 +212,13 @@ def _path(context, row):
     nav_root = getNavigationRoot(context)
     if not values.startswith(nav_root):
         values = nav_root + values
+
     query = {'query': values}
     if depth is not None:
         query['depth'] = depth
+        # when a depth value is specified, a trailing slash matters on the
+        # query
+        query['query'] = query['query'].rstrip('/')
     tmp = {row.index: query}
     return tmp
 
