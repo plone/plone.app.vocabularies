@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.1.12 (unreleased)
+-------------------
+
+- use sort_on and sort_order in catalog vocabulary
+  [vangheem]
+
 2.1.11 (2013-07-18)
 -------------------
 

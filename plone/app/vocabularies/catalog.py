@@ -499,5 +499,9 @@ class CatalogVocabularyFactory(object):
     def __call__(self, context, query):
         parsed = queryparser.parseFormquery(context, query['criteria'])
         catalog = getToolByName(context, 'portal_catalog')
-        brains = catalog(**parsed)
+        if 'sort_on' in query:
+            parsed['sort_on'] = query['sort_on']
+        if 'sort_order' in query:
+            parsed['sort_order'] = query['sort_order']
+        brains = catalog(parsed)
         return CatalogVocabulary.fromItems(brains, context)
