@@ -502,6 +502,6 @@ class CatalogVocabularyFactory(object):
         if 'sort_on' in query:
             parsed['sort_on'] = query['sort_on']
         if 'sort_order' in query:
-            parsed['sort_order'] = query['sort_order']
+            parsed['sort_order'] = str(query['sort_order'])
         brains = catalog(**parsed)
         return CatalogVocabulary.fromItems(brains, context)
