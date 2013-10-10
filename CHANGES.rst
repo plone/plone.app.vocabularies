@@ -4,6 +4,13 @@ Changelog
 2.1.12 (unreleased)
 -------------------
 
+- catalog vocabulary query could be None
+  [garbas]
+
+- getTerm and getTermByToken were not really checking if item is in the
+  vocabulary list
+  [garbas]
+
 - use sort_on and sort_order in catalog vocabulary
   [vangheem]
 
