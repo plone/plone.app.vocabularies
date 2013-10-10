@@ -460,10 +460,6 @@ class CatalogVocabulary(SlicableVocabulary):
     def __init__(self, brains, *interfaces):
         self._brains = brains
 
-    def getTerm(self, brain):
-        return SimpleTerm(brain, brain.UID, brain.UID)
-    getTermByToken = getTerm
-
     def __iter__(self):
         return iter(self._terms)
 
@@ -496,12 +492,14 @@ class CatalogVocabulary(SlicableVocabulary):
 class CatalogVocabularyFactory(object):
     implements(IVocabularyFactory)
 
-    def __call__(self, context, query):
-        parsed = queryparser.parseFormquery(context, query['criteria'])
+    def __call__(self, context, query=None):
+        parsed = {}
+        if query:
+            parsed = queryparser.parseFormquery(context, query['criteria'])
+            if 'sort_on' in query:
+                parsed['sort_on'] = query['sort_on']
+            if 'sort_order' in query:
+                parsed['sort_order'] = str(query['sort_order'])
         catalog = getToolByName(context, 'portal_catalog')
-        if 'sort_on' in query:
-            parsed['sort_on'] = query['sort_on']
-        if 'sort_order' in query:
-            parsed['sort_order'] = str(query['sort_order'])
         brains = catalog(**parsed)
         return CatalogVocabulary.fromItems(brains, context)
