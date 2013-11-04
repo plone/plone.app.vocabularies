@@ -500,6 +500,9 @@ class CatalogVocabularyFactory(object):
                 parsed['sort_on'] = query['sort_on']
             if 'sort_order' in query:
                 parsed['sort_order'] = str(query['sort_order'])
-        catalog = getToolByName(context, 'portal_catalog')
+        try:
+            catalog = getToolByName(context, 'portal_catalog')
+        except AttributeError:
+            catalog = getToolByName(getSite(), 'portal_catalog')
         brains = catalog(**parsed)
         return CatalogVocabulary.fromItems(brains, context)

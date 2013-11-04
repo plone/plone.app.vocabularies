@@ -4,6 +4,9 @@ Changelog
 2.1.12 (unreleased)
 -------------------
 
+- fallback to getSite for grabbing portal_catalog
+  [vangheem]
+
 - catalog vocabulary query could be None
   [garbas]
 
