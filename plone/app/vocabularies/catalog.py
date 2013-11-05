@@ -19,6 +19,7 @@ from Products.ZCTextIndex.ParseTree import ParseError
 from plone.app.vocabularies.terms import BrowsableTerm
 from plone.app.querystring import queryparser
 from plone.app.vocabularies import SlicableVocabulary
+from plone.uuid.interfaces import IUUID
 
 
 def parse_query(query, path_prefix=""):
@@ -462,6 +463,21 @@ class CatalogVocabulary(SlicableVocabulary):
 
     def __iter__(self):
         return iter(self._terms)
+
+    def __contains__(self, value):
+        if isinstance(value, basestring):
+            # perhaps it's already a uid
+            uid = value
+        else:
+            uid = IUUID(value)
+        for term in self._terms:
+            try:
+                term_uid = term.value.UID
+            except AttributeError:
+                term_uid = term.value
+            if uid == term_uid:
+                return True
+        return False
 
     def __len__(self):
         return len(self._brains)
