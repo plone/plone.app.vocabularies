@@ -4,6 +4,9 @@ Changelog
 2.1.12 (unreleased)
 -------------------
 
+- provide proper contains method for catalog results
+  [vangheem]
+
 - fallback to getSite for grabbing portal_catalog
   [vangheem]
 
