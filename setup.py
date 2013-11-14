@@ -6,7 +6,7 @@ setup(name='plone.app.querystring',
       version=version,
       description="",
       long_description=open("README.rst").read() + "\n" +
-                       open("CHANGES.txt").read(),
+                       open("CHANGES.rst").read(),
       classifiers=[
         "Framework :: Plone",
         "License :: OSI Approved :: GNU General Public License (GPL)",
