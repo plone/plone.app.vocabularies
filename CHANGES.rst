@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.12 (unreleased)
+2.1.12 (2013-11-14)
 -------------------
 
 - provide proper contains method for catalog results
