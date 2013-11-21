@@ -25,8 +25,8 @@ class AvailableContentLanguageVocabulary(object):
 
       >>> tool = DummyTool('portal_languages')
       >>> def getAvailableLanguages():
-      ...     return dict(en=dict(name='English'),
-      ...                 de=dict(name='German'))
+      ...     return dict(en=dict(name='English', native='English'),
+      ...                 de=dict(name='German', native='Deutsch'))
       >>> tool.getAvailableLanguages = getAvailableLanguages
       >>> context.portal_languages = tool
 
@@ -39,7 +39,7 @@ class AvailableContentLanguageVocabulary(object):
 
       >>> de = languages.by_token['de']
       >>> de.title, de.token, de.value
-      ('German', 'de', 'de')
+      ('Deutsch', 'de', 'de')
     """
     implements(IVocabularyFactory)
 
