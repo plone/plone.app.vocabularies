@@ -31,7 +31,6 @@ setup(
         test=[
             'zope.configuration',
             'zope.testing',
-            'Products.PloneTestCase',
         ]
     ),
     install_requires=[
