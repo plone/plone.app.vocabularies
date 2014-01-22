@@ -57,8 +57,10 @@ class QueryBuilder(BrowserView):
                        sort_order=self.request.get('sort_order', None),
                        limit=10)
 
-        return getMultiAdapter((results, self.request),
-            name='display_query_results')(**options)
+        return getMultiAdapter(
+            (results, self.request),
+            name='display_query_results'
+        )(**options)
 
     def _makequery(self, query=None, batch=False, b_start=0, b_size=30,
                    sort_on=None, sort_order=None, limit=0, brains=False):
@@ -108,7 +110,14 @@ class QueryBuilder(BrowserView):
             else:
                 pass
 
+        if limit and parsedquery.get('b_size', limit) >= limit:
+            parsedquery['b_size'] = limit
+
         results = catalog(parsedquery)
+
+        if results and limit and results.actual_result_count > limit:
+            results.actual_result_count = limit
+
         if not brains:
             results = IContentListing(results)
         if batch:
@@ -118,10 +127,12 @@ class QueryBuilder(BrowserView):
     def number_of_results(self, query):
         """Get the number of results"""
         results = self(query, sort_on=None, sort_order=None, limit=1)
-        return translate(_(u"batch_x_items_matching_your_criteria",
-                 default=u"${number} items matching your search terms.",
-                 mapping={'number': results.actual_result_count}),
-                 context=self.request)
+        return translate(
+            _(u"batch_x_items_matching_your_criteria",
+              default=u"${number} items matching your search terms.",
+              mapping={'number': results.actual_result_count}),
+            context=self.request
+        )
 
 
 class RegistryConfiguration(BrowserView):
