@@ -4,7 +4,8 @@ Changelog
 2.1.14 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Add actions vocabulary.
+  [giacomos]
 
 
 2.1.13 (2014-01-27)
