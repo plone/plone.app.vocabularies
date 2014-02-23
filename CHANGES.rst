@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.14 (unreleased)
+2.1.14 (2014-02-23)
 -------------------
 
 - Add actions vocabulary.
