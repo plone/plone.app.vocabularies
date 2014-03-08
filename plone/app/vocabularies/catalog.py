@@ -6,8 +6,6 @@ from zope.interface import implements, classProvides
 from zope.schema.interfaces import ISource, IContextSourceBinder, IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 from zope.site.hooks import getSite
-from zope.schema.interfaces import IVocabularyTokenized
-from zope.interface import directlyProvides
 
 from zope.formlib.interfaces import ISourceQueryView
 
@@ -448,6 +446,9 @@ KeywordsVocabularyFactory = KeywordsVocabulary()
 
 
 class CatalogVocabulary(SlicableVocabulary):
+    # We want to get rid of this and use CatalogSource instead,
+    # but we can't in Plone versions that support
+    # plone.app.widgets < 1.6.0
 
     @classmethod
     def fromItems(cls, brains, context, *interfaces):
@@ -506,6 +507,10 @@ class CatalogVocabulary(SlicableVocabulary):
 
 
 class CatalogVocabularyFactory(object):
+    # We want to get rid of this and use CatalogSource instead,
+    # but we can't in Plone versions that support
+    # plone.app.widgets < 1.6.0
+
     implements(IVocabularyFactory)
 
     def __call__(self, context, query=None):
@@ -522,3 +527,64 @@ class CatalogVocabularyFactory(object):
             catalog = getToolByName(getSite(), 'portal_catalog')
         brains = catalog(**parsed)
         return CatalogVocabulary.fromItems(brains, context)
+
+
+class CatalogSource(object):
+    """Catalog source for use with Choice fields.
+
+    When instantiating the source, you can pass keyword arguments
+    which will become the catalog query used to find terms.
+
+    e.g.:
+
+      image = Choice(
+          title=u'Image',
+          source=CatalogSource(portal_type='Image'),
+          )
+
+    The `__contains__` method is used during validation to
+    make sure the selected item is found with the specified query.
+
+    The `search_catalog` method is used by plone.app.widgets
+    to retrieve catalog brains for this source's query augmented by
+    input from the user interacting with the widget.
+
+    Tests:
+
+      >>> from plone.app.vocabularies.tests.base import create_context
+      >>> class DummyCatalog(object):
+      ...     def __init__(self, values):
+      ...         self.values = values
+      ...     def __call__(self, query):
+      ...         if 'foo' in query and query['foo'] == 'bar':
+      ...             return self.values
+      >>> context = create_context()
+      >>> context.portal_catalog = DummyCatalog(['asdf'])
+      >>> source = CatalogSource(foo='bar')
+
+      >>> 'asdf' in source
+      True
+
+      >>> source.search_catalog({'foo': 'baz'})
+      ['asdf']
+
+    """
+
+    implements(ISource)
+
+    def __init__(self, context=None, **query):
+        self.query = query
+
+    def __contains__(self, value):
+        if isinstance(value, basestring):
+            uid = value
+        else:
+            uid = IUUID(value)
+        if self.search_catalog({'UID': uid}):
+            return True
+
+    def search_catalog(self, user_query):
+        query = user_query.copy()
+        query.update(self.query)
+        catalog = getToolByName(getSite(), 'portal_catalog')
+        return catalog(query)
