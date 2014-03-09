@@ -552,7 +552,8 @@ class CatalogSource(object):
     Tests:
 
       >>> from plone.app.vocabularies.tests.base import create_context
-      >>> class DummyCatalog(object):
+      >>> from OFS.SimpleItem import SimpleItem
+      >>> class DummyCatalog(SimpleItem):
       ...     def __init__(self, values):
       ...         self.values = values
       ...     def __call__(self, query):
