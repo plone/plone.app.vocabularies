@@ -1,33 +1,38 @@
+from plone.registry.interfaces import IRegistry
 from zope.component import getUtility
+from zope.i18nmessageid import MessageFactory
 from zope.interface import provider
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
-from zope.i18nmessageid import MessageFactory
 
 import pytz
 import random
+
+import pdb;pdb.set_trace()
 
 @provider(IVocabularyFactory)
 def TimezonesFactory(context, query=None):
     """Vocabulary for all timezones.
 
-      >>> from zope.component import queryUtility
-      >>> from plone.app.vocabularies.tests.base import create_context
-
-      >>> name = 'plone.app.vocabularies.Timezones'
-      >>> util = queryUtility(IVocabularyFactory, name)
-      >>> context = create_context()
-
-      >>> len(util(context)) > 500
-      True
-
-      >>> util(context).by_token['Europe/Vienna'].title
-      'Europe/Vienna'
-
-    """
-    tz_list = [SimpleTerm(value=it, title=it)
+    This are all timezones supported by pytz.
+    """    
+    _ = MessageFactory('plonelocales')
+    tz_list = [SimpleTerm(value=it, title=_(it, default=it))
                for it in pytz.all_timezones
+               if query is None or query.lower() in it.lower()]
+    return SimpleVocabulary(tz_list)
+
+
+@provider(IVocabularyFactory)
+def CommonTimezonesFactory(context, query=None):
+    """Vocabulary for common timezones.
+
+    This are the timezones a user would choose from in a form.
+    """
+    _ = MessageFactory('plonelocales')
+    tz_list = [SimpleTerm(value=it, title=_(it, default=it))
+               for it in pytz.common_timezones
                if query is None or query.lower() in it.lower()]
     return SimpleVocabulary(tz_list)
 
@@ -35,17 +40,6 @@ def TimezonesFactory(context, query=None):
 @provider(IVocabularyFactory)
 def AvailableTimezonesFactory(context, query=None):
     """Vocabulary for available timezones, as set by in the controlpanel.
-
-    This vocabulary is based on collective.elephantvocabulary. The reason is,
-    that if timezones are used in events or in user's settings and later
-    retracted by the portal manager, they should still be usable for those
-    objects but not selectable in forms.
-
-    Note: after setting available_timezones, this vocabulary must be
-    reinstantiated to reflect the changes.
-
-
-
     """
     # TODO: if the portal_timezone is not in available_timezones, also put it
     #       in AvailableTimezone vocab.
@@ -53,10 +47,16 @@ def AvailableTimezonesFactory(context, query=None):
         IVocabularyFactory,
         'plone.app.vocabularies.Timezones'
     )(context, query)
-    return wrap_vocabulary(
-        tzvocab,
-        visible_terms_from_registry='plone.app.event.available_timezones'
-    )(context)
+    reg_key = "plone.available_timezones"
+    registry = getUtility(IRegistry)
+    # check if "plone.available_timezones" available_timezones' in registry
+    if reg_key not in registry:
+        # else use 'plone.app.event.available_timezones'
+        reg_key = 'plone.app.event.available_timezones'
+    tz_list = [SimpleTerm(value=it, title=_(it, default=it))
+               for it in registry[reg_key]
+               if query is None or query.lower() in it.lower()]
+    return SimpleVocabulary(tz_list)
 
 
 # PLEASE NOTE: strftime %w interprets 0 as Sunday unlike the calendar module!
