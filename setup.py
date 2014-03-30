@@ -47,5 +47,6 @@ setup(
         'Products.CMFCore',
         'Zope2',
         'plone.app.querystring'
+        'pytz',
     ],
 )
