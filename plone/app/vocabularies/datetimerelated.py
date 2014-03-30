@@ -9,7 +9,6 @@ from zope.schema.vocabulary import SimpleVocabulary
 import pytz
 import random
 
-import pdb;pdb.set_trace()
 
 @provider(IVocabularyFactory)
 def TimezonesFactory(context, query=None):
