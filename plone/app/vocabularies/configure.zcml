@@ -1,4 +1,6 @@
-<configure xmlns="http://namespaces.zope.org/zope">
+<configure 
+  xmlns="http://namespaces.zope.org/zope" 
+  xmlns:zcml="http://namespaces.zope.org/zcml">
 
   <utility
     component=".language.AvailableContentLanguageVocabularyFactory"
@@ -111,6 +113,7 @@
     />
 
   <utility
+    zcml:condition="installed plone.app.event"
     component=".datetimerelated.AvailableTimezonesFactory"
     name="plone.app.vocabularies.AvailableTimezones"
     />

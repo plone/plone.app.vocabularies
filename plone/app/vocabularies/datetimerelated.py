@@ -51,6 +51,11 @@ def AvailableTimezonesFactory(context, query=None):
     if reg_key not in registry:
         # else use 'plone.app.event.available_timezones'
         reg_key = 'plone.app.event.available_timezones'
+    if reg_key not in registry:
+        raise NotImplementedError(
+            '"available timezones" needs Plone 5.x or plone.app.event '
+            'installed.'
+        )
     tz_list = [SimpleTerm(value=it, title=_(it, default=it))
                for it in registry[reg_key]
                if query is None or query.lower() in it.lower()]

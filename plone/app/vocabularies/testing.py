@@ -2,7 +2,6 @@ from plone.app.testing import IntegrationTesting
 from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import PloneSandboxLayer
 
-
 class PAVocabulariesLayer(PloneSandboxLayer):
     defaultBases = (PLONE_FIXTURE,)
 
@@ -13,7 +12,6 @@ class PAVocabulariesLayer(PloneSandboxLayer):
             package=plone.app.vocabularies,
             context=configurationContext
         )
-
 
 PAVocabularies_FIXTURE = PAVocabulariesLayer()
 PAVocabularies_INTEGRATION_TESTING = IntegrationTesting(

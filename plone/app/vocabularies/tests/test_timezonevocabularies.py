@@ -27,11 +27,10 @@ class TimezoneTest(unittest.TestCase):
     def test_available_timezones_vocabulary(self):
         reg = getUtility(IRegistry)
         # check if "plone.available_timezones" available_timezones' in registry
-        # this is for Plone 4.3
         reg_key = 'plone.available_timezones'
         if reg_key not in reg:
-            # else use 'plone.app.event.available_timezones'
-            reg_key = "plone.app.event.available_timezones"
+            # this is for Plone 4.3 w/o plone.app.event available
+            return
         
         # initially, all common zones are available in AvailableTimezones
         common_zones_vocab = getUtility(
