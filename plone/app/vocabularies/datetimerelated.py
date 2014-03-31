@@ -9,6 +9,7 @@ from zope.schema.vocabulary import SimpleVocabulary
 import pytz
 import random
 
+_ = MessageFactory('plonelocales')
 
 @provider(IVocabularyFactory)
 def TimezonesFactory(context, query=None):
@@ -16,7 +17,6 @@ def TimezonesFactory(context, query=None):
 
     This are all timezones supported by pytz.
     """    
-    _ = MessageFactory('plonelocales')
     tz_list = [SimpleTerm(value=it, title=_(it, default=it))
                for it in pytz.all_timezones
                if query is None or query.lower() in it.lower()]
@@ -29,7 +29,6 @@ def CommonTimezonesFactory(context, query=None):
 
     This are the timezones a user would choose from in a form.
     """
-    _ = MessageFactory('plonelocales')
     tz_list = [SimpleTerm(value=it, title=_(it, default=it))
                for it in pytz.common_timezones
                if query is None or query.lower() in it.lower()]
@@ -79,7 +78,6 @@ def WeekdaysFactory(context):
       u'weekday_mon'
 
     """
-    _ = MessageFactory('plonelocales')
     items = []
     for idx in range(len(WEEKDAY_PREFIXES)):
         msgstr = _('weekday_{0}'.format(WEEKDAY_PREFIXES[idx]))
@@ -102,7 +100,6 @@ def WeekdaysAbbrFactory(context):
       7
     
     """
-    _ = MessageFactory('plonelocales')
     items = []
     for idx in range(len(WEEKDAY_PREFIXES)):
         msgstr = _('weekday_{0}_abbr'.format(WEEKDAY_PREFIXES[idx]))
@@ -125,7 +122,6 @@ def WeekdaysShortFactory(context):
       7
     
     """
-    _ = MessageFactory('plonelocales')
     items = []
     for idx in range(len(WEEKDAY_PREFIXES)):
         msgstr = _('weekday_{0}_short'.format(WEEKDAY_PREFIXES[idx]))
@@ -150,7 +146,6 @@ def MonthFactory(context):
       >>> len(util(context))
       12
     """
-    _ = MessageFactory('plonelocales')
     items = []
     for idx in range(len(MONTH_PREFIXES)):
         msgstr = _('month_{0}'.format(MONTH_PREFIXES[idx]))
@@ -171,10 +166,8 @@ def MonthAbbrFactory(context):
       >>> len(util(context))
       12
     """
-    _ = MessageFactory('plonelocales')
     items = []
     for idx in range(len(MONTH_PREFIXES)):
         msgstr = _('month_{0}_abbr'.format(MONTH_PREFIXES[idx]))
         items.append(SimpleTerm(idx, str(idx), msgstr))
     return SimpleVocabulary(items)
-

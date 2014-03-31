@@ -16,6 +16,7 @@ class TimezoneTest(unittest.TestCase):
         tzvocab = getUtility(IVocabularyFactory, 'plone.app.vocabularies.Timezones')
         tz_list = [item.value for item in tzvocab(self.portal)]
         self.assertTrue('Africa/Abidjan' in tz_list)
+        self.assertTrue('Europe/London' in tz_list)
 
     def test_timezone_vocabulary_query(self):
         tzvocab = getUtility(IVocabularyFactory, 'plone.app.vocabularies.Timezones')
@@ -25,22 +26,27 @@ class TimezoneTest(unittest.TestCase):
 
     def test_available_timezones_vocabulary(self):
         reg = getUtility(IRegistry)
-        settings = reg.forInterface(IEventSettings, prefix="plone.app.event")
-
-        # initially, all zones are available in AvailableTimezones
-        all_zones_vocab = getUtility(
+        # check if "plone.available_timezones" available_timezones' in registry
+        # this is for Plone 4.3
+        reg_key = 'plone.available_timezones'
+        if reg_key not in reg:
+            # else use 'plone.app.event.available_timezones'
+            reg_key = "plone.app.event.available_timezones"
+        
+        # initially, all common zones are available in AvailableTimezones
+        common_zones_vocab = getUtility(
             IVocabularyFactory,
-            'plone.app.vocabularies.Timezones'
+            'plone.app.vocabularies.CommonTimezones'
         )(self.portal)
         avail_zones_vocab = getUtility(
             IVocabularyFactory,
             'plone.app.vocabularies.AvailableTimezones'
         )(self.portal)
-        self.assertTrue(len(all_zones_vocab) == len(avail_zones_vocab) != 0)
+        self.assertTrue(len(common_zones_vocab) > len(avail_zones_vocab) > 0)
 
         # let's limit it to the first 10 zones of all_zones
-        all_zones = [term.value for term in all_zones_vocab]
-        settings.available_timezones = all_zones[0:10]
+        common_zones = [term.value for term in common_zones_vocab]
+        reg[reg_key] = common_zones[0:10]
 
         # the AvailableTimezones vocabulary must instantiated again, to reflect
         # those changes
@@ -50,23 +56,15 @@ class TimezoneTest(unittest.TestCase):
             'plone.app.vocabularies.AvailableTimezones'
         )(self.portal)
 
-        # the length of the avail_zones_vocab is still the same as
-        # all_zones_vocab
-        self.assertTrue(len(all_zones_vocab) == len(avail_zones_vocab) != 0)
-        # but when iterating over every item, the length equals the
-        # available_timezones setting.
-        # this magic is done by collective.elephantvocabulary and has the
-        # purpose that timezones are still available for events or users, who
-        # used them, even if the portal manager retracked them later.
-        self.assertTrue(len([item for item in avail_zones_vocab]) == 10)
+        # the length of the avail_zones_vocab is now 10
+        self.assertTrue(len(common_zones_vocab) > len(avail_zones_vocab) > 0)
+        self.assertEqual(len(avail_zones_vocab), 10)
 
         # Test querying AvailableTimezones vocabulary
+        reg[reg_key] = common_zones
         filtered_zones_vocab = getUtility(
             IVocabularyFactory,
             'plone.app.vocabularies.AvailableTimezones'
         )(self.portal, query='vienna')
         # filtered all items down to one
-        self.assertTrue(len(filtered_zones_vocab) == 1)
-        # iterating over all items returns empty list, since filtered item
-        # isn't in available zones
-        self.assertTrue(len([item for item in filtered_zones_vocab]) == 0)
+        self.assertEqual(len(filtered_zones_vocab), 1)
