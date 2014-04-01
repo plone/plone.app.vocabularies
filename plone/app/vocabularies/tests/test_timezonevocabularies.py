@@ -11,7 +11,6 @@ class TimezoneTest(unittest.TestCase):
 
     def setUp(self):
         self.portal = self.layer['portal']
-        reg = getUtility(IRegistry)
 
     def test_timezone_vocabulary(self):
         tzvocab = getUtility(IVocabularyFactory, 'plone.app.vocabularies.Timezones')
