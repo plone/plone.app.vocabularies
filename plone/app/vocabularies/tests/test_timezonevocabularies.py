@@ -11,6 +11,7 @@ class TimezoneTest(unittest.TestCase):
 
     def setUp(self):
         self.portal = self.layer['portal']
+        reg = getUtility(IRegistry)
 
     def test_timezone_vocabulary(self):
         tzvocab = getUtility(IVocabularyFactory, 'plone.app.vocabularies.Timezones')
@@ -30,8 +31,8 @@ class TimezoneTest(unittest.TestCase):
         # this is for Plone 4.3
         reg_key = 'plone.available_timezones'
         if reg_key not in reg:
-            # else use 'plone.app.event.available_timezones'
-            reg_key = "plone.app.event.available_timezones"
+            # this works only for plone.app.event 2.0
+            return
         
         # initially, all common zones are available in AvailableTimezones
         common_zones_vocab = getUtility(
