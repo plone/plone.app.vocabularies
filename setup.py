@@ -46,6 +46,7 @@ setup(
         'Acquisition',
         'Products.CMFCore',
         'Zope2',
-        'plone.app.querystring'
+        'plone.app.querystring',
+        'pytz',
     ],
 )

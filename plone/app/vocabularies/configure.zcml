@@ -1,4 +1,6 @@
-<configure xmlns="http://namespaces.zope.org/zope">
+<configure 
+  xmlns="http://namespaces.zope.org/zope" 
+  xmlns:zcml="http://namespaces.zope.org/zcml">
 
   <utility
     component=".language.AvailableContentLanguageVocabularyFactory"
@@ -98,6 +100,47 @@
   <utility                                                                          
     component=".actions.ActionCategoriesVocabularyFactory"                         
     name="plone.app.vocabularies.Actions"                                     
+    />
+
+  <utility
+    component=".datetimerelated.TimezonesFactory"
+    name="plone.app.vocabularies.Timezones"
+    />
+
+  <utility
+    component=".datetimerelated.CommonTimezonesFactory"
+    name="plone.app.vocabularies.CommonTimezones"
+    />
+
+  <utility
+    zcml:condition="installed plone.app.event"
+    component=".datetimerelated.AvailableTimezonesFactory"
+    name="plone.app.vocabularies.AvailableTimezones"
+    />
+
+  <utility
+    component=".datetimerelated.WeekdaysFactory"
+    name="plone.app.vocabularies.Weekdays"
+    />
+
+  <utility
+    component=".datetimerelated.WeekdaysAbbrFactory"
+    name="plone.app.vocabularies.WeekdaysAbbr"
+    />
+
+  <utility
+    component=".datetimerelated.WeekdaysShortFactory"
+    name="plone.app.vocabularies.WeekdaysShort"
+    />
+
+  <utility
+    component=".datetimerelated.MonthFactory"
+    name="plone.app.vocabularies.Month"
+    />
+
+  <utility
+    component=".datetimerelated.MonthAbbrFactory"
+    name="plone.app.vocabularies.MonthAbbr"
     />
 
   <!-- All source implementations will be deprecated -->

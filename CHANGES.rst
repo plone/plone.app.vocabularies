@@ -4,7 +4,10 @@ Changelog
 2.1.15 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Add datetime related vocabularies: timezones, weekdays, months.
+  This are moved from ``plone.app.event`` and extended by to be more 
+  complete.
+  [yenzenz]
 
 
 2.1.14 (2014-02-23)
