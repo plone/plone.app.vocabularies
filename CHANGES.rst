@@ -4,8 +4,13 @@ Changelog
 2.1.15 (unreleased)
 -------------------
 
+- Make ``KeywordsVocabulary`` more customizeable using an ``keyword_index``
+  class variable to allow users to inherit and just override that attribute
+  to build their own keyword vocabularies.
+  [saily]
+
 - Add datetime related vocabularies: timezones, weekdays, months.
-  This are moved from ``plone.app.event`` and extended by to be more 
+  This are moved from ``plone.app.event`` and extended by to be more
   complete.
   [yenzenz]
 
