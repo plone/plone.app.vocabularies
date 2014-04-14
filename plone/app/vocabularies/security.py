@@ -1,5 +1,4 @@
 from operator import attrgetter
-from zope.component import queryUtility
 
 from zope.i18n import translate
 from zope.i18nmessageid import MessageFactory
