@@ -4,6 +4,10 @@ Changelog
 2.1.15 (unreleased)
 -------------------
 
+- Added ``AllRolesVocabulary`` which contains the Authenticated, Anonymous and
+  Owner roles which are removed from the ``RolesVocabulary``
+  [ichim-david]
+
 - Make ``KeywordsVocabulary`` more customizeable using an ``keyword_index``
   class variable to allow users to inherit and just override that attribute
   to build their own keyword vocabularies.

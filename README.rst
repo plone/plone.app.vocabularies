@@ -10,6 +10,7 @@ Common Named Vocabularies
 * plone.app.vocabularies.AvailableContentLanguages
 * plone.app.vocabularies.SupportedContentLanguages
 * plone.app.vocabularies.Roles
+* plone.app.vocabularies.AllRoles
 * plone.app.vocabularies.Groups
 * plone.app.vocabularies.AllowedContentTypes
 * plone.app.vocabularies.AllowableContentTypes
