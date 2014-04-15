@@ -91,7 +91,7 @@ class AllRolesVocabulary(object):
       <zope.schema.vocabulary.SimpleVocabulary object at ...>
 
       >>> len(roles.by_token)
-      6
+      5
 
       >>> manager = roles.by_token['Manager']
       >>> manager.title, manager.token, manager.value
