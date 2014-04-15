@@ -4,8 +4,8 @@ Changelog
 2.1.15 (unreleased)
 -------------------
 
-- Added ``AllRolesVocabulary`` which contains the Authenticated, Anonymous and
-  Owner roles which are removed from the ``RolesVocabulary``
+- Added ``AllRolesVocabulary`` which contains the Authenticated and Anonymous
+  roles which are removed from the ``RolesVocabulary``
   [ichim-david]
 
 - Make ``KeywordsVocabulary`` more customizeable using an ``keyword_index``

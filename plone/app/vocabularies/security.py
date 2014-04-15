@@ -67,8 +67,8 @@ RolesVocabularyFactory = RolesVocabulary()
 
 
 class AllRolesVocabulary(object):
-    """Vocabulary that amends the RolesVocabulary with the Anonymous,
-      Authenticated and Owner roles
+    """Vocabulary that amends the RolesVocabulary with the Anonymous
+      and Authenticated roles
       >>> from zope.component import queryUtility
       >>> from plone.app.vocabularies.tests.base import create_context
       >>> from plone.app.vocabularies.tests.base import DummyTool
@@ -112,8 +112,10 @@ class AllRolesVocabulary(object):
             role_title = translate(PMF(role_id), context=request)
             items.append(SimpleTerm(role_id, role_id, role_title))
 
-        missing_roles = ["Anonymous", "Authenticated", "Owner"]
+        missing_roles = ["Anonymous", "Authenticated"]
         for role_id in missing_roles:
+            if role_id in roles:
+                continue
             role_title = translate(PMF(role_id), context=context)
             items.append(SimpleTerm(role_id, role_id, role_title))
         items.sort(key=attrgetter('title'))
