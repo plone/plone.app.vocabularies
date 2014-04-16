@@ -41,7 +41,7 @@ def AvailableTimezonesFactory(context, query=None):
     """
     reg_key = "plone.available_timezones"
     registry = getUtility(IRegistry)
-    # check if "plone.available_timezones" available_timezones' in registry
+    # check if 'plone.available_timezones' is in registry
     if reg_key not in registry:
         # else use 'plone.app.event.available_timezones'
         reg_key = 'plone.app.event.available_timezones'
