@@ -116,7 +116,7 @@ class AllRolesVocabulary(object):
         for role_id in missing_roles:
             if role_id in roles:
                 continue
-            role_title = translate(PMF(role_id), context=context)
+            role_title = translate(PMF(role_id), context=request)
             items.append(SimpleTerm(role_id, role_id, role_title))
         items.sort(key=attrgetter('title'))
 
