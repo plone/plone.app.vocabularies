@@ -4,7 +4,8 @@ Changelog
 2.1.16 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Cleanup.
+  [thet]
 
 
 2.1.15 (unreleased)
