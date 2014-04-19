@@ -14,6 +14,9 @@ Changelog
   complete.
   [yenzenz]
 
+- Add catalog source which can eventually replace the vocabulary.
+  [davisagli]
+
 
 2.1.14 (2014-02-23)
 -------------------
