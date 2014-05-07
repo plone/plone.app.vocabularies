@@ -17,11 +17,6 @@
     name="plone.app.vocabularies.Roles"
     />
 
-    <utility
-     component=".security.AllRolesVocabularyFactory"
-     name="plone.app.vocabularies.AllRoles"
-     />
-
   <utility
     component=".security.GroupsVocabularyFactory"
     name="plone.app.vocabularies.Groups"

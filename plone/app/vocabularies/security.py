@@ -30,7 +30,7 @@ class RolesVocabulary(object):
 
       >>> tool = DummyTool('portal_membership')
       >>> def getPortalRoles():
-      ...     return ('Anonymous', 'Manager', 'Ploonies')
+      ...    return ('Anonymous', 'Authenticated', 'Manager', 'Ploonies')
       >>> tool.getPortalRoles = getPortalRoles
       >>> context.portal_membership = tool
 
@@ -39,59 +39,7 @@ class RolesVocabulary(object):
       <zope.schema.vocabulary.SimpleVocabulary object at ...>
 
       >>> len(roles.by_token)
-      3
-
-      >>> manager = roles.by_token['Manager']
-      >>> manager.title, manager.token, manager.value
-      (u'Manager', 'Manager', 'Manager')
-    """
-    implements(IVocabularyFactory)
-
-    def __call__(self, context):
-        site = getSite()
-        mtool = getToolByName(site, 'portal_membership', None)
-        if mtool is None:
-            return SimpleVocabulary([])
-
-        items = []
-        request = aq_get(mtool, 'REQUEST', None)
-        roles = mtool.getPortalRoles()
-        for role_id in roles:
-            role_title = translate(PMF(role_id), context=request)
-            items.append(SimpleTerm(role_id, role_id, role_title))
-
-        items.sort(key=attrgetter('title'))
-        return SimpleVocabulary(items)
-
-RolesVocabularyFactory = RolesVocabulary()
-
-
-class AllRolesVocabulary(object):
-    """Vocabulary that amends the RolesVocabulary with the Anonymous
-      and Authenticated roles
-      >>> from zope.component import queryUtility
-      >>> from plone.app.vocabularies.tests.base import create_context
-      >>> from plone.app.vocabularies.tests.base import DummyTool
-
-      >>> name = 'plone.app.vocabularies.AllRoles'
-      >>> util = queryUtility(IVocabularyFactory, name)
-      >>> context = create_context()
-
-      >>> len(util(context))
-      0
-
-      >>> tool = DummyTool('portal_membership')
-      >>> def getPortalRoles():
-      ...     return ('Editor', 'Manager', 'Reviewer')
-      >>> tool.getPortalRoles = getPortalRoles
-      >>> context.portal_membership = tool
-
-      >>> roles = util(context)
-      >>> roles
-      <zope.schema.vocabulary.SimpleVocabulary object at ...>
-
-      >>> len(roles.by_token)
-      5
+      4
 
       >>> manager = roles.by_token['Manager']
       >>> manager.title, manager.token, manager.value
@@ -122,8 +70,7 @@ class AllRolesVocabulary(object):
 
         return SimpleVocabulary(items)
 
-
-AllRolesVocabularyFactory = AllRolesVocabulary()
+RolesVocabularyFactory = RolesVocabulary()
 
 
 class GroupsVocabulary(object):
