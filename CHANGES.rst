@@ -4,16 +4,16 @@ Changelog
 2.1.16 (unreleased)
 -------------------
 
+- Added the missing Authenticated and Anonymous roles within the
+  `RolesVocabulary``.
+  [ichim-david]
+
 - Cleanup.
   [thet]
 
 
-2.1.15 (unreleased)
+2.1.15 (2014-04-11)
 -------------------
-
-- Added the missing Authenticated and Anonymous roles within the
-  `RolesVocabulary``.
-  [ichim-david]
 
 - Make ``KeywordsVocabulary`` more customizeable using an ``keyword_index``
   class variable to allow users to inherit and just override that attribute
