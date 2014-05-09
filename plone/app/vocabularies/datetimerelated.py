@@ -7,16 +7,16 @@ from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 
 import pytz
-import random
 
 _ = MessageFactory('plonelocales')
+
 
 @provider(IVocabularyFactory)
 def TimezonesFactory(context, query=None):
     """Vocabulary for all timezones.
 
     This are all timezones supported by pytz.
-    """    
+    """
     tz_list = [SimpleTerm(value=it, title=_(it, default=it))
                for it in pytz.all_timezones
                if query is None or query.lower() in it.lower()]
@@ -41,10 +41,6 @@ def AvailableTimezonesFactory(context, query=None):
     """
     # TODO: if the portal_timezone is not in available_timezones, also put it
     #       in AvailableTimezone vocab.
-    tzvocab = getUtility(
-        IVocabularyFactory,
-        'plone.app.vocabularies.Timezones'
-    )(context, query)
     reg_key = "plone.available_timezones"
     registry = getUtility(IRegistry)
     # check if "plone.available_timezones" available_timezones' in registry
@@ -64,6 +60,7 @@ def AvailableTimezonesFactory(context, query=None):
 
 # PLEASE NOTE: strftime %w interprets 0 as Sunday unlike the calendar module!
 WEEKDAY_PREFIXES = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+
 
 @provider(IVocabularyFactory)
 def WeekdaysFactory(context):
@@ -103,7 +100,7 @@ def WeekdaysAbbrFactory(context):
 
       >>> len(util(context))
       7
-    
+
     """
     items = []
     for idx in range(len(WEEKDAY_PREFIXES)):
@@ -125,7 +122,7 @@ def WeekdaysShortFactory(context):
 
       >>> len(util(context))
       7
-    
+
     """
     items = []
     for idx in range(len(WEEKDAY_PREFIXES)):
@@ -134,8 +131,9 @@ def WeekdaysShortFactory(context):
     return SimpleVocabulary(items)
 
 
-MONTH_PREFIXES = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 
+MONTH_PREFIXES = ['jan', 'feb', 'mar', 'apr', 'may', 'jun',
                   'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
+
 
 @provider(IVocabularyFactory)
 def MonthFactory(context):
@@ -156,6 +154,7 @@ def MonthFactory(context):
         msgstr = _('month_{0}'.format(MONTH_PREFIXES[idx]))
         items.append(SimpleTerm(idx, str(idx), msgstr))
     return SimpleVocabulary(items)
+
 
 @provider(IVocabularyFactory)
 def MonthAbbrFactory(context):
