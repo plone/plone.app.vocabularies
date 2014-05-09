@@ -30,7 +30,7 @@ class RolesVocabulary(object):
 
       >>> tool = DummyTool('portal_membership')
       >>> def getPortalRoles():
-      ...     return ('Anonymous', 'Manager', 'Ploonies')
+      ...    return ('Anonymous', 'Authenticated', 'Manager', 'Ploonies')
       >>> tool.getPortalRoles = getPortalRoles
       >>> context.portal_membership = tool
 
@@ -39,7 +39,7 @@ class RolesVocabulary(object):
       <zope.schema.vocabulary.SimpleVocabulary object at ...>
 
       >>> len(roles.by_token)
-      3
+      4
 
       >>> manager = roles.by_token['Manager']
       >>> manager.title, manager.token, manager.value
@@ -60,7 +60,14 @@ class RolesVocabulary(object):
             role_title = translate(PMF(role_id), context=request)
             items.append(SimpleTerm(role_id, role_id, role_title))
 
+        missing_roles = ["Anonymous", "Authenticated"]
+        for role_id in missing_roles:
+            if role_id in roles:
+                continue
+            role_title = translate(PMF(role_id), context=request)
+            items.append(SimpleTerm(role_id, role_id, role_title))
         items.sort(key=attrgetter('title'))
+
         return SimpleVocabulary(items)
 
 RolesVocabularyFactory = RolesVocabulary()

@@ -419,12 +419,16 @@ class KeywordsVocabulary(object):
     """
     implements(IVocabularyFactory)
 
+    # Allow users to customize the index to easily create
+    # KeywordVocabularies for other keyword indexes
+    keyword_index = 'Subject'
+
     def __call__(self, context, query=None):
         site = getSite()
         self.catalog = getToolByName(site, "portal_catalog", None)
         if self.catalog is None:
             return SimpleVocabulary([])
-        index = self.catalog._catalog.getIndex('Subject')
+        index = self.catalog._catalog.getIndex(self.keyword_index)
 
         def safe_encode(term):
             if isinstance(term, unicode):

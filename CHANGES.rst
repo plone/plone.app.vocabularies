@@ -1,13 +1,32 @@
 Changelog
 =========
 
-2.1.15 (unreleased)
+2.1.16 (unreleased)
 -------------------
 
+- Added the missing Authenticated and Anonymous roles within the
+  `RolesVocabulary``.
+  [ichim-david]
+
+- Cleanup.
+  [thet]
+
+
+2.1.15 (2014-04-11)
+-------------------
+
+- Make ``KeywordsVocabulary`` more customizeable using an ``keyword_index``
+  class variable to allow users to inherit and just override that attribute
+  to build their own keyword vocabularies.
+  [saily]
+
 - Add datetime related vocabularies: timezones, weekdays, months.
-  This are moved from ``plone.app.event`` and extended by to be more 
+  This are moved from ``plone.app.event`` and extended by to be more
   complete.
   [yenzenz]
+
+- Add catalog source which can eventually replace the vocabulary.
+  [davisagli]
 
 
 2.1.14 (2014-02-23)

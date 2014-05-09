@@ -39,11 +39,9 @@ def CommonTimezonesFactory(context, query=None):
 def AvailableTimezonesFactory(context, query=None):
     """Vocabulary for available timezones, as set by in the controlpanel.
     """
-    # TODO: if the portal_timezone is not in available_timezones, also put it
-    #       in AvailableTimezone vocab.
     reg_key = "plone.available_timezones"
     registry = getUtility(IRegistry)
-    # check if "plone.available_timezones" available_timezones' in registry
+    # check if 'plone.available_timezones' is in registry
     if reg_key not in registry:
         # else use 'plone.app.event.available_timezones'
         reg_key = 'plone.app.event.available_timezones'
@@ -78,7 +76,6 @@ def WeekdaysFactory(context):
 
       >>> util(context).by_token['0'].title
       u'weekday_mon'
-
     """
     items = []
     for idx in range(len(WEEKDAY_PREFIXES)):
@@ -100,7 +97,6 @@ def WeekdaysAbbrFactory(context):
 
       >>> len(util(context))
       7
-
     """
     items = []
     for idx in range(len(WEEKDAY_PREFIXES)):
@@ -122,7 +118,6 @@ def WeekdaysShortFactory(context):
 
       >>> len(util(context))
       7
-
     """
     items = []
     for idx in range(len(WEEKDAY_PREFIXES)):
