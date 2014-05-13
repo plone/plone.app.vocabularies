@@ -8,7 +8,7 @@ from zope.schema.vocabulary import SimpleVocabulary
 
 import pytz
 
-_ = MessageFactory('plonelocales')
+PLMF = MessageFactory('plonelocales')
 
 
 @provider(IVocabularyFactory)
@@ -17,7 +17,7 @@ def TimezonesFactory(context, query=None):
 
     This are all timezones supported by pytz.
     """
-    tz_list = [SimpleTerm(value=it, title=_(it, default=it))
+    tz_list = [SimpleTerm(value=it, title=PLMF(it, default=it))
                for it in pytz.all_timezones
                if query is None or query.lower() in it.lower()]
     return SimpleVocabulary(tz_list)
@@ -29,7 +29,7 @@ def CommonTimezonesFactory(context, query=None):
 
     This are the timezones a user would choose from in a form.
     """
-    tz_list = [SimpleTerm(value=it, title=_(it, default=it))
+    tz_list = [SimpleTerm(value=it, title=PLMF(it, default=it))
                for it in pytz.common_timezones
                if query is None or query.lower() in it.lower()]
     return SimpleVocabulary(tz_list)
@@ -50,7 +50,7 @@ def AvailableTimezonesFactory(context, query=None):
             '"available timezones" needs Plone 5.x or plone.app.event '
             'installed.'
         )
-    tz_list = [SimpleTerm(value=it, title=_(it, default=it))
+    tz_list = [SimpleTerm(value=it, title=PLMF(it, default=it))
                for it in registry[reg_key]
                if query is None or query.lower() in it.lower()]
     return SimpleVocabulary(tz_list)
@@ -79,7 +79,7 @@ def WeekdaysFactory(context):
     """
     items = []
     for idx in range(len(WEEKDAY_PREFIXES)):
-        msgstr = _('weekday_{0}'.format(WEEKDAY_PREFIXES[idx]))
+        msgstr = PLMF('weekday_{0}'.format(WEEKDAY_PREFIXES[idx]))
         items.append(SimpleTerm(idx, str(idx), msgstr))
     return SimpleVocabulary(items)
 
@@ -100,7 +100,7 @@ def WeekdaysAbbrFactory(context):
     """
     items = []
     for idx in range(len(WEEKDAY_PREFIXES)):
-        msgstr = _('weekday_{0}_abbr'.format(WEEKDAY_PREFIXES[idx]))
+        msgstr = PLMF('weekday_{0}_abbr'.format(WEEKDAY_PREFIXES[idx]))
         items.append(SimpleTerm(idx, str(idx), msgstr))
     return SimpleVocabulary(items)
 
@@ -121,7 +121,7 @@ def WeekdaysShortFactory(context):
     """
     items = []
     for idx in range(len(WEEKDAY_PREFIXES)):
-        msgstr = _('weekday_{0}_short'.format(WEEKDAY_PREFIXES[idx]))
+        msgstr = PLMF('weekday_{0}_short'.format(WEEKDAY_PREFIXES[idx]))
         items.append(SimpleTerm(idx, str(idx), msgstr))
     return SimpleVocabulary(items)
 
@@ -146,7 +146,7 @@ def MonthFactory(context):
     """
     items = []
     for idx in range(len(MONTH_PREFIXES)):
-        msgstr = _('month_{0}'.format(MONTH_PREFIXES[idx]))
+        msgstr = PLMF('month_{0}'.format(MONTH_PREFIXES[idx]))
         items.append(SimpleTerm(idx, str(idx), msgstr))
     return SimpleVocabulary(items)
 
@@ -167,6 +167,6 @@ def MonthAbbrFactory(context):
     """
     items = []
     for idx in range(len(MONTH_PREFIXES)):
-        msgstr = _('month_{0}_abbr'.format(MONTH_PREFIXES[idx]))
+        msgstr = PLMF('month_{0}_abbr'.format(MONTH_PREFIXES[idx]))
         items.append(SimpleTerm(idx, str(idx), msgstr))
     return SimpleVocabulary(items)
