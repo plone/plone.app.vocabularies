@@ -29,6 +29,7 @@ setup(
     zip_safe=False,
     extras_require=dict(
         test=[
+            'plone.app.testing',
             'zope.configuration',
             'zope.testing',
         ]
