@@ -31,7 +31,7 @@ class TimezoneTest(unittest.TestCase):
         if reg_key not in reg:
             # ignore for Plone 4.3 w/o plone.app.event available
             return
-        
+
         # this works only for plone.app.event 2.0
         # initially, all common zones are available in AvailableTimezones
         common_zones_vocab = getUtility(
