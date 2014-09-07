@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.16 (unreleased)
+2.1.16 (2014-09-07)
 -------------------
 
 - Added the missing Authenticated and Anonymous roles within the
