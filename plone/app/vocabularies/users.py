@@ -1,17 +1,14 @@
-from zope.browser.interfaces import ITerms
-from zope.interface import directlyProvides
-from zope.interface import implements, classProvides
-from zope.schema.interfaces import ISource, IContextSourceBinder
-from zope.schema.interfaces import IVocabularyTokenized
-from zope.schema.interfaces import IVocabularyFactory
-from zope.schema.vocabulary import SimpleTerm
-
-from zope.formlib.interfaces import ISourceQueryView
-
+# -*- coding: utf-8 -*-
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-
 from plone.app.vocabularies import SlicableVocabulary
+from zope.browser.interfaces import ITerms
+from zope.component.hooks import getSite
+from zope.formlib.interfaces import ISourceQueryView
+from zope.interface import implements, classProvides
+from zope.schema.interfaces import ISource, IContextSourceBinder
+from zope.schema.interfaces import IVocabularyFactory
+from zope.schema.vocabulary import SimpleTerm
 
 
 class UsersSource(object):
@@ -109,8 +106,11 @@ class UsersFactory(object):
     implements(IVocabularyFactory)
 
     def __call__(self, context, query=''):
+        if context is None:
+            context = getSite()
         users = getToolByName(context, "acl_users")
-        return UsersVocabulary.fromItems(users.searchUsers(fullname=query), context)
+        return UsersVocabulary.fromItems(
+            users.searchUsers(fullname=query), context)
 
 
 class UsersSourceQueryView(object):
