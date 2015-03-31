@@ -4,7 +4,8 @@ Changelog
 2.1.17 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Fix issue with missing context in plone.app.vocabularies.Users.
+  [pbauer]
 
 
 2.1.16 (2014-09-07)
