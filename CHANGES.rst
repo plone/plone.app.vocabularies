@@ -4,6 +4,11 @@ Changelog
 2.1.17 (unreleased)
 -------------------
 
+- default to having english with AvailableContentLanguageVocabularyFactory
+  to fix issue that happens sometimes when setting language and multilingual
+  is not installed
+  [vangheem]
+
 - Fix issue with missing context in plone.app.vocabularies.Users.
   [pbauer]
 

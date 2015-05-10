@@ -44,7 +44,7 @@ class AvailableContentLanguageVocabulary(object):
     implements(IVocabularyFactory)
 
     def __call__(self, context):
-        items = []
+        items = [SimpleTerm('en', 'en', 'English')]  # default, only english
         site = getSite()
         ltool = getToolByName(site, 'portal_languages', None)
         if ltool is not None:
