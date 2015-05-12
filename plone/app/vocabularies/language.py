@@ -20,8 +20,8 @@ class AvailableContentLanguageVocabulary(object):
       >>> util = queryUtility(IVocabularyFactory, name)
       >>> context = create_context()
 
-      >>> len(util(context))
-      0
+      >>> len(util(context))  # 'en' is given as default now
+      1
 
       >>> tool = DummyTool('portal_languages')
       >>> def getAvailableLanguages():
