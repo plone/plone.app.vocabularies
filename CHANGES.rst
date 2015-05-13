@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.17 (unreleased)
+2.1.17 (2015-05-13)
 -------------------
 
 - default to having english with AvailableContentLanguageVocabularyFactory

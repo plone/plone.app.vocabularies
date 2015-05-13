@@ -1,4 +1,6 @@
 include *.rst
+include *.GPL
+include *.txt
 
 recursive-include docs *
 recursive-include plone *
