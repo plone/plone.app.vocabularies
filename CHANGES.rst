@@ -4,7 +4,9 @@ Changelog
 2.1.18 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- change CatalogSource to be able to validate
+  path strings in addition to UIDs
+  [vangheem]
 
 
 2.1.17 (2015-05-13)

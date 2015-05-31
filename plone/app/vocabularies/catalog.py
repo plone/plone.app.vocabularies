@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 import itertools
 from binascii import b2a_qp
 from zope.browser.interfaces import ITerms
@@ -320,7 +321,7 @@ class QuerySearchableTextSourceView(object):
         if not value:
             return None
         if (not self.context.portal_path.endswith('/')) \
-               and (not value.startswith('/')):
+                and (not value.startswith('/')):
             value = '/' + value
         # get rid for path
         rid = self.context.catalog.getrid(self.context.portal_path + value)
@@ -333,7 +334,7 @@ class QuerySearchableTextSourceView(object):
             # fetch the brain from the catalog
             brain = self.context.catalog._catalog[rid]
             title = brain.Title
-            #title = brain.Title
+            # title = brain.Title
             if brain.is_folderish:
                 browse_token = value
             parent_token = "/".join(value.split("/")[:-1])
@@ -585,8 +586,16 @@ class CatalogSource(object):
             uid = value
         else:
             uid = IUUID(value)
-        if self.search_catalog({'UID': uid}):
-            return True
+        if uid[0] == '/':
+            # it is a path query
+            site = getSite()
+            site_path = '/'.join(site.getPhysicalPath())
+            path = os.path.join(site_path, uid.lstrip('/'))
+            if self.search_catalog({'path': {'query': path, 'depth': 0}}):
+                return True
+        else:
+            if self.search_catalog({'UID': uid}):
+                return True
 
     def search_catalog(self, user_query):
         query = user_query.copy()
