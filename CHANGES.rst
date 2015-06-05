@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.18 (unreleased)
+2.1.18 (2015-06-05)
 -------------------
 
 - change CatalogSource to be able to validate
