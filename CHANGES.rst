@@ -4,7 +4,8 @@ Changelog
 2.1.19 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Make ``KeywordsVocabulary`` work smoothly with Unicode vocabularies.
+  [l34marr]
 
 
 2.1.18 (2015-06-05)

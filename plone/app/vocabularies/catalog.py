@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
 import itertools
-from binascii import b2a_qp
 from zope.browser.interfaces import ITerms
 from zope.interface import implements, classProvides
 from zope.schema.interfaces import ISource, IContextSourceBinder, IVocabularyFactory
@@ -398,8 +397,8 @@ class KeywordsVocabulary(object):
         >>> vocab = KeywordsVocabulary()
         >>> result = vocab(context)
         >>> result.by_token.keys()
-        ['blee', 'baz', 'foo', 'bar', 'non-=C3=A5scii']
-        >>> result.getTermByToken('non-=C3=A5scii').title
+        ['blee', 'baz', 'foo', 'bar', 'non-\xc3\xa5scii']
+        >>> result.getTermByToken('non-\xc3\xa5scii').title
         u'non-\\xe5scii'
 
         Testing unicode vocabularies
@@ -410,10 +409,10 @@ class KeywordsVocabulary(object):
         >>> vocab = KeywordsVocabulary()
         >>> result = vocab(context)
         >>> result.by_token.keys()
-        ['nix', '=C3=83=C2=A4=C3=83=C2=BC=C3=83=C2=B6']
+        ['nix', '\xc3\x83\xc2\xa4\xc3\x83\xc2\xbc\xc3\x83\xc2\xb6']
         >>> result.by_value.keys() == [u'äüö', u'nix']
         True
-        >>> test_title = result.getTermByToken('=C3=83=C2=A4=C3=83=C2=BC=C3=83=C2=B6').title
+        >>> test_title = result.getTermByToken('\xc3\x83\xc2\xa4\xc3\x83\xc2\xbc\xc3\x83\xc2\xb6').title
         >>> test_title == u'äüö'
         True
 
