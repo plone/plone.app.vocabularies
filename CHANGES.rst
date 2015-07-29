@@ -4,8 +4,8 @@ Changelog
 2.1.19 (unreleased)
 -------------------
 
-- Nothing changed yet.
-
+- Fixed SyndicatableFeedItems to allow unicode characters in objects titles.
+  [Gagaro]
 
 2.1.18 (2015-06-05)
 -------------------
