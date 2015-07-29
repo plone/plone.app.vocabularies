@@ -56,8 +56,8 @@ class SyndicatableFeedItems(object):
         items = []
         for brain in catalog(**query):
             uid = brain.UID
-            title = '%s(%s)' % (brain.Title,
-                                brain.getPath()[len(site_path) + 1:])
+            title = u'%s(%s)' % (brain.Title.decode('utf8'),
+                                 brain.getPath()[len(site_path) + 1:])
             items.append(SimpleTerm(uid, uid, title))
         return SimpleVocabulary(items)
 
