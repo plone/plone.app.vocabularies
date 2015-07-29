@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.19 (unreleased)
+2.1.19 (2015-07-29)
 -------------------
 
 - Fixed SyndicatableFeedItems to allow unicode characters in objects titles.
