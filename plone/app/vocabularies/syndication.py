@@ -1,26 +1,27 @@
-from zope.component.hooks import getSite
+# -*- coding: utf-8 -*-
+from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
+from zope.component import getUtility
+from zope.component.hooks import getSite
 from zope.i18nmessageid import MessageFactory
-from zope.interface import implements
+from zope.interface import implementer
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 
 try:
-    from Products.CMFPlone.interfaces.syndication import \
-        ISiteSyndicationSettings
+    # XXX: this is a circular dependency (not declared in setup.py)
+    from Products.CMFPlone.interfaces.syndication import ISiteSyndicationSettings  # noqa
     HAS_SYNDICATION = True
 except ImportError:
     # new syndication not available
     HAS_SYNDICATION = False
-from zope.component import getUtility
-from plone.registry.interfaces import IRegistry
 
 _ = MessageFactory('plone')
 
 
+@implementer(IVocabularyFactory)
 class SyndicationFeedTypesVocabulary(object):
-    implements(IVocabularyFactory)
 
     def __call__(self, context):
         if not HAS_SYNDICATION:
@@ -41,8 +42,8 @@ class SyndicationFeedTypesVocabulary(object):
 SyndicationFeedTypesVocabularyFactory = SyndicationFeedTypesVocabulary()
 
 
+@implementer(IVocabularyFactory)
 class SyndicatableFeedItems(object):
-    implements(IVocabularyFactory)
 
     def __call__(self, context):
         site = getSite()

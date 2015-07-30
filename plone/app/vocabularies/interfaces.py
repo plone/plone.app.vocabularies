@@ -1,4 +1,6 @@
-from zope.interface import Interface, Attribute
+# -*- coding: utf-8 -*-
+from zope.interface import Attribute
+from zope.interface import Interface
 from zope.schema.interfaces import IVocabularyTokenized
 
 
@@ -40,4 +42,3 @@ class IBrowsableTerm(Interface):
 class ISlicableVocabulary(IVocabularyTokenized):
     def __getitem__(start, stop):
         """ return a slice of the results"""
-

@@ -1,8 +1,8 @@
+# -*- coding: utf-8 -*-
 from plone.app.vocabularies.testing import PAVocabularies_INTEGRATION_TESTING
 from plone.registry.interfaces import IRegistry
 from zope.component import getUtility
 from zope.schema.interfaces import IVocabularyFactory
-
 import unittest2 as unittest
 
 
@@ -13,13 +13,19 @@ class TimezoneTest(unittest.TestCase):
         self.portal = self.layer['portal']
 
     def test_timezone_vocabulary(self):
-        tzvocab = getUtility(IVocabularyFactory, 'plone.app.vocabularies.Timezones')
+        tzvocab = getUtility(
+            IVocabularyFactory,
+            'plone.app.vocabularies.Timezones'
+        )
         tz_list = [item.value for item in tzvocab(self.portal)]
         self.assertTrue('Africa/Abidjan' in tz_list)
         self.assertTrue('Europe/London' in tz_list)
 
     def test_timezone_vocabulary_query(self):
-        tzvocab = getUtility(IVocabularyFactory, 'plone.app.vocabularies.Timezones')
+        tzvocab = getUtility(
+            IVocabularyFactory,
+            'plone.app.vocabularies.Timezones'
+        )
         tz_list = [item.value for item in tzvocab(self.portal, query='vienna')]
         self.assertTrue('Europe/Vienna' in tz_list)
         self.assertTrue(len(tz_list) == 1)

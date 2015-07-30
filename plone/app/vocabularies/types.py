@@ -1,43 +1,65 @@
+# -*- coding: utf-8 -*-
 from Acquisition import aq_get
-from zope.interface import implements
-from zope.schema.interfaces import IVocabularyFactory
-from zope.schema.vocabulary import SimpleVocabulary
-from zope.schema.vocabulary import SimpleTerm
-from zope.site.hooks import getSite
-from zope.i18n import translate
-
 from Products.CMFCore.utils import getToolByName
+from zope.i18n import translate
+from zope.interface import implementer
+from zope.schema.interfaces import IVocabularyFactory
+from zope.schema.vocabulary import SimpleTerm
+from zope.schema.vocabulary import SimpleVocabulary
+from zope.site.hooks import getSite
 
 
 def getAllowedContentTypes(context):
-    """ computes the list of allowed content types by subtracting the site property blacklist
-        from the list of installed types.
+    """ computes the list of allowed content types ...
+    Here the mime types allowed in text fields are meant.
+
+    It does so by subtracting the site property blacklist from the list of
+    allowable (overall available) types.
     """
     allowable_types = getAllowableContentTypes(context)
     forbidden_types = getForbiddenContentTypes(context)
-    allowed_types = [type for type in allowable_types if type not in forbidden_types]
+    allowed_types = [
+        ctype for ctype in allowable_types
+        if ctype not in forbidden_types
+    ]
     return allowed_types
 
 
 def getAllowableContentTypes(context):
-    """ retrieves the list of installed content types by querying portal transforms. """
+    """ retrieves the list of available content types (aka mime-types) ...
+
+    ... by querying portal transforms.
+
+    Cite from over there:
+    This returns a list of mimetypes that can be used as input for textfields
+    by building a list of the inputs beginning with "text/" of all
+    transforms.
+    """
     portal_transforms = getToolByName(context, 'portal_transforms')
     return portal_transforms.listAvailableTextInputs()
 
 
 def getForbiddenContentTypes(context):
-    """ Convenence method for retrevng the site property 'forbidden_contenttypes'."""
+    """Method for retrieving the site property 'forbidden_contenttypes'.
+
+    This is a list of mime-types not allowed in text input fields.
+    """
     portal_properties = getToolByName(context, 'portal_properties', None)
     if portal_properties is not None:
-        site_properties = getattr(portal_properties, 'site_properties', None)
-        if site_properties is not None:
-            if site_properties.hasProperty('forbidden_contenttypes'):
-                return list(site_properties.getProperty('forbidden_contenttypes'))
+        return []
+    site_properties = getattr(portal_properties, 'site_properties', None)
+    if site_properties is not None:
+        return []
+    if site_properties.hasProperty('forbidden_contenttypes'):
+        return list(site_properties.getProperty('forbidden_contenttypes'))
     return []
 
 
+@implementer(IVocabularyFactory)
 class AllowableContentTypesVocabulary(object):
     """Vocabulary factory for allowable content types.
+
+    A list of mime-types that can be used as input for textfields.
 
       >>> from zope.component import queryUtility
       >>> from plone.app.vocabularies.tests.base import create_context
@@ -64,22 +86,23 @@ class AllowableContentTypesVocabulary(object):
       >>> doc.title, doc.token, doc.value
       ('text/plain', 'text/plain', 'text/plain')
     """
-    implements(IVocabularyFactory)
 
     def __call__(self, context):
         site = getSite()
         items = list(getAllowableContentTypes(site))
         if 'text/x-plone-outputfilters-html' in items:
             items.remove('text/x-plone-outputfilters-html')
-        items.sort()
-        items = [SimpleTerm(i, i, i) for i in items]
+        items = [SimpleTerm(i, i, i) for i in sorted(items)]
         return SimpleVocabulary(items)
 
 AllowableContentTypesVocabularyFactory = AllowableContentTypesVocabulary()
 
 
+@implementer(IVocabularyFactory)
 class AllowedContentTypesVocabulary(object):
     """Vocabulary factory for allowed content types.
+
+    A list of mime-types that is allowed to be used as input for textfields.
 
       >>> from zope.component import queryUtility
       >>> from plone.app.vocabularies.tests.base import create_context
@@ -110,24 +133,23 @@ class AllowedContentTypesVocabulary(object):
       <zope.schema.vocabulary.SimpleVocabulary object at ...>
 
       >>> len(types.by_token)
-      1
+      2
 
       >>> doc = types.by_token['text/plain']
       >>> doc.title, doc.token, doc.value
       ('text/plain', 'text/plain', 'text/plain')
     """
-    implements(IVocabularyFactory)
 
     def __call__(self, context):
         site = getSite()
         items = list(getAllowedContentTypes(site))
-        items.sort()
-        items = [SimpleTerm(i, i, i) for i in items]
+        items = [SimpleTerm(i, i, i) for i in sorted(items)]
         return SimpleVocabulary(items)
 
 AllowedContentTypesVocabularyFactory = AllowedContentTypesVocabulary()
 
 
+@implementer(IVocabularyFactory)
 class PortalTypesVocabulary(object):
     """Vocabulary factory for portal types.
 
@@ -151,7 +173,6 @@ class PortalTypesVocabulary(object):
       >>> doc.title, doc.token, doc.value
       (u'Page', 'Document', 'Document')
     """
-    implements(IVocabularyFactory)
 
     def __call__(self, context):
         site = getSite()
@@ -162,13 +183,13 @@ class PortalTypesVocabulary(object):
         request = aq_get(ttool, 'REQUEST', None)
         items = [(translate(ttool[t].Title(), context=request), t)
                  for t in ttool.listContentTypes()]
-        items.sort()
-        items = [SimpleTerm(i[1], i[1], i[0]) for i in items]
+        items = [SimpleTerm(i[1], i[1], i[0]) for i in sorted(items)]
         return SimpleVocabulary(items)
 
 PortalTypesVocabularyFactory = PortalTypesVocabulary()
 
 
+@implementer(IVocabularyFactory)
 class UserFriendlyTypesVocabulary(object):
     """Vocabulary factory for user friendly portal types.
 
@@ -199,7 +220,6 @@ class UserFriendlyTypesVocabulary(object):
       >>> doc.title, doc.token, doc.value
       (u'Page', 'Document', 'Document')
     """
-    implements(IVocabularyFactory)
 
     def __call__(self, context):
         site = getSite()
@@ -209,8 +229,10 @@ class UserFriendlyTypesVocabulary(object):
             return SimpleVocabulary([])
 
         request = aq_get(ttool, 'REQUEST', None)
-        items = [(translate(ttool[t].Title(), context=request), t)
-                 for t in ptool.getUserFriendlyTypes()]
+        items = [
+            (translate(ttool[t].Title(), context=request), t)
+            for t in ptool.getUserFriendlyTypes()
+        ]
         items.sort()
         items = [SimpleTerm(i[1], i[1], i[0]) for i in items]
         return SimpleVocabulary(items)
@@ -218,14 +240,26 @@ class UserFriendlyTypesVocabulary(object):
 UserFriendlyTypesVocabularyFactory = UserFriendlyTypesVocabulary()
 
 
-BAD_TYPES = ("ATBooleanCriterion", "ATDateCriteria", "ATDateRangeCriterion",
-             "ATListCriterion", "ATPortalTypeCriterion", "ATReferenceCriterion",
-             "ATSelectionCriterion", "ATSimpleIntCriterion", "Plone Site",
-             "ATSimpleStringCriterion", "ATSortCriterion", "TempFolder",
-             "ATCurrentAuthorCriterion", "ATPathCriterion",
-             "ATRelativePathCriterion", )
+BAD_TYPES = [
+    "ATBooleanCriterion",
+    "ATCurrentAuthorCriterion",
+    "ATDateCriteria",
+    "ATDateRangeCriterion",
+    "ATListCriterion",
+    "ATPathCriterion",
+    "ATPortalTypeCriterion",
+    "ATReferenceCriterion",
+    "ATRelativePathCriterion",
+    "ATSelectionCriterion",
+    "ATSimpleIntCriterion",
+    "ATSimpleStringCriterion",
+    "ATSortCriterion",
+    "Plone Site",
+    "TempFolder",
+]
 
 
+@implementer(IVocabularyFactory)
 class ReallyUserFriendlyTypesVocabulary(object):
     """Vocabulary factory for really user friendly portal types.
 
@@ -253,7 +287,6 @@ class ReallyUserFriendlyTypesVocabulary(object):
       >>> doc.title, doc.token, doc.value
       (u'Page', 'Document', 'Document')
     """
-    implements(IVocabularyFactory)
 
     def __call__(self, context):
         site = getSite()
@@ -262,9 +295,11 @@ class ReallyUserFriendlyTypesVocabulary(object):
             return SimpleVocabulary([])
 
         request = aq_get(ttool, 'REQUEST', None)
-        items = [(translate(ttool[t].Title(), context=request), t)
-                 for t in ttool.listContentTypes()
-                 if t not in BAD_TYPES]
+        items = [
+            (translate(ttool[t].Title(), context=request), t)
+            for t in ttool.listContentTypes()
+            if t not in BAD_TYPES
+        ]
         items.sort()
         items = [SimpleTerm(i[1], i[1], i[0]) for i in items]
         return SimpleVocabulary(items)

@@ -1,16 +1,20 @@
 # -*- coding: utf-8 -*-
+from plone.app.vocabularies import SlicableVocabulary
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from plone.app.vocabularies import SlicableVocabulary
 from zope.browser.interfaces import ITerms
 from zope.component.hooks import getSite
 from zope.formlib.interfaces import ISourceQueryView
-from zope.interface import implements, classProvides
-from zope.schema.interfaces import ISource, IContextSourceBinder
+from zope.interface import implementer
+from zope.interface import provider
+from zope.schema.interfaces import IContextSourceBinder
+from zope.schema.interfaces import ISource
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 
 
+@implementer(ISource)
+@provider(IContextSourceBinder)
 class UsersSource(object):
     """
       >>> from plone.app.vocabularies.tests.base import create_context
@@ -41,8 +45,6 @@ class UsersSource(object):
       >>> source.get('user1'), source.get('noone')
       ('user1', None)
     """
-    implements(ISource)
-    classProvides(IContextSourceBinder)
 
     def __init__(self, context):
         self.context = context
@@ -100,19 +102,22 @@ class UsersVocabulary(SlicableVocabulary):
         return self._terms
 
 
+@implementer(IVocabularyFactory)
 class UsersFactory(object):
+    """Factory creating a UsersVocabulary
     """
-    """
-    implements(IVocabularyFactory)
 
     def __call__(self, context, query=''):
         if context is None:
             context = getSite()
         users = getToolByName(context, "acl_users")
         return UsersVocabulary.fromItems(
-            users.searchUsers(fullname=query), context)
+            users.searchUsers(fullname=query),
+            context
+        )
 
 
+@implementer(ITerms, ISourceQueryView)
 class UsersSourceQueryView(object):
     """
       >>> from plone.app.vocabularies.tests.base import create_context
@@ -172,9 +177,6 @@ class UsersSourceQueryView(object):
       >>> view.results('t')
       ['user1', 'user2']
     """
-
-    implements(ITerms,
-               ISourceQueryView)
 
     template = ViewPageTemplateFile('searchabletextsource.pt')
 

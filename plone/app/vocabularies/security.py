@@ -1,19 +1,19 @@
+# -*- coding: utf-8 -*-
+from Acquisition import aq_get
 from operator import attrgetter
-
+from Products.CMFCore.utils import getToolByName
 from zope.i18n import translate
 from zope.i18nmessageid import MessageFactory
-from zope.interface import implements
+from zope.interface import implementer
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 from zope.site.hooks import getSite
 
-from Acquisition import aq_get
-from Products.CMFCore.utils import getToolByName
-
 PMF = MessageFactory('plone')
 
 
+@implementer(IVocabularyFactory)
 class RolesVocabulary(object):
     """Vocabulary factory for roles in the portal
 
@@ -45,7 +45,6 @@ class RolesVocabulary(object):
       >>> manager.title, manager.token, manager.value
       (u'Manager', 'Manager', 'Manager')
     """
-    implements(IVocabularyFactory)
 
     def __call__(self, context):
         site = getSite()
@@ -73,6 +72,7 @@ class RolesVocabulary(object):
 RolesVocabularyFactory = RolesVocabulary()
 
 
+@implementer(IVocabularyFactory)
 class GroupsVocabulary(object):
     """Vocabulary factory for groups in the portal
 
@@ -116,7 +116,6 @@ class GroupsVocabulary(object):
       >>> editors.title, editors.token, editors.value
       ('Editors', 'editors', 'editors')
     """
-    implements(IVocabularyFactory)
 
     def __call__(self, context):
         items = []
