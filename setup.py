@@ -5,7 +5,7 @@ version = '2.1.20.dev0'
 setup(
     name='plone.app.vocabularies',
     version=version,
-    description="A collection of generally useful vocabularies.",
+    description="Collection of generally useful vocabularies for Plone.",
     long_description='%s\n%s' % (
         open("README.rst").read(),
         open("CHANGES.rst").read()
@@ -29,14 +29,11 @@ setup(
     namespace_packages=['plone', 'plone.app'],
     include_package_data=True,
     zip_safe=False,
-    extras_require=dict(
-        test=[
-            'plone.app.testing',
-            'zope.configuration',
-            'zope.testing',
-        ]
-    ),
     install_requires=[
+        'Acquisition',
+        'plone.app.querystring',
+        'Products.CMFCore',
+        'pytz',
         'setuptools',
         'zope.browser',
         'zope.component',
@@ -46,10 +43,13 @@ setup(
         'zope.interface',
         'zope.schema',
         'zope.site',
-        'Acquisition',
-        'Products.CMFCore',
         'Zope2',
-        'plone.app.querystring',
-        'pytz',
     ],
+    extras_require=dict(
+        test=[
+            'plone.app.testing',
+            'zope.configuration',
+            'zope.testing',
+        ]
+    ),
 )

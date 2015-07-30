@@ -1,14 +1,17 @@
-from zope.browser.interfaces import ITerms
-from zope.interface import implements, classProvides
-from zope.schema.interfaces import ISource, IContextSourceBinder
-from zope.schema.vocabulary import SimpleTerm
-
-from zope.formlib.interfaces import ISourceQueryView
-
+# -*- coding: utf-8 -*-
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from zope.browser.interfaces import ITerms
+from zope.formlib.interfaces import ISourceQueryView
+from zope.interface import implementer
+from zope.interface import provider
+from zope.schema.interfaces import IContextSourceBinder
+from zope.schema.interfaces import ISource
+from zope.schema.vocabulary import SimpleTerm
 
 
+@implementer(ISource)
+@provider(IContextSourceBinder)
 class GroupsSource(object):
     """
       >>> from plone.app.vocabularies.tests.base import create_context
@@ -42,8 +45,6 @@ class GroupsSource(object):
       >>> source.get('group1'), source.get('noone')
       ('group1', None)
     """
-    implements(ISource)
-    classProvides(IContextSourceBinder)
 
     def __init__(self, context):
         self.context = context
@@ -72,6 +73,7 @@ class GroupsSource(object):
         return self.users.getGroupById(value, None)
 
 
+@implementer(ITerms, ISourceQueryView)
 class GroupsSourceQueryView(object):
     """
       >>> from plone.app.vocabularies.tests.base import create_context
@@ -131,8 +133,6 @@ class GroupsSourceQueryView(object):
       >>> view.results('t')
       ['group1', 'group2']
     """
-    implements(ITerms,
-               ISourceQueryView)
 
     template = ViewPageTemplateFile('searchabletextsource.pt')
 

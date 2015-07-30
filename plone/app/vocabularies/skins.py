@@ -1,15 +1,16 @@
+# -*- coding: utf-8 -*-
+from Products.CMFCore.utils import getToolByName
 from zope.i18nmessageid import MessageFactory
-from zope.interface import implements
+from zope.interface import implementer
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 from zope.site.hooks import getSite
 
-from Products.CMFCore.utils import getToolByName
-
 _ = MessageFactory('plone')
 
 
+@implementer(IVocabularyFactory)
 class SkinsVocabulary(object):
     """Vocabulary factory for skins.
 
@@ -47,7 +48,6 @@ class SkinsVocabulary(object):
       >>> term.title, term.token, term.value
       (u'(Unstyled)', 'Plone Default', 'Plone Default')
     """
-    implements(IVocabularyFactory)
 
     def __call__(self, context):
         terms = []
@@ -57,7 +57,13 @@ class SkinsVocabulary(object):
             items = list(stool.getSkinSelections())
             items.sort()
             if 'Plone Default' in items:
-                terms = [SimpleTerm('Plone Default', 'Plone Default', _(u'(Unstyled)'))]
+                terms = [
+                    SimpleTerm(
+                        'Plone Default',
+                        'Plone Default',
+                        _(u'(Unstyled)')
+                    )
+                ]
                 items.remove('Plone Default')
             terms += [SimpleTerm(i, i, i) for i in items]
         return SimpleVocabulary(terms)

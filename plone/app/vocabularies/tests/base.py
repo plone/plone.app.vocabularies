@@ -1,6 +1,6 @@
-from zope.site.hooks import setSite
-
+# -*- coding: utf-8 -*-
 from Products.ZCTextIndex.ParseTree import ParseError
+from zope.site.hooks import setSite
 
 
 def create_context():

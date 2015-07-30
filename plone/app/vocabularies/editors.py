@@ -1,15 +1,16 @@
+# -*- coding: utf-8 -*-
+from Products.CMFCore.utils import getToolByName
 from zope.i18nmessageid import MessageFactory
-from zope.interface import implements
+from zope.interface import implementer
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 from zope.site.hooks import getSite
 
-from Products.CMFCore.utils import getToolByName
-
 _ = MessageFactory('plone')
 
 
+@implementer(IVocabularyFactory)
 class AvailableEditorsVocabulary(object):
     """Vocabulary factory for available editors in the portal.
 
@@ -40,7 +41,6 @@ class AvailableEditorsVocabulary(object):
       >>> TinyMCE.title, TinyMCE.token, TinyMCE.value
       (u'TinyMCE', 'TinyMCE', 'TinyMCE')
     """
-    implements(IVocabularyFactory)
 
     def __call__(self, context):
         items = []

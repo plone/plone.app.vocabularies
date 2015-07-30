@@ -1,24 +1,25 @@
 # -*- coding: utf-8 -*-
-import os
-import itertools
 from binascii import b2a_qp
-from zope.browser.interfaces import ITerms
-from zope.interface import implements, classProvides
-from zope.schema.interfaces import ISource, IContextSourceBinder, IVocabularyFactory
-from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
-from zope.site.hooks import getSite
-
-from zope.formlib.interfaces import ISourceQueryView
-
+from plone.app.querystring import queryparser
+from plone.app.vocabularies import SlicableVocabulary
+from plone.app.vocabularies.terms import BrowsableTerm
+from plone.uuid.interfaces import IUUID
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import safe_unicode
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.ZCTextIndex.ParseTree import ParseError
-
-from plone.app.vocabularies.terms import BrowsableTerm
-from plone.app.querystring import queryparser
-from plone.app.vocabularies import SlicableVocabulary
-from plone.uuid.interfaces import IUUID
+from zope.browser.interfaces import ITerms
+from zope.formlib.interfaces import ISourceQueryView
+from zope.interface import implementer
+from zope.interface import provider
+from zope.schema.interfaces import IContextSourceBinder
+from zope.schema.interfaces import ISource
+from zope.schema.interfaces import IVocabularyFactory
+from zope.schema.vocabulary import SimpleTerm
+from zope.schema.vocabulary import SimpleVocabulary
+from zope.site.hooks import getSite
+import itertools
+import os
 
 
 def parse_query(query, path_prefix=""):
@@ -91,6 +92,8 @@ def parse_query(query, path_prefix=""):
     return query
 
 
+@implementer(ISource)
+@provider(IContextSourceBinder)
 class SearchableTextSource(object):
     """
       >>> from plone.app.vocabularies.tests.base import Brain
@@ -138,8 +141,6 @@ class SearchableTextSource(object):
       >>> list(source.search(''))
       ['1234', '2345']
     """
-    implements(ISource)
-    classProvides(IContextSourceBinder)
 
     def __init__(self, context, base_query={}, default_query=None):
         self.context = context
@@ -174,7 +175,10 @@ class SearchableTextSource(object):
             query.update(parse_query(query_string, self.portal_path))
 
         try:
-            results = (x.getPath()[len(self.portal_path):] for x in self.catalog(**query))
+            results = (
+                x.getPath()[len(self.portal_path):]
+                for x in self.catalog(**query)
+            )
         except ParseError:
             return []
 
@@ -185,6 +189,7 @@ class SearchableTextSource(object):
         return results
 
 
+@implementer(IContextSourceBinder)
 class SearchableTextSourceBinder(object):
     """Use this to instantiate a new SearchableTextSource with custom
     parameters. For example:
@@ -230,8 +235,6 @@ class SearchableTextSourceBinder(object):
       True
     """
 
-    implements(IContextSourceBinder)
-
     def __init__(self, query, default_query=None):
         self.query = query
         self.default_query = default_query
@@ -241,6 +244,7 @@ class SearchableTextSourceBinder(object):
                                     default_query=self.default_query)
 
 
+@implementer(ITerms, ISourceQueryView)
 class QuerySearchableTextSourceView(object):
     """
       >>> from plone.app.vocabularies.tests.base import DummyCatalog
@@ -308,9 +312,6 @@ class QuerySearchableTextSourceView(object):
       u'/foo'
     """
 
-    implements(ITerms,
-               ISourceQueryView)
-
     template = ViewPageTemplateFile('searchabletextsource.pt')
 
     def __init__(self, context, request):
@@ -377,6 +378,7 @@ class QuerySearchableTextSourceView(object):
         return results
 
 
+@implementer(IVocabularyFactory)
 class KeywordsVocabulary(object):
     """Vocabulary factory listing all catalog keywords from the "Subject" index
 
@@ -384,7 +386,7 @@ class KeywordsVocabulary(object):
         >>> from plone.app.vocabularies.tests.base import create_context
         >>> from plone.app.vocabularies.tests.base import DummyContent
         >>> from plone.app.vocabularies.tests.base import Request
-        >>> from Products.PluginIndexes.KeywordIndex.KeywordIndex import KeywordIndex
+        >>> from Products.PluginIndexes.KeywordIndex.KeywordIndex import KeywordIndex  # noqa
 
         >>> context = create_context()
 
@@ -392,8 +394,17 @@ class KeywordsVocabulary(object):
         >>> tool = DummyCatalog(rids)
         >>> context.portal_catalog = tool
         >>> index = KeywordIndex('Subject')
-        >>> done = index._index_object(1,DummyContent('ob1', ['foo', 'bar', 'baz']), attr='Subject')
-        >>> done = index._index_object(2,DummyContent('ob2', ['blee', 'bar', 'non-\xc3\xa5scii']), attr='Subject')
+        >>> done = index._index_object(
+        ...     1,
+        ...     DummyContent('ob1', ['foo', 'bar', 'baz']), attr='Subject'
+        ... )
+        >>> done = index._index_object(
+        ...     2,
+        ...     DummyContent(
+        ...         'ob2',
+        ...         ['blee', 'bar', 'non-\xc3\xa5scii']),
+        ...         attr='Subject',
+        ... )
         >>> tool.indexes['Subject'] = index
         >>> vocab = KeywordsVocabulary()
         >>> result = vocab(context)
@@ -405,7 +416,10 @@ class KeywordsVocabulary(object):
         Testing unicode vocabularies
         First clear the index. Comparing non-unicode to unicode objects fails.
         >>> index.clear()
-        >>> done = index._index_object(1, DummyContent('obj1', [u'äüö', u'nix']), attr="Subject")
+        >>> done = index._index_object(
+        ...     1,
+        ...     DummyContent('obj1', [u'äüö', u'nix']), attr="Subject"
+        ... )
         >>> tool.indexes['Subject'] = index
         >>> vocab = KeywordsVocabulary()
         >>> result = vocab(context)
@@ -413,13 +427,13 @@ class KeywordsVocabulary(object):
         ['nix', '=C3=83=C2=A4=C3=83=C2=BC=C3=83=C2=B6']
         >>> result.by_value.keys() == [u'äüö', u'nix']
         True
-        >>> test_title = result.getTermByToken('=C3=83=C2=A4=C3=83=C2=BC=C3=83=C2=B6').title
+        >>> test_title = result.getTermByToken(
+        ...     '=C3=83=C2=A4=C3=83=C2=BC=C3=83=C2=B6'
+        ... ).title
         >>> test_title == u'äüö'
         True
 
     """
-    implements(IVocabularyFactory)
-
     # Allow users to customize the index to easily create
     # KeywordVocabularies for other keyword indexes
     keyword_index = 'Subject'
@@ -507,16 +521,18 @@ class CatalogVocabulary(SlicableVocabulary):
     @property
     def _terms(self):
         if not hasattr(self, "__terms"):
-            self.__terms = [self.createTerm(brain, None) for brain in self._brains]
+            self.__terms = [
+                self.createTerm(brain, None)
+                for brain in self._brains
+            ]
         return self.__terms
 
 
+@implementer(IVocabularyFactory)
 class CatalogVocabularyFactory(object):
     # We want to get rid of this and use CatalogSource instead,
     # but we can't in Plone versions that support
     # plone.app.widgets < 1.6.0
-
-    implements(IVocabularyFactory)
 
     def __call__(self, context, query=None):
         parsed = {}
@@ -534,6 +550,7 @@ class CatalogVocabularyFactory(object):
         return CatalogVocabulary.fromItems(brains, context)
 
 
+@implementer(ISource)
 class CatalogSource(object):
     """Catalog source for use with Choice fields.
 
@@ -575,8 +592,6 @@ class CatalogSource(object):
       ['asdf']
 
     """
-
-    implements(ISource)
 
     def __init__(self, context=None, **query):
         self.query = query

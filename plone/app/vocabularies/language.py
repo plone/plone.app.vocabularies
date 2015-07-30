@@ -1,14 +1,14 @@
+# -*- coding: utf-8 -*-
 from operator import itemgetter
-
-from zope.interface import implements
+from Products.CMFCore.utils import getToolByName
+from zope.interface import implementer
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 from zope.site.hooks import getSite
 
-from Products.CMFCore.utils import getToolByName
 
-
+@implementer(IVocabularyFactory)
 class AvailableContentLanguageVocabulary(object):
     """Vocabulary factory for available content languages in the portal.
 
@@ -41,7 +41,6 @@ class AvailableContentLanguageVocabulary(object):
       >>> de.title, de.token, de.value
       ('Deutsch', 'de', 'de')
     """
-    implements(IVocabularyFactory)
 
     def __call__(self, context):
         items = [SimpleTerm('en', 'en', 'English')]  # default, only english
@@ -54,9 +53,10 @@ class AvailableContentLanguageVocabulary(object):
             items = [SimpleTerm(i[0], i[0], i[1]) for i in items]
         return SimpleVocabulary(items)
 
-AvailableContentLanguageVocabularyFactory = AvailableContentLanguageVocabulary()
+AvailableContentLanguageVocabularyFactory = AvailableContentLanguageVocabulary()  # noqa
 
 
+@implementer(IVocabularyFactory)
 class SupportedContentLanguageVocabulary(object):
     """Vocabulary factory for supported content languages in the portal.
 
@@ -88,7 +88,6 @@ class SupportedContentLanguageVocabulary(object):
       >>> de.title, de.token, de.value
       ('German', 'de', 'de')
     """
-    implements(IVocabularyFactory)
 
     def __call__(self, context):
         items = []
@@ -100,4 +99,4 @@ class SupportedContentLanguageVocabulary(object):
             items = [SimpleTerm(i[0], i[0], i[1]) for i in items]
         return SimpleVocabulary(items)
 
-SupportedContentLanguageVocabularyFactory = SupportedContentLanguageVocabulary()
+SupportedContentLanguageVocabularyFactory = SupportedContentLanguageVocabulary()  # noqa

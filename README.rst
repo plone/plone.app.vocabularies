@@ -1,50 +1,124 @@
 Overview
 ========
 
-A collection of generally useful vocabularies.
+A collection of generally useful vocabularies for Plone.
+
+It is implemented using ``zope.schema.vocabulary``.
+Intended to be used as a base and example for custom vocabularies.
 
 
 Common Named Vocabularies
 =========================
 
-* plone.app.vocabularies.AvailableContentLanguages
-* plone.app.vocabularies.SupportedContentLanguages
-* plone.app.vocabularies.Roles
-* plone.app.vocabularies.Groups
-* plone.app.vocabularies.AllowedContentTypes
-* plone.app.vocabularies.AllowableContentTypes
-* plone.app.vocabularies.PortalTypes
-* plone.app.vocabularies.ReallyUserFriendlyTypes
-* plone.app.vocabularies.UserFriendlyTypes
-* plone.app.vocabularies.Skins
-* plone.app.vocabularies.Workflows
-* plone.app.vocabularies.WorkflowStates
-* plone.app.vocabularies.WorkflowTransitions
-* plone.app.vocabularies.AvailableEditors
-* plone.app.vocabularies.Keywords
-* plone.app.vocabularies.SyndicationFeedTypes
-* plone.app.vocabularies.SyndicatableFeedItems
-* plone.app.vocabularies.Users
-* plone.app.vocabularies.Catalog
+Languages
+---------
+
+``plone.app.vocabularies.AvailableContentLanguages``
+    all known languages
+
+``plone.app.vocabularies.SupportedContentLanguages``
+    currently configured/supported content languages for the portal
 
 
-Date/Time Related Vocabularies
-==============================
+Users, Groups, Security
+-----------------------
+
+``plone.app.vocabularies.Users``
+    user of the portal (searchable)
+
+``plone.app.vocabularies.Groups``
+    groups of the portal (searchable)
+
+``plone.app.vocabularies.Roles``
+    all possible roles in the portal
+
+Text Input Field
+----------------
+
+``plone.app.vocabularies.AllowedContentTypes``
+    Configured allowed mime-types (text/\*) for text input fields
+
+``plone.app.vocabularies.AllowableContentTypes``
+    All possible mime types (text/\*) for text input fields
+
+``plone.app.vocabularies.AvailableEditors``
+    Configured WYSIWIG editors
+
+
+Portal Types
+------------
+
+``plone.app.vocabularies.PortalTypes``
+    All portal-types installed in the portal
+
+``plone.app.vocabularies.ReallyUserFriendlyTypes``
+    Static filtered list of portal-types.
+    Filter is a list of portal_type ids (strings) defined at ``plone.app.vocabularies.types.BAD_TYPES``.
+
+``plone.app.vocabularies.UserFriendlyTypes``
+    Portal types filtered as 'user friendly' by the Types Tool.
+
+
+Workflows
+---------
+
+``plone.app.vocabularies.Workflows``
+    All installed workflows
+
+``plone.app.vocabularies.WorkflowStates``
+    All titles of workflow states - for any workflow installed
+
+``plone.app.vocabularies.WorkflowTransitions``
+    All titles of workflow transitions - for any workflow installed
+
+
+Syndication/ Feeds
+------------------
+
+``plone.app.vocabularies.SyndicationFeedTypes``
+    Configured allowed feed types
+
+``plone.app.vocabularies.SyndicatableFeedItems``
+    Folders or Collections on the first two navigation levels (depth=2) relative to the site root.
+    Value is UID of the Folder or Collection, term is title of it
+    (searchable)
+
+
+Catalog
+-------
+
+``plone.app.vocabularies.Keywords``
+    All Subjects aka Tags aka Keywords used by the portals content
+
+
+``plone.app.vocabularies.Catalog``
+    Generic queryable catalog
+
+
+Theme
+-----
+
+``plone.app.vocabularies.Skins``
+    Themes/ skins available in the portal.
+
+
+Date/Time Related
+-----------------
 
 ``plone.app.vocabularies.Timezones``
-    all timezones provided by ``pytz``
+    all timezones provided by `pytz <http://pythonhosted.org/pytz/>`_
 
 ``plone.app.vocabularies.CommonTimezones``
-    common timezones provided by ``pytz``. This are those
-    a user would choose from and is not too much confused.
+    common timezones provided by 'pytz'.
+    This are those a user would choose from and is not too much confused.
 
 ``plone.app.vocabularies.AvailableTimezones``
     timezones configured in the portal.
 
 ``plone.app.vocabularies.Weekdays``
-    the seven weekdays in fullname. Value is the day number start counting
-    at zero on monday. Title of the term is an i18n messagestring in
-    ``plonelocales`` namespace, so it translates.
+    the seven weekdays in fullname.
+    Value is the day number start counting at zero on monday.
+    Title of the term is an i18n messagestring in ``plonelocales`` namespace, so it translates.
 
 ``plone.app.vocabularies.WeekdaysAbbr``
    same as above but with 3 character abbreviations.
@@ -58,3 +132,10 @@ Date/Time Related Vocabularies
 ``plone.app.vocabularies.MonthAbbr``
    same as above but with 3 character abbreviations.
 
+
+Source Code
+===========
+
+Contributors please read the document `Process for Plone core's development <http://docs.plone.org/develop/plone-coredev/index.html>`_
+
+Sources are at the `Plone code repository hosted at Github <https://github.com/plone/plone.app.vocabularies>`_.

@@ -1,19 +1,19 @@
 # -*- coding:utf-8 -*-
+from Acquisition import aq_get
+from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.utils import safe_unicode
 from zope.i18n import translate
 from zope.i18nmessageid import MessageFactory
-from zope.interface import implements
+from zope.interface import implementer
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 from zope.site.hooks import getSite
 
-from Acquisition import aq_get
-from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone.utils import safe_unicode
-
 _ = MessageFactory('plone')
 
 
+@implementer(IVocabularyFactory)
 class WorkflowsVocabulary(object):
     """Vocabulary factory for workflows.
 
@@ -53,7 +53,6 @@ class WorkflowsVocabulary(object):
       >>> noticias.title == 'Workflow de Notícias'.decode('utf-8')
       True
     """
-    implements(IVocabularyFactory)
 
     def __call__(self, context):
         items = []
@@ -63,13 +62,16 @@ class WorkflowsVocabulary(object):
             items = [(w.title, w.id) for w in wtool.values()]
             items.sort()
             # All vocabularies return theirs term title as unicode
-            items = [SimpleTerm(i[1], i[1], safe_unicode(i[0]))
-                                                 for i in items]
+            items = [
+                SimpleTerm(i[1], i[1], safe_unicode(i[0]))
+                for i in items
+            ]
         return SimpleVocabulary(items)
 
 WorkflowsVocabularyFactory = WorkflowsVocabulary()
 
 
+@implementer(IVocabularyFactory)
 class WorkflowStatesVocabulary(object):
     """Vocabulary factory for workflow states.
 
@@ -104,7 +106,6 @@ class WorkflowStatesVocabulary(object):
       >>> rev.title == 'Revisão [revisao]'.decode('utf-8')
       True
     """
-    implements(IVocabularyFactory)
 
     def __call__(self, context):
         site = getSite()
@@ -120,17 +121,24 @@ class WorkflowStatesVocabulary(object):
 
         items = wtool.listWFStatesByTitle(filter_similar=True)
         items = [(safe_unicode(i[0]), i[1]) for i in items]
-        items_dict = dict([(i[1], translate(_(i[0]), context=request))
-                                                  for i in items])
+        items_dict = dict(  # no dict comprehension in py 2.6
+            [
+                (i[1], translate(_(i[0]), context=request))
+                for i in items
+            ]
+        )
         items_list = [(k, v) for k, v in items_dict.items()]
         items_list.sort(lambda x, y: cmp(x[1], y[1]))
-        terms = [SimpleTerm(k, title=u'%s [%s]' % (v, k))
-                                                  for k, v in items_list]
+        terms = [
+            SimpleTerm(k, title=u'%s [%s]' % (v, k))
+            for k, v in items_list
+        ]
         return SimpleVocabulary(terms)
 
 WorkflowStatesVocabularyFactory = WorkflowStatesVocabulary()
 
 
+@implementer(IVocabularyFactory)
 class WorkflowTransitionsVocabulary(object):
     """Vocabulary factory for workflow transitions
 
@@ -188,7 +196,6 @@ class WorkflowTransitionsVocabulary(object):
       >>> publ.title == 'Publicação [publicacao]'.decode('utf-8')
       True
     """
-    implements(IVocabularyFactory)
 
     def __call__(self, context):
         site = getSite()

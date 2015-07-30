@@ -4,7 +4,8 @@ Changelog
 2.1.20 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Cleanup: PEP8, decorators for zca, et al. Also pimped the README.
+  [jensens]
 
 
 2.1.19 (2015-07-29)
