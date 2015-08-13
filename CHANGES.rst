@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.20 (unreleased)
+2.1.20 (2015-08-13)
 -------------------
 
 - Cleanup: PEP8, decorators for zca, et al. Also pimped the README.
