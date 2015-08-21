@@ -464,6 +464,15 @@ class KeywordsVocabulary(object):
 KeywordsVocabularyFactory = KeywordsVocabulary()
 
 
+class CreatorsVocabulary(KeywordsVocabulary):
+    # Creator is not a KeywordIndex, but a FieldIndex.  Seems to work
+    # fine though.
+    keyword_index = 'Creator'
+
+
+CreatorsVocabularyFactory = CreatorsVocabulary()
+
+
 class CatalogVocabulary(SlicableVocabulary):
     # We want to get rid of this and use CatalogSource instead,
     # but we can't in Plone versions that support

@@ -78,6 +78,11 @@
     />
 
   <utility
+    component=".catalog.CreatorsVocabularyFactory"
+    name="plone.app.vocabularies.Creators"
+    />
+
+  <utility
     component=".syndication.SyndicationFeedTypesVocabularyFactory"
     name="plone.app.vocabularies.SyndicationFeedTypes"
     />
