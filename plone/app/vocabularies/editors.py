@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
-from Products.CMFCore.utils import getToolByName
+from zope.component import getUtility
 from zope.i18nmessageid import MessageFactory
 from zope.interface import implementer
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
-from zope.site.hooks import getSite
+
+from plone.registry.interfaces import IRegistry
+from Products.CMFPlone.interfaces import IEditingSchema
 
 _ = MessageFactory('plone')
 
@@ -44,11 +46,12 @@ class AvailableEditorsVocabulary(object):
 
     def __call__(self, context):
         items = []
-        site = getSite()
-        pprop = getToolByName(site, 'portal_properties', None)
-        if pprop is not None:
-            editors = pprop.site_properties.available_editors
-            items = [SimpleTerm(e, e, _(e)) for e in editors]
+
+        registry = getUtility(IRegistry)
+        settings = registry.forInterface(IEditingSchema, prefix="plone")
+
+        editors = settings.available_editors
+        items = [SimpleTerm(e, e, _(e)) for e in editors]
         return SimpleVocabulary(items)
 
 AvailableEditorsVocabularyFactory = AvailableEditorsVocabulary()

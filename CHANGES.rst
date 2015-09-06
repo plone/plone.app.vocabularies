@@ -4,7 +4,8 @@ Changelog
 2.1.21 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Pull available_editors values from the configuration registry.
+  [esteele]
 
 
 2.1.20 (2015-08-13)
