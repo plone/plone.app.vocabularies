@@ -44,12 +44,6 @@ def test_suite():
                 optionflags=optionflags
             ),
             DocTestSuite(
-                'plone.app.vocabularies.editors',
-                setUp=vocabSetUp,
-                tearDown=vocabTearDown,
-                optionflags=optionflags
-            ),
-            DocTestSuite(
                 'plone.app.vocabularies.groups',
                 setUp=vocabSetUp,
                 tearDown=vocabTearDown,
