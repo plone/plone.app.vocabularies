@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.21 (unreleased)
+2.1.21 (2015-09-07)
 -------------------
 
 - Pull available_editors values from the configuration registry.
