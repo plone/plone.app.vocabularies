@@ -3,12 +3,14 @@ from binascii import b2a_qp
 from plone.app.querystring import queryparser
 from plone.app.vocabularies import SlicableVocabulary
 from plone.app.vocabularies.terms import BrowsableTerm
+from plone.registry.interfaces import IRegistry
 from plone.uuid.interfaces import IUUID
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import safe_unicode
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.ZCTextIndex.ParseTree import ParseError
 from zope.browser.interfaces import ITerms
+from zope.component import queryUtility
 from zope.formlib.interfaces import ISourceQueryView
 from zope.interface import implementer
 from zope.interface import provider
@@ -149,11 +151,7 @@ class SearchableTextSource(object):
         self.catalog = getToolByName(context, "portal_catalog")
         self.portal_tool = getToolByName(context, "portal_url")
         self.portal_path = self.portal_tool.getPortalPath()
-        try:
-            self.encoding = getToolByName(
-                context, "portal_properties").site_properties.default_charset
-        except AttributeError:
-            self.encoding = 'ascii'
+        self.encoding = 'utf-8'
 
     def __contains__(self, value):
         """Return whether the value is available in this source

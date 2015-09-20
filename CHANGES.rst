@@ -4,8 +4,8 @@ Changelog
 2.1.22 (unreleased)
 -------------------
 
-- Nothing changed yet.
-
+- Pull default_charset value from the configuration registry.
+  [esteele]
 
 2.1.21 (2015-09-07)
 -------------------
