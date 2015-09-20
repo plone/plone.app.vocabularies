@@ -151,12 +151,7 @@ class SearchableTextSource(object):
         self.catalog = getToolByName(context, "portal_catalog")
         self.portal_tool = getToolByName(context, "portal_url")
         self.portal_path = self.portal_tool.getPortalPath()
-
-        registry = queryUtility(IRegistry)
-        if registry is not None:
-            self.encoding = registry.get('plone.default_charset', 'utf-8')
-        else:
-            self.encoding = 'utf-8'
+        self.encoding = 'utf-8'
 
     def __contains__(self, value):
         """Return whether the value is available in this source
