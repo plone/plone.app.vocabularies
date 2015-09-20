@@ -10,7 +10,7 @@ from Products.CMFPlone.utils import safe_unicode
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.ZCTextIndex.ParseTree import ParseError
 from zope.browser.interfaces import ITerms
-from zope.component import getUtility
+from zope.component import queryUtility
 from zope.formlib.interfaces import ISourceQueryView
 from zope.interface import implementer
 from zope.interface import provider
@@ -151,8 +151,12 @@ class SearchableTextSource(object):
         self.catalog = getToolByName(context, "portal_catalog")
         self.portal_tool = getToolByName(context, "portal_url")
         self.portal_path = self.portal_tool.getPortalPath()
-        registry = getUtility(IRegistry)
-        self.encoding = registry.get('plone.default_charset', 'ascii')
+
+        registry = queryUtility(IRegistry)
+        if registry is not None:
+            self.encoding = registry.get('plone.default_charset', 'ascii')
+        else:
+            self.encoding = 'ascii'
 
     def __contains__(self, value):
         """Return whether the value is available in this source
