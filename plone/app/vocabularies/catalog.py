@@ -154,9 +154,9 @@ class SearchableTextSource(object):
 
         registry = queryUtility(IRegistry)
         if registry is not None:
-            self.encoding = registry.get('plone.default_charset', 'ascii')
+            self.encoding = registry.get('plone.default_charset', 'utf-8')
         else:
-            self.encoding = 'ascii'
+            self.encoding = 'utf-8'
 
     def __contains__(self, value):
         """Return whether the value is available in this source
