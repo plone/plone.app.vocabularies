@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '2.1.20'
+version = '2.1.22.dev0'
 
 setup(
     name='plone.app.vocabularies',
@@ -13,6 +13,9 @@ setup(
     classifiers=[
         "Environment :: Web Environment",
         "Framework :: Plone",
+        "Framework :: Plone :: 4.1",
+        "Framework :: Plone :: 4.2",
+        "Framework :: Plone :: 4.3",
         "Framework :: Zope2",
         "License :: OSI Approved :: GNU General Public License (GPL)",
         "Operating System :: OS Independent",

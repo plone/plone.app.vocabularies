@@ -1,6 +1,24 @@
 Changelog
 =========
 
+2.1.22 (unreleased)
+-------------------
+
+Fixes:
+
+- Reverted changes of release 2.1.21 as they are incompatible with
+  Plone 4.3.  The 2.1.x series will remain compatible with Plone 4.3
+  (and 4.1 and 4.2).
+  [maurits]
+
+
+2.1.21 (2015-09-07)
+-------------------
+
+- Pull available_editors values from the configuration registry.
+  [esteele]
+
+
 2.1.20 (2015-08-13)
 -------------------
 
