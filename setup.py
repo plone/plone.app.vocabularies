@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '2.1.22.dev0'
+version = '2.2.0.dev0'
 
 setup(
     name='plone.app.vocabularies',
@@ -13,11 +13,11 @@ setup(
     classifiers=[
         "Environment :: Web Environment",
         "Framework :: Plone",
+        "Framework :: Plone :: 5.0",
         "Framework :: Zope2",
         "License :: OSI Approved :: GNU General Public License (GPL)",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
     ],
     keywords='Plone Zope formlib vocabularies',

@@ -1,11 +1,18 @@
 Changelog
 =========
 
-2.1.22 (unreleased)
--------------------
+2.2.0 (unreleased)
+------------------
+
+Fixes:
+
+- Updated version to 2.2.0, as the previous release introduced an
+  incompatibility with Plone 4.3.
+  [maurits]
 
 - Pull default_charset value from the configuration registry.
   [esteele]
+
 
 2.1.21 (2015-09-07)
 -------------------
@@ -26,6 +33,7 @@ Changelog
 
 - Fixed SyndicatableFeedItems to allow unicode characters in objects titles.
   [Gagaro]
+
 
 2.1.18 (2015-06-05)
 -------------------
