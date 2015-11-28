@@ -13,6 +13,17 @@ from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 
 
+def _createUserTerm(userid, context=None, acl_users=None):
+    if acl_users is None:
+        acl_users = getToolByName(context, "acl_users")
+    user = acl_users.getUserById(userid, None)
+    fullname = userid
+    if user:
+        fullname = user.getProperty('fullname', None) or userid
+    token = userid.encode('unicode_escape') if isinstance(userid, unicode) else userid
+    return SimpleTerm(userid, token, fullname)
+
+
 @implementer(ISource)
 @provider(IContextSourceBinder)
 class UsersSource(object):
@@ -80,22 +91,13 @@ class UsersVocabulary(SlicableVocabulary):
 
     @classmethod
     def createTerm(cls, userid, context):
-        users = getToolByName(context, "acl_users")
-        user = users.getUserById(userid, None)
-        fullname = userid
-        if user:
-            fullname = user.getProperty('fullname', None) or userid
-        return SimpleTerm(userid, userid, fullname)
+        return _createUserTerm(userid, context=context)
 
     def __contains__(self, value):
         return self._users.getUserById(value, None) and True or False
 
     def getTerm(self, userid):
-        fullname = userid
-        user = self._users.getUserById(userid, None)
-        if user:
-            fullname = user.getProperty('fullname', None) or userid
-        return SimpleTerm(userid, userid, fullname)
+        return _createUserTerm(userid, acl_users=self._users)
     getTermByToken = getTerm
 
     def __iter__(self):
@@ -185,12 +187,8 @@ class UsersSourceQueryView(object):
         self.request = request
 
     def getTerm(self, value):
-        user = self.context.get(value)
-        token = value
-        title = value
-        if user is not None:
-            title = user.getProperty('fullname', None) or user.getId()
-        return SimpleTerm(value, token=token, title=title)
+        user_id = value
+        return _createUserTerm(user_id, context=self.context.context)
 
     def getValue(self, token):
         if token not in self.context:
