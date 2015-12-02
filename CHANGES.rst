@@ -10,7 +10,9 @@ New:
 
 Fixes:
 
-- *add item here*
+- Make user vocabulary handle non-ASCII characters.
+  This fixes https://github.com/plone/plone.app.widgets/issues/120
+  [davisagli]
 
 
 2.2.0 (2015-10-28)
