@@ -531,6 +531,34 @@ class CatalogVocabulary(SlicableVocabulary):
 
 @implementer(IVocabularyFactory)
 class CatalogVocabularyFactory(object):
+    """
+    Test application of Navigation Root:
+
+      >>> from plone.app.vocabularies.tests.base import create_context
+      >>> from plone.app.vocabularies.tests.base import DummyUrlTool
+      >>> from plone.app.vocabularies.tests.base import DummyCatalog
+      >>> class DummyPathCatalog(DummyCatalog):
+      ...     def __call__(self, **query):
+      ...         if 'path' in query and 'query' in query['path']:
+      ...             return [v for v in self.values() if
+      ...                     v.getPath().startswith(query['path']['query'])]
+      ...         return self.values()
+      >>> catalog = DummyPathCatalog(['/abcd', '/defg', '/dummy/sub-site',
+      ...                             '/dummy/sub-site/ghij'])
+      >>> context = create_context()
+      >>> context.portal_catalog = catalog
+      >>> context.portal_url = DummyUrlTool(context)
+      >>> factory = CatalogVocabularyFactory()
+
+      >>> [t.token for t in factory(context)]
+      ['/dummy/sub-site', '/abcd', '/dummy/sub-site/ghij', '/defg']
+
+      >>> from plone.app.vocabularies.tests.base import DummyNavRoot
+      >>> nav_root = DummyNavRoot('sub-site', parent=context)
+      >>> [t.token for t in factory(nav_root)]
+      ['/dummy/sub-site', '/dummy/sub-site/ghij']
+
+    """
     # We want to get rid of this and use CatalogSource instead,
     # but we can't in Plone versions that support
     # plone.app.widgets < 1.6.0
