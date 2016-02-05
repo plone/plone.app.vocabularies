@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from binascii import b2a_qp
+from plone.app.layout.navigation.root import getNavigationRootObject
 from plone.app.querystring import queryparser
 from plone.app.vocabularies import SlicableVocabulary
 from plone.app.vocabularies.terms import BrowsableTerm
@@ -545,7 +546,19 @@ class CatalogVocabularyFactory(object):
         try:
             catalog = getToolByName(context, 'portal_catalog')
         except AttributeError:
-            catalog = getToolByName(getSite(), 'portal_catalog')
+            context = getSite()
+            catalog = getToolByName(context, 'portal_catalog')
+
+        # If no path is specified check if we are in a sub-site and use that
+        # as the path root for catalog searches
+        if 'path' not in parsed:
+            portal = getToolByName(context, 'portal_url').getPortalObject()
+            nav_root = getNavigationRootObject(context, portal)
+            if nav_root.getPhysicalPath() != portal.getPhysicalPath():
+                parsed['path'] = {
+                    'query': '/'.join(nav_root.getPhysicalPath()),
+                    'depth': -1
+                }
         brains = catalog(**parsed)
         return CatalogVocabulary.fromItems(brains, context)
 

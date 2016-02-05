@@ -10,7 +10,9 @@ New:
 
 Fixes:
 
-- *add item here*
+- Restrict Catalog vocabulary to search current Navigation Root unless
+  path is specified.
+  [alecm]
 
 
 2.1.22 (2015-10-28)
