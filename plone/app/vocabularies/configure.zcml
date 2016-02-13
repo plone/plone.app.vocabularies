@@ -108,6 +108,11 @@
     />
 
   <utility
+    component=".actions.PortalActionCategoriesVocabularyFactory"
+    name="plone.app.vocabularies.PortalActionCategories"
+    />
+
+  <utility
     component=".datetimerelated.TimezonesFactory"
     name="plone.app.vocabularies.Timezones"
     />

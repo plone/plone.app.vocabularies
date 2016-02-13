@@ -9,6 +9,9 @@ New:
 - Vocabulary for permissions
   [ebrehault]
 
+- Vocabulary for portal action categories
+  [ebrehault]
+
 Fixes:
 
 - Make user vocabulary handle non-ASCII characters.
