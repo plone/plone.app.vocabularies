@@ -129,3 +129,17 @@ class GroupsVocabulary(object):
         return SimpleVocabulary(items)
 
 GroupsVocabularyFactory = GroupsVocabulary()
+
+
+@implementer(IVocabularyFactory)
+class PermissionsVocabulary(object):
+    """Vocabulary factory for permissions.
+    """
+
+    def __call__(self, context):
+        site = getSite()
+        items = [SimpleTerm(perm, perm, perm)
+            for perm in site.possible_permissions()]
+        return SimpleVocabulary(items)
+
+PermissionsVocabularyFactory = PermissionsVocabulary()

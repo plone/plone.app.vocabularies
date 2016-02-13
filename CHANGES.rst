@@ -6,7 +6,8 @@ Changelog
 
 New:
 
-- *add item here*
+- Vocabulary for permissions
+  [ebrehault]
 
 Fixes:
 

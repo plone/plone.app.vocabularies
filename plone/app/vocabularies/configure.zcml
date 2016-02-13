@@ -23,6 +23,11 @@
     />
 
   <utility
+    component=".security.PermissionsVocabularyFactory"
+    name="plone.app.vocabularies.Permissions"
+    />
+
+  <utility
     component=".types.AllowedContentTypesVocabularyFactory"
     name="plone.app.vocabularies.AllowedContentTypes"
     />
