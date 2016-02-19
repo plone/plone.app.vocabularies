@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 from Products.ZCTextIndex.ParseTree import ParseError
-from plone.app.layout.navigation.interfaces import INavigationRoot
-from OFS.interfaces import IItem
-from zope.interface import implements
 from zope.site.hooks import setSite
 
 
@@ -28,27 +25,6 @@ class DummyContext(object):
         instead of 'iface', but that should not matter.
         """
         return default
-
-    def getPhysicalPath(self):
-        return ['', self.__name__]
-
-    def absolute_url(self, relative=False):
-        return '/'.join(self.getPhysicalPath())
-
-
-
-class DummyUrlTool(object):
-
-    name = 'portal_url'
-
-    def __init__(self, context):
-        self.portal = context
-
-    def __call__(self):
-        return self.portal.__name__
-
-    def getPortalObject(self):
-        return self.portal
 
 
 class DummyTool(object):
@@ -102,13 +78,8 @@ class Brain(object):
     def getPath(self):
         return self.rid
 
-    @property
-    def UID(self):
-        return self.rid
-
 
 class DummyCatalog(dict):
-    implements(IItem)
 
     def __init__(self, values):
         self.indexes = {}
@@ -143,30 +114,3 @@ class DummyContent(object):
 
     def Subject(self):
         return self.subjects
-
-
-class DummyNavRoot(object):
-    implements(INavigationRoot)
-    __parent__ = None
-
-    def __init__(self, _id, title=None, parent=None):
-        self.__name__ = _id
-        self.title = title or _id
-        if parent:
-            self.__parent__ = parent
-
-    def getPhysicalPath(self):
-        return ['', self.__parent__.__name__, self.__name__]
-
-    def absolute_url(self, relative=False):
-        return '/'.join(self.getPhysicalPath())
-
-    @property
-    def portal_catalog(self):
-        # fake tool acquisition
-        return self.__parent__.portal_catalog
-
-    @property
-    def portal_url(self):
-        # fake tool acquisition
-        return self.__parent__.portal_url
