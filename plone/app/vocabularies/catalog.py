@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from binascii import b2a_qp
+from plone.app.layout.navigation.root import getNavigationRootObject
 from plone.app.querystring import queryparser
 from plone.app.vocabularies import SlicableVocabulary
 from plone.app.vocabularies.terms import BrowsableTerm
@@ -526,6 +527,34 @@ class CatalogVocabulary(SlicableVocabulary):
 
 @implementer(IVocabularyFactory)
 class CatalogVocabularyFactory(object):
+    """
+    Test application of Navigation Root:
+
+      >>> from plone.app.vocabularies.tests.base import create_context
+      >>> from plone.app.vocabularies.tests.base import DummyUrlTool
+      >>> from plone.app.vocabularies.tests.base import DummyCatalog
+      >>> class DummyPathCatalog(DummyCatalog):
+      ...     def __call__(self, **query):
+      ...         if 'path' in query and 'query' in query['path']:
+      ...             return [v for v in self.values() if
+      ...                     v.getPath().startswith(query['path']['query'])]
+      ...         return self.values()
+      >>> catalog = DummyPathCatalog(['/abcd', '/defg', '/dummy/sub-site',
+      ...                             '/dummy/sub-site/ghij'])
+      >>> context = create_context()
+      >>> context.portal_catalog = catalog
+      >>> context.portal_url = DummyUrlTool(context)
+      >>> factory = CatalogVocabularyFactory()
+
+      >>> [t.token for t in factory(context)]
+      ['/dummy/sub-site', '/abcd', '/dummy/sub-site/ghij', '/defg']
+
+      >>> from plone.app.vocabularies.tests.base import DummyNavRoot
+      >>> nav_root = DummyNavRoot('sub-site', parent=context)
+      >>> [t.token for t in factory(nav_root)]
+      ['/dummy/sub-site', '/dummy/sub-site/ghij']
+
+    """
     # We want to get rid of this and use CatalogSource instead,
     # but we can't in Plone versions that support
     # plone.app.widgets < 1.6.0
@@ -541,7 +570,19 @@ class CatalogVocabularyFactory(object):
         try:
             catalog = getToolByName(context, 'portal_catalog')
         except AttributeError:
-            catalog = getToolByName(getSite(), 'portal_catalog')
+            context = getSite()
+            catalog = getToolByName(context, 'portal_catalog')
+
+        # If no path is specified check if we are in a sub-site and use that
+        # as the path root for catalog searches
+        if 'path' not in parsed:
+            portal = getToolByName(context, 'portal_url').getPortalObject()
+            nav_root = getNavigationRootObject(context, portal)
+            if nav_root.getPhysicalPath() != portal.getPhysicalPath():
+                parsed['path'] = {
+                    'query': '/'.join(nav_root.getPhysicalPath()),
+                    'depth': -1
+                }
         brains = catalog(**parsed)
         return CatalogVocabulary.fromItems(brains, context)
 
