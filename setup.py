@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '2.1.23'
+version = '2.1.24.dev0'
 
 setup(
     name='plone.app.vocabularies',
