@@ -4,10 +4,6 @@ Changelog
 2.2.2 (unreleased)
 ------------------
 
-New:
-
-- *add item here*
-
 Fixes:
 
 - Restrict Catalog vocabulary to search current Navigation Root unless
