@@ -10,7 +10,11 @@ Incompatibilities:
 
 New:
 
-- *add item here*
+- Vocabulary for permissions
+  [ebrehault]
+
+- Vocabulary for portal action categories
+  [ebrehault]
 
 Fixes:
 

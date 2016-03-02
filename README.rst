@@ -59,6 +59,16 @@ Portal Types
     Portal types filtered as 'user friendly' by the Types Tool.
 
 
+Portal actions
+--------------
+
+``plone.app.vocabularies.Actions``
+    All the actions category ids. Used in Actions portlet.
+
+``plone.app.vocabularies.PortalActionCategories``
+    All the actions categories (ids + translated title). Used in Actions control panel.
+
+
 Workflows
 ---------
 

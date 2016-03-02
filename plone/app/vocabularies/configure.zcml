@@ -23,6 +23,11 @@
     />
 
   <utility
+    component=".security.PermissionsVocabularyFactory"
+    name="plone.app.vocabularies.Permissions"
+    />
+
+  <utility
     component=".types.AllowedContentTypesVocabularyFactory"
     name="plone.app.vocabularies.AllowedContentTypes"
     />
@@ -100,6 +105,11 @@
   <utility
     component=".actions.ActionCategoriesVocabularyFactory"
     name="plone.app.vocabularies.Actions"
+    />
+
+  <utility
+    component=".actions.PortalActionCategoriesVocabularyFactory"
+    name="plone.app.vocabularies.PortalActionCategories"
     />
 
   <utility
