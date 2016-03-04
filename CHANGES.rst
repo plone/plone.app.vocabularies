@@ -1,12 +1,8 @@
 Changelog
 =========
 
-2.2.3 (unreleased)
+2.2.3 (2016-03-03)
 ------------------
-
-Incompatibilities:
-
-- *add item here*
 
 New:
 
@@ -15,10 +11,6 @@ New:
 
 - Vocabulary for portal action categories
   [ebrehault]
-
-Fixes:
-
-- *add item here*
 
 
 2.2.2 (2016-02-25)
