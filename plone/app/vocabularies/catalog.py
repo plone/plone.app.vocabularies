@@ -634,20 +634,27 @@ class CatalogSource(object):
         self.query = query
 
     def __contains__(self, value):
-        if isinstance(value, basestring):
-            uid = value
-        else:
-            uid = IUUID(value)
-        if uid[0] == '/':
+        """used during validation to make sure the selected item is found with
+        the specified query.
+
+        value can be either a string (hex value of uuid or path) or a plone
+        content object.
+        """
+        if not isinstance(value, basestring):
+            # here we have a content and fetch the uuid as hex value
+            value = IUUID(value)
+        # else we have uuid hex value or path
+
+        if value.startswith('/'):
             # it is a path query
             site = getSite()
             site_path = '/'.join(site.getPhysicalPath())
-            path = os.path.join(site_path, uid.lstrip('/'))
-            if self.search_catalog({'path': {'query': path, 'depth': 0}}):
-                return True
+            path = os.path.join(site_path, value.lstrip('/'))
+            query = {'path': {'query': path, 'depth': 0}}
         else:
-            if self.search_catalog({'UID': uid}):
-                return True
+            # its a uuid
+            query = {'UID': value}
+        return bool(self.search_catalog(query))
 
     def search_catalog(self, user_query):
         query = user_query.copy()

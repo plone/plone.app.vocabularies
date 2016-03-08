@@ -14,7 +14,8 @@ New:
 
 Fixes:
 
-- *add item here*
+- increase readability of code in CatalogSource.
+  [jensens]
 
 
 2.2.3 (2016-03-03)
