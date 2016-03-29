@@ -6,7 +6,8 @@ Changelog
 
 New:
 
-- *add item here*
+- Add ImagesScales vocabulary.
+  [bsuttor]
 
 Fixes:
 
