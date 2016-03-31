@@ -142,6 +142,12 @@ Date/Time Related
 ``plone.app.vocabularies.MonthAbbr``
    same as above but with 3 character abbreviations.
 
+Images
+------
+
+``plone.app.vocabularies.ImagesScales``
+   All image scales which are avaiable on Plone site.
+
 
 Source Code
 ===========
