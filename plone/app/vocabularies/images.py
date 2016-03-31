@@ -12,7 +12,7 @@ def ScalesVocabulary(context):
     """
     terms = []
     for scale, (width, height) in getAllowedSizes().iteritems():
-        terms.append(SimpleTerm(scale, scale, "{:s} {:d}x{:d}".format (
+        terms.append(SimpleTerm(scale, scale, "{0:s} {1:d}x{2:d}".format (
             scale, width, height)))
 
     return SimpleVocabulary(terms)
