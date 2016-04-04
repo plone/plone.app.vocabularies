@@ -153,6 +153,12 @@
     name="plone.app.vocabularies.MonthAbbr"
     />
 
+  <utility
+    component=".images.ScalesVocabulary"
+    name="plone.app.vocabularies.ImagesScales"
+    />
+
+
   <!-- All source implementations will be deprecated -->
   <adapter
       for=".catalog.SearchableTextSource
