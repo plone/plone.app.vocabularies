@@ -9,10 +9,6 @@ New:
 - Add ImagesScales vocabulary.
   [bsuttor]
 
-Fixes:
-
-- *add item here*
-
 
 2.1.23 (2016-02-24)
 -------------------
