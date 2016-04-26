@@ -4,10 +4,6 @@ Changelog
 2.2.4 (unreleased)
 ------------------
 
-Incompatibilities:
-
-- *add item here*
-
 New:
 
 - Add ImagesScales vocabulary.
