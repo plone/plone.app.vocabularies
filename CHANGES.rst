@@ -14,7 +14,9 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Fix bug where queries would not be parsed correctly for date queries on the catalog
+  vocabulary
+  [vangheem]
 
 
 2.2.4 (2016-04-26)

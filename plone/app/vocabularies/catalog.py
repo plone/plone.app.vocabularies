@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from binascii import b2a_qp
 from plone.app.layout.navigation.root import getNavigationRootObject
-from plone.app.querystring import queryparser
 from plone.app.vocabularies import SlicableVocabulary
 from plone.app.vocabularies.terms import BrowsableTerm
+from plone.app.vocabularies.utils import parseQueryString
 from plone.uuid.interfaces import IUUID
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import safe_unicode
@@ -19,6 +19,7 @@ from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 from zope.site.hooks import getSite
+
 import itertools
 import os
 
@@ -562,7 +563,7 @@ class CatalogVocabularyFactory(object):
     def __call__(self, context, query=None):
         parsed = {}
         if query:
-            parsed = queryparser.parseFormquery(context, query['criteria'])
+            parsed = parseQueryString(context, query['criteria'])
             if 'sort_on' in query:
                 parsed['sort_on'] = query['sort_on']
             if 'sort_order' in query:
