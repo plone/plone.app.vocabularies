@@ -4,14 +4,6 @@ Changelog
 2.2.5 (unreleased)
 ------------------
 
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
-
 Bug fixes:
 
 - Fix bug where queries would not be parsed correctly for date queries on the catalog
