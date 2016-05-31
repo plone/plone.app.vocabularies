@@ -6,7 +6,7 @@ from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 
-_ = MessageFactory('plone')
+PMF = MessageFactory('plone')
 
 
 @provider(IVocabularyFactory)
@@ -15,7 +15,7 @@ def ScalesVocabulary(context):
     """
     terms = []
     for scale, (width, height) in getAllowedSizes().iteritems():
-        translated = _(
+        translated = PMF(
             'imagescale_{0:s}'.format(scale),
             default='{0:s} ${{width}}x${{height}}'.format(scale),
             mapping={'width': str(width), 'height': str(height)})
