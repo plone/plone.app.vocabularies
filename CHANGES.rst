@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.2.6 (unreleased)
+2.3.0 (unreleased)
 ------------------
 
 Breaking changes:
@@ -10,7 +10,9 @@ Breaking changes:
 
 New features:
 
-- *add item here*
+- Refactor ``KeywordsVocabulary`` logic of term construction from  *dirty* values out into own functions.
+  Document functions in README.
+  [jensens]
 
 Bug fixes:
 

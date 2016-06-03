@@ -149,6 +149,26 @@ Images
    All image scales which are avaiable on Plone site.
 
 
+API/ Tools
+==========
+
+``plone.app.vocabularies.terms.TermWithDescription`` (class)
+    A SimpleTerm accepting additionally a description parameter.
+    Like title it may be used for display.
+
+``plone.app.vocabularies.terms.BrowsableTerm`` (class)
+    A term which may be browsed.
+    In a vocabulary those are used to identify terms which are actually browsable (e.g. those representing folders).
+
+``plone.app.vocabularies.terms.safe_simpleterm_from_value`` (function)
+    Create a ``SimpleTerm`` from a *dirty* or *untrusted* value.
+    Token is encoed carefully and Title converted to unicode.
+
+``plone.app.vocabularies.terms.safe_simplevocabulary_from_values`` (function)
+    Create a ``SimpleVocabulary`` from a iterable (list) of *dirty* or *untrusted* values.
+    Utilizes above ``safe_simpleterm_from_value`` to achieve this.
+
+
 Source Code
 ===========
 
