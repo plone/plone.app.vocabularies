@@ -4,6 +4,7 @@ from plone.app.vocabularies import SlicableVocabulary
 from plone.app.vocabularies.terms import BrowsableTerm
 from plone.app.vocabularies.terms import safe_simplevocabulary_from_values
 from plone.app.vocabularies.utils import parseQueryString
+from plone.memoize.instance import memoize
 from plone.uuid.interfaces import IUUID
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -452,19 +453,30 @@ class CatalogVocabulary(SlicableVocabulary):
     # plone.app.widgets < 1.6.0
 
     @classmethod
-    def fromItems(cls, brains, context, *interfaces):
-        return cls(brains)
+    def fromItems(cls, query, context, *interfaces):
+        return cls(query)
     fromValues = fromItems
 
     @classmethod
     def createTerm(cls, brain, context):
         return SimpleTerm(brain, brain.UID, brain.UID)
 
-    def __init__(self, brains, *interfaces):
-        self._brains = brains
+    def __init__(self, query, *interfaces):
+        self.query = query
+
+    @property
+    @memoize
+    def catalog(self):
+        return getToolByName(getSite(), 'portal_catalog')
+
+    @property
+    @memoize
+    def brains(self):
+        return self.catalog(**self.query)
 
     def __iter__(self):
-        return iter(self._terms)
+        for brain in self.brains:
+            yield self.createTerm(brain, None)
 
     def __contains__(self, value):
         if isinstance(value, basestring):
@@ -472,42 +484,22 @@ class CatalogVocabulary(SlicableVocabulary):
             uid = value
         else:
             uid = IUUID(value)
-        for term in self._terms:
-            try:
-                term_uid = term.value.UID
-            except AttributeError:
-                term_uid = term.value
-            if uid == term_uid:
-                return True
-        return False
+        query = self.query.copy()
+        query['UID'] = uid
+        return len(self.catalog(**query)) > 0
 
     def __len__(self):
-        return len(self._brains)
+        return len(self.brains)
 
     def __getitem__(self, index):
         if isinstance(index, slice):
             slice_inst = index
             start = slice_inst.start
             stop = slice_inst.stop
-            if not hasattr(self, "__terms"):
-                return [self.createTerm(brain, None)
-                        for brain in self._brains[start:stop]]
-            else:
-                return self.__terms[start:stop]
+            return [self.createTerm(brain, None)
+                    for brain in self.brains[start:stop]]
         else:
-            if not hasattr(self, "__terms"):
-                return self.createTerm(self._brains[index], None)
-            else:
-                return self.__terms[index]
-
-    @property
-    def _terms(self):
-        if not hasattr(self, "__terms"):
-            self.__terms = [
-                self.createTerm(brain, None)
-                for brain in self._brains
-            ]
-        return self.__terms
+            return self.createTerm(self.brains[index], None)
 
 
 @implementer(IVocabularyFactory)
@@ -552,24 +544,18 @@ class CatalogVocabularyFactory(object):
                 parsed['sort_on'] = query['sort_on']
             if 'sort_order' in query:
                 parsed['sort_order'] = str(query['sort_order'])
-        try:
-            catalog = getToolByName(context, 'portal_catalog')
-        except AttributeError:
-            context = getSite()
-            catalog = getToolByName(context, 'portal_catalog')
 
         # If no path is specified check if we are in a sub-site and use that
         # as the path root for catalog searches
         if 'path' not in parsed:
-            portal = getToolByName(context, 'portal_url').getPortalObject()
-            nav_root = getNavigationRootObject(context, portal)
-            if nav_root.getPhysicalPath() != portal.getPhysicalPath():
+            site = getSite()
+            nav_root = getNavigationRootObject(context, site)
+            if nav_root and nav_root.getPhysicalPath() != site.getPhysicalPath():
                 parsed['path'] = {
                     'query': '/'.join(nav_root.getPhysicalPath()),
                     'depth': -1
                 }
-        brains = catalog(**parsed)
-        return CatalogVocabulary.fromItems(brains, context)
+        return CatalogVocabulary.fromItems(parsed, context)
 
 
 @implementer(ISource)

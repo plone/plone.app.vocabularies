@@ -6,7 +6,12 @@ Changelog
 
 Breaking changes:
 
-- *add item here*
+- CatalogVocabulary now takes a query for it's constructor instead of a LazyMap of brains
+  and lazy loads terms. Also, in __contains__, do a UID query instead of checking the
+  entire contents of the result. This prevents potential DOS with custom code where the
+  whole contents of the catalog would get loaded with terms created for it on every
+  validation attempt.
+  [vangheem]
 
 New features:
 
