@@ -15,7 +15,13 @@ Breaking changes:
 
 New features:
 
-- *add item here*
+- Optional allow to filter keyword vocabulary to a current *section* based on the current context.
+  The class was build for easy subclassing - and still is.
+  It allows to override the section fetching logic in a subclass.
+  The default logic is first to look in the controlpanel if there is a ``IEditingSchema.subjects_of_navigation_root`` boolean.
+  If its ``True`` the ``getNavigationRootObject`` is used as the section and only keywords used in this section are part of the vocabulary.
+  Otherwise all keywords in the index are displayed.
+  [jensens]
 
 Bug fixes:
 

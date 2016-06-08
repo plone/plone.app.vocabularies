@@ -2,7 +2,7 @@
 from Products.ZCTextIndex.ParseTree import ParseError
 from plone.app.layout.navigation.interfaces import INavigationRoot
 from OFS.interfaces import IItem
-from zope.interface import implements
+from zope.interface import implementer
 from zope.site.hooks import setSite
 
 
@@ -19,22 +19,14 @@ class DummyContext(object):
         self.__parent__ = None
 
     def getSiteManager(self):
-        return self
-
-    def queryUtility(self, iface, name='', default=None):
-        """Query for a utility.
-
-        Note that earlier zope.component versions had 'provided'
-        instead of 'iface', but that should not matter.
-        """
-        return default
+        from zope.component import getSiteManager
+        return getSiteManager()
 
     def getPhysicalPath(self):
         return ['', self.__name__]
 
     def absolute_url(self, relative=False):
         return '/'.join(self.getPhysicalPath())
-
 
 
 class DummyUrlTool(object):
@@ -107,8 +99,8 @@ class Brain(object):
         return self.rid
 
 
+@implementer(IItem)
 class DummyCatalog(dict):
-    implements(IItem)
 
     def __init__(self, values):
         self.indexes = {}
@@ -145,8 +137,30 @@ class DummyContent(object):
         return self.subjects
 
 
+class DummyContentWithParent(object):
+    __parent__ = None
+
+    def __init__(self, cid, title=None, subjects=[], parent=None):
+        self.__name__ = cid
+        self.__parent__ = parent
+        self.title = title or cid
+        self.subjects = subjects
+
+    def Title(self):
+        return self.title
+
+    def Subject(self):
+        return self.subjects
+
+    def getPhysicalPath(self):
+        return self.__parent__.getPhysicalPath() + [self.__name__]
+
+    def absolute_url(self, relative=False):
+        return '/'.join(self.getPhysicalPath())
+
+
+@implementer(INavigationRoot)
 class DummyNavRoot(object):
-    implements(INavigationRoot)
     __parent__ = None
 
     def __init__(self, _id, title=None, parent=None):
