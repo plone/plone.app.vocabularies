@@ -98,8 +98,14 @@ Catalog
 -------
 
 ``plone.app.vocabularies.Keywords``
-    All Subjects aka Tags aka Keywords used by the portals content
+    It either displays all Subjects aka Tags aka Keywords used by the portals content.
+    Or if there is a ``IEditingSchema.subjects_of_navigation_root`` boolean set to True in the registry,
+    the ``getNavigationRootObject`` is used as the section and only keywords used in this section are part of the vocabulary.
 
+    Developers can subclass ``plone.app.vocabularies.catalog.KeywordVocabulary``, it is build to be developer friendly.
+    ``keyword_index`` property may be redefined to use a different index than 'Subject' for the Keywords.
+    ``path_index`` property may be redefined to use a different index than ``path`` for the sections path
+    ``section`` method may be redefined to located the section keywords should be restricted to.
 
 ``plone.app.vocabularies.Catalog``
     Generic queryable catalog

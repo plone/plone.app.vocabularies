@@ -20,7 +20,7 @@ setup(
         "Programming Language :: Python",
         "Programming Language :: Python :: 2.7",
     ],
-    keywords='Plone Zope formlib vocabularies',
+    keywords='Plone Zope vocabularies',
     author='Plone Foundation',
     author_email='plone-developers@lists.sourceforge.net',
     url='https://github.com/plone/plone.app.vocabularies',
@@ -48,6 +48,7 @@ setup(
     ],
     extras_require=dict(
         test=[
+            'mock',
             'plone.app.testing',
             'zope.configuration',
             'zope.testing',

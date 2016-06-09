@@ -19,7 +19,11 @@ class AvailableEditorsVocabulary(object):
         items = []
 
         registry = getUtility(IRegistry)
-        settings = registry.forInterface(IEditingSchema, prefix="plone")
+        settings = registry.forInterface(
+            IEditingSchema,
+            prefix="plone",
+            check=False
+        )
 
         if settings:
             editors = settings.available_editors
