@@ -23,10 +23,6 @@ New features:
   Otherwise all keywords in the index are displayed.
   [jensens]
 
-Bug fixes:
-
-- *add item here*
-
 
 2.3.0 (2016-06-07)
 ------------------
