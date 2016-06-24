@@ -10,7 +10,8 @@ Breaking changes:
 
 New features:
 
-- *add item here*
+- Created Vocabulary for Search Indexes.
+  [rodfersou]
 
 Bug fixes:
 
