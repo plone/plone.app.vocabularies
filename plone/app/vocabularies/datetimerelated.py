@@ -6,7 +6,9 @@ from zope.interface import provider
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
+
 import pytz
+
 
 PLMF = MessageFactory('plonelocales')
 
@@ -39,7 +41,7 @@ def CommonTimezonesFactory(context, query=None):
 def AvailableTimezonesFactory(context, query=None):
     """Vocabulary for available timezones, as set by in the controlpanel.
     """
-    reg_key = "plone.available_timezones"
+    reg_key = 'plone.available_timezones'
     registry = getUtility(IRegistry)
     # check if 'plone.available_timezones' is in registry
     if reg_key not in registry:

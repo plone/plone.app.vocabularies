@@ -2,6 +2,7 @@
 from plone.app.vocabularies.testing import PAVocabularies_INTEGRATION_TESTING
 from zope.component import getUtility
 from zope.schema.interfaces import IVocabularyFactory
+
 import unittest2 as unittest
 
 
@@ -16,7 +17,7 @@ class AvailableEditorsTest(unittest.TestCase):
         from plone.registry import Registry
         registry = Registry()
         from Products.CMFPlone.interfaces import IEditingSchema
-        registry.registerInterface(IEditingSchema, prefix="plone")
+        registry.registerInterface(IEditingSchema, prefix='plone')
         registry.records['plone.available_editors']
         vocab_util = getUtility(
             IVocabularyFactory,

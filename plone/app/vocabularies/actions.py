@@ -17,7 +17,7 @@ class ActionCategoriesVocabulary(object):
         # Building the list of action categories
         try:
             categories = portal_actions.listFilteredActionsFor(context).keys()
-        except:
+        except Exception:
             portal = context.portal_url.getPortalObject()
             categories = portal.portal_actions.objectIds()
         categories.sort()

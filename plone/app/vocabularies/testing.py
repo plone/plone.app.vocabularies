@@ -18,4 +18,5 @@ class PAVocabulariesLayer(PloneSandboxLayer):
 PAVocabularies_FIXTURE = PAVocabulariesLayer()
 PAVocabularies_INTEGRATION_TESTING = IntegrationTesting(
     bases=(PAVocabularies_FIXTURE,),
-    name="PAVocabularies:Integration")
+    name='PAVocabularies:Integration',
+)

@@ -10,6 +10,7 @@ from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 from zope.site.hooks import getSite
 
+
 PMF = MessageFactory('plone')
 
 
@@ -59,7 +60,7 @@ class RolesVocabulary(object):
             role_title = translate(PMF(role_id), context=request)
             items.append(SimpleTerm(role_id, role_id, role_title))
 
-        missing_roles = ["Anonymous", "Authenticated"]
+        missing_roles = ['Anonymous', 'Authenticated']
         for role_id in missing_roles:
             if role_id in roles:
                 continue
@@ -139,7 +140,7 @@ class PermissionsVocabulary(object):
     def __call__(self, context):
         site = getSite()
         items = [SimpleTerm(perm, perm, perm)
-            for perm in site.possible_permissions()]
+                 for perm in site.possible_permissions()]
         return SimpleVocabulary(items)
 
 PermissionsVocabularyFactory = PermissionsVocabulary()

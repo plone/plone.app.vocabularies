@@ -9,6 +9,7 @@ from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 
+
 try:
     # XXX: this is a circular dependency (not declared in setup.py)
     from Products.CMFPlone.interfaces.syndication import ISiteSyndicationSettings  # noqa
@@ -51,14 +52,16 @@ class SyndicatableFeedItems(object):
         site_path = '/'.join(site.getPhysicalPath())
         query = {
             'portal_type': ('Folder', 'Collection', 'Topic'),
-            'path': {"query": site_path,
+            'path': {'query': site_path,
                      'depth': 2}
         }
         items = []
         for brain in catalog(**query):
             uid = brain.UID
-            title = u'%s(%s)' % (brain.Title.decode('utf8'),
-                                 brain.getPath()[len(site_path) + 1:])
+            title = u'{0}({1})'.format(
+                brain.Title.decode('utf8'),
+                brain.getPath()[len(site_path) + 1:],
+            )
             items.append(SimpleTerm(uid, uid, title))
         return SimpleVocabulary(items)
 

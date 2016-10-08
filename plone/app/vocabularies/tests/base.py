@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from Products.ZCTextIndex.ParseTree import ParseError
-from plone.app.layout.navigation.interfaces import INavigationRoot
 from OFS.interfaces import IItem
+from plone.app.layout.navigation.interfaces import INavigationRoot
+from Products.ZCTextIndex.ParseTree import ParseError
 from zope.interface import implementer
 from zope.site.hooks import setSite
 
@@ -71,7 +71,7 @@ class DummyTypeTool(dict):
 class Response(dict):
 
     def getHeader(self, value):
-        return 'header %s' % value
+        return 'header {0}'.format(value)
 
 
 class Request(dict):
@@ -126,6 +126,7 @@ class DummyCatalog(dict):
 
 
 class DummyContent(object):
+
     def __init__(self, title, subjects=[]):
         self.title = title
         self.subjects = subjects

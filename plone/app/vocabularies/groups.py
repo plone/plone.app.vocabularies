@@ -48,7 +48,7 @@ class GroupsSource(object):
 
     def __init__(self, context):
         self.context = context
-        self.users = getToolByName(context, "acl_users")
+        self.users = getToolByName(context, 'acl_users')
 
     def __contains__(self, value):
         """Return whether the value is available in this source
@@ -158,8 +158,8 @@ class GroupsSourceQueryView(object):
 
     def results(self, name):
         # check whether the normal search button was pressed
-        if name + ".search" in self.request.form:
-            query_fieldname = name + ".query"
+        if name + '.search' in self.request.form:
+            query_fieldname = name + '.query'
             if query_fieldname in self.request.form:
                 query = self.request.form[query_fieldname]
                 if query != '':

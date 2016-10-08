@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from plone.app.querystring import queryparser
 from plone.app.querystring.interfaces import IParsedQueryIndexModifier
 from zope.component import getUtilitiesFor

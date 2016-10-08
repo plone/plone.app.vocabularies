@@ -28,7 +28,7 @@ import itertools
 import os
 
 
-def parse_query(query, path_prefix=""):
+def parse_query(query, path_prefix=''):
     """ Parse the query string and turn it into a dictionary for querying the
         catalog.
 
@@ -86,15 +86,15 @@ def parse_query(query, path_prefix=""):
             query['path'] = {'query': path}
         else:
             query['SearchableText'].append(part)
-    text = " ".join(query['SearchableText'])
+    text = ' '.join(query['SearchableText'])
     for char in '?-+*()':
         text = text.replace(char, ' ')
-    query['SearchableText'] = " AND ".join(x + "*" for x in text.split())
+    query['SearchableText'] = ' AND '.join(x + '*' for x in text.split())
     if 'path' in query:
         if query['SearchableText'] == '':
             del query['SearchableText']
-            query["path"]["depth"] = 1
-        query["path"]["query"] = path_prefix + query["path"]["query"]
+            query['path']['depth'] = 1
+        query['path']['query'] = path_prefix + query['path']['query']
     return query
 
 
@@ -152,8 +152,8 @@ class SearchableTextSource(object):
         self.context = context
         self.base_query = base_query
         self.default_query = default_query
-        self.catalog = getToolByName(context, "portal_catalog")
-        self.portal_tool = getToolByName(context, "portal_url")
+        self.catalog = getToolByName(context, 'portal_catalog')
+        self.portal_tool = getToolByName(context, 'portal_url')
         self.portal_path = self.portal_tool.getPortalPath()
         self.encoding = 'utf-8'
 
@@ -197,8 +197,8 @@ class SearchableTextSourceBinder(object):
     parameters. For example:
 
     target_folder = schema.Choice(
-        title=_(u"Target folder"),
-        description=_(u"As a path relative to the portal root"),
+        title=_(u'Target folder'),
+        description=_(u'As a path relative to the portal root'),
         required=True,
         source=SearchableTextSourceBinder({'is_folderish' : True}),
         )
@@ -340,7 +340,7 @@ class QuerySearchableTextSourceView(object):
             # title = brain.Title
             if brain.is_folderish:
                 browse_token = value
-            parent_token = "/".join(value.split("/")[:-1])
+            parent_token = '/'.join(value.split('/')[:-1])
         return BrowsableTerm(value, token=token,
                              title=title.decode(self.context.encoding),
                              description=value,
@@ -359,20 +359,20 @@ class QuerySearchableTextSourceView(object):
         query = ''
 
         # check whether the normal search button was pressed
-        if name + ".search" in self.request.form:
-            query_fieldname = name + ".query"
+        if name + '.search' in self.request.form:
+            query_fieldname = name + '.query'
             if query_fieldname in self.request.form:
                 query = self.request.form[query_fieldname]
 
         # check whether a browse button was pressed
-        browse_prefix = name + ".browse."
+        browse_prefix = name + '.browse.'
         browse = tuple(x for x in self.request.form
                        if x.startswith(browse_prefix))
         if len(browse) == 1:
             path = browse[0][len(browse_prefix):]
-            query = "path:" + path
+            query = 'path:' + path
             results = self.context.search(query)
-            if name + ".omitbrowsedfolder" in self.request.form:
+            if name + '.omitbrowsedfolder' in self.request.form:
                 results = itertools.ifilter(lambda x: x != path, results)
         else:
             results = self.context.search(query)
@@ -382,7 +382,7 @@ class QuerySearchableTextSourceView(object):
 
 @implementer(IVocabularyFactory)
 class KeywordsVocabulary(object):
-    """Vocabulary factory listing all catalog keywords from the "Subject" index
+    """Vocabulary factory listing all catalog keywords from the 'Subject' index
 
         >>> from plone.app.vocabularies.tests.base import DummyCatalog
         >>> from plone.app.vocabularies.tests.base import create_context
@@ -420,7 +420,7 @@ class KeywordsVocabulary(object):
         >>> index.clear()
         >>> done = index._index_object(
         ...     1,
-        ...     DummyContent('obj1', [u'äüö', u'nix']), attr="Subject"
+        ...     DummyContent('obj1', [u'äüö', u'nix']), attr='Subject'
         ... )
         >>> tool.indexes['Subject'] = index
         >>> vocab = KeywordsVocabulary()
@@ -602,7 +602,8 @@ class CatalogVocabularyFactory(object):
         if 'path' not in parsed:
             site = getSite()
             nav_root = getNavigationRootObject(context, site)
-            if nav_root and nav_root.getPhysicalPath() != site.getPhysicalPath():
+            site_path = site.getPhysicalPath()
+            if nav_root and nav_root.getPhysicalPath() != site_path:
                 parsed['path'] = {
                     'query': '/'.join(nav_root.getPhysicalPath()),
                     'depth': -1

@@ -1,25 +1,28 @@
-from setuptools import setup, find_packages
+# -*- coding: utf-8 -*-
+from setuptools import find_packages
+from setuptools import setup
+
 
 version = '3.0.1.dev0'
 
 setup(
     name='plone.app.vocabularies',
     version=version,
-    description="Collection of generally useful vocabularies for Plone.",
-    long_description='%s\n%s' % (
-        open("README.rst").read(),
-        open("CHANGES.rst").read()
+    description='Collection of generally useful vocabularies for Plone.',
+    long_description='{0}\n{1}'.format(
+        open('README.rst').read(),
+        open('CHANGES.rst').read()
     ),
     classifiers=[
-        "Environment :: Web Environment",
-        "Framework :: Plone",
-        "Framework :: Plone :: 5.0",
-        "Framework :: Plone :: 5.1",
-        "Framework :: Zope2",
-        "License :: OSI Approved :: GNU General Public License (GPL)",
-        "Operating System :: OS Independent",
-        "Programming Language :: Python",
-        "Programming Language :: Python :: 2.7",
+        'Environment :: Web Environment',
+        'Framework :: Plone',
+        'Framework :: Plone :: 5.0',
+        'Framework :: Plone :: 5.1',
+        'Framework :: Zope2',
+        'License :: OSI Approved :: GNU General Public License (GPL)',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2.7',
     ],
     keywords='Plone Zope vocabularies',
     author='Plone Foundation',

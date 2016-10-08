@@ -15,12 +15,13 @@ from zope.schema.vocabulary import SimpleTerm
 
 def _createUserTerm(userid, context=None, acl_users=None):
     if acl_users is None:
-        acl_users = getToolByName(context, "acl_users")
+        acl_users = getToolByName(context, 'acl_users')
     user = acl_users.getUserById(userid, None)
     fullname = userid
     if user:
         fullname = user.getProperty('fullname', None) or userid
-    token = userid.encode('unicode_escape') if isinstance(userid, unicode) else userid
+    token = userid.encode('unicode_escape') if isinstance(
+        userid, unicode) else userid
     return SimpleTerm(userid, token, fullname)
 
 
@@ -59,7 +60,7 @@ class UsersSource(object):
 
     def __init__(self, context):
         self.context = context
-        self.users = getToolByName(context, "acl_users")
+        self.users = getToolByName(context, 'acl_users')
 
     def __contains__(self, value):
         """Return whether the value is available in this source
@@ -79,7 +80,7 @@ class UsersVocabulary(SlicableVocabulary):
 
     def __init__(self, terms, context, *interfaces):
         super(UsersVocabulary, self).__init__(terms, *interfaces)
-        self._users = getToolByName(context, "acl_users")
+        self._users = getToolByName(context, 'acl_users')
 
     @classmethod
     def fromItems(cls, items, context, *interfaces):
@@ -112,7 +113,7 @@ class UsersFactory(object):
     def __call__(self, context, query=''):
         if context is None:
             context = getSite()
-        users = getToolByName(context, "acl_users")
+        users = getToolByName(context, 'acl_users')
         return UsersVocabulary.fromItems(
             users.searchUsers(fullname=query),
             context
@@ -200,8 +201,8 @@ class UsersSourceQueryView(object):
 
     def results(self, name):
         # check whether the normal search button was pressed
-        if name + ".search" in self.request.form:
-            query_fieldname = name + ".query"
+        if name + '.search' in self.request.form:
+            query_fieldname = name + '.query'
             if query_fieldname in self.request.form:
                 query = self.request.form[query_fieldname]
                 if query != '':
