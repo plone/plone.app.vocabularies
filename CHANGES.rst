@@ -54,6 +54,8 @@ New features:
 ------------------
 
 Bug fixes:
+- Import getAllowedSizes from CMFPlone to avoid dependency on plone.app.imaging.
+  [davisagli]
 
 - Fix bug where queries would not be parsed correctly for date queries on the catalog
   vocabulary

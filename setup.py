@@ -33,7 +33,6 @@ setup(
     install_requires=[
         'Acquisition',
         'plone.app.querystring',
-        'plone.app.imaging',
         'Products.CMFCore',
         'pytz',
         'setuptools',

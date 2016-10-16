@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from plone.app.imaging.utils import getAllowedSizes
+from Products.CMFPlone.utils import getAllowedSizes
 from zope.i18nmessageid import MessageFactory
 from zope.interface import provider
 from zope.schema.interfaces import IVocabularyFactory
@@ -11,7 +11,7 @@ PMF = MessageFactory('plone')
 
 @provider(IVocabularyFactory)
 def ScalesVocabulary(context):
-    """Obtains available scales from plone.app.imaging
+    """Obtains available scales from registry
     """
     terms = []
     for scale, (width, height) in getAllowedSizes().iteritems():
