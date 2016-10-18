@@ -10,6 +10,7 @@ from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 from zope.site.hooks import getSite
 
+
 _ = MessageFactory('plone')
 
 
@@ -130,7 +131,7 @@ class WorkflowStatesVocabulary(object):
         items_list = [(k, v) for k, v in items_dict.items()]
         items_list.sort(lambda x, y: cmp(x[1], y[1]))
         terms = [
-            SimpleTerm(k, title=u'%s [%s]' % (v, k))
+            SimpleTerm(k, title=u'{0} [{1}]'.format(v, k))
             for k, v in items_list
         ]
         return SimpleVocabulary(terms)
@@ -170,14 +171,14 @@ class WorkflowTransitionsVocabulary(object):
       >>> tool = DummyTool('portal_workflow')
       >>> t1 = Transition('publish', 'Publish')
       >>> t2 = Transition('reject', 'Reject')
-      >>> t3 = Transition('publicacao', 'Publicação')
+      >>> t3 = Transition('publicacao', u'Publicação')
 
       >>> wf1 = Workflow('default', 'Default Workflow', (t1, t2))
       >>> wf2 = Workflow('intranet', 'Intranet Workflow', (t1, ))
       >>> wf3 = Workflow('noticias', 'Workflow de Notícias', (t2, t3))
 
       >>> def values():
-      ...     return (wf1, wf2, wf3)
+      ...     return  wf1, wf2, wf3
       >>> tool.values = values
       >>> context.portal_workflow = tool
 
@@ -193,7 +194,7 @@ class WorkflowTransitionsVocabulary(object):
       (u'Publish [publish]', 'publish', 'publish')
 
       >>> publ = transitions.by_token['publicacao']
-      >>> publ.title == 'Publicação [publicacao]'.decode('utf-8')
+      >>> publ.title == u'Publicação [publicacao]'
       True
     """
 
@@ -220,8 +221,8 @@ class WorkflowTransitionsVocabulary(object):
                     name = safe_unicode(transition.actbox_name)
 
                     transition_title = translate(
-                                        _(name),
-                                        context=aq_get(wtool, 'REQUEST', None))
+                        _(name),
+                        context=aq_get(wtool, 'REQUEST', None))
                     transitions.setdefault(transition.id, []).append(
                         dict(title=transition_title, wf_name=wf_name))
         items = []
@@ -230,7 +231,7 @@ class WorkflowTransitionsVocabulary(object):
         for transition_id, info in transition_items:
             titles = set([i['title'] for i in info])
             item_title = ' // '.join(sorted(titles))
-            item_title = "%s [%s]" % (item_title, transition_id)
+            item_title = u'{0} [{1}]'.format(item_title, transition_id)
             items.append(SimpleTerm(transition_id, transition_id, item_title))
 
         return SimpleVocabulary(items)

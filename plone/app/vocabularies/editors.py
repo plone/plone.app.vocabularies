@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from plone.registry.interfaces import IRegistry
+from Products.CMFPlone.interfaces import IEditingSchema
 from zope.component import getUtility
 from zope.i18nmessageid import MessageFactory
 from zope.interface import implementer
@@ -6,8 +8,6 @@ from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 
-from plone.registry.interfaces import IRegistry
-from Products.CMFPlone.interfaces import IEditingSchema
 
 _ = MessageFactory('plone')
 
@@ -21,7 +21,7 @@ class AvailableEditorsVocabulary(object):
         registry = getUtility(IRegistry)
         settings = registry.forInterface(
             IEditingSchema,
-            prefix="plone",
+            prefix='plone',
             check=False
         )
 

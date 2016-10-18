@@ -241,21 +241,21 @@ UserFriendlyTypesVocabularyFactory = UserFriendlyTypesVocabulary()
 
 
 BAD_TYPES = [
-    "ATBooleanCriterion",
-    "ATCurrentAuthorCriterion",
-    "ATDateCriteria",
-    "ATDateRangeCriterion",
-    "ATListCriterion",
-    "ATPathCriterion",
-    "ATPortalTypeCriterion",
-    "ATReferenceCriterion",
-    "ATRelativePathCriterion",
-    "ATSelectionCriterion",
-    "ATSimpleIntCriterion",
-    "ATSimpleStringCriterion",
-    "ATSortCriterion",
-    "Plone Site",
-    "TempFolder",
+    'ATBooleanCriterion',
+    'ATCurrentAuthorCriterion',
+    'ATDateCriteria',
+    'ATDateRangeCriterion',
+    'ATListCriterion',
+    'ATPathCriterion',
+    'ATPortalTypeCriterion',
+    'ATReferenceCriterion',
+    'ATRelativePathCriterion',
+    'ATSelectionCriterion',
+    'ATSimpleIntCriterion',
+    'ATSimpleStringCriterion',
+    'ATSortCriterion',
+    'Plone Site',
+    'TempFolder',
 ]
 
 

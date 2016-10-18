@@ -9,7 +9,7 @@ class ITermWithDescription(Interface):
     """
 
     description = Attribute(
-        "description",
+        'description',
         """Description of the term, which will be displayed to distinguish
            between terms with similar labels.
         """)
@@ -21,7 +21,7 @@ class IBrowsableTerm(Interface):
     """
 
     browse_token = Attribute(
-        "browse_token",
+        'browse_token',
         """Token which can be used to get contents of browsable terms in
            queryable sources.
 
@@ -30,7 +30,7 @@ class IBrowsableTerm(Interface):
         """)
 
     parent_token = Attribute(
-        "parent_token",
+        'parent_token',
         """Token which can be used to get contents of the parent of browsable
            terms in queryable sources.
 
@@ -40,5 +40,6 @@ class IBrowsableTerm(Interface):
 
 
 class ISlicableVocabulary(IVocabularyTokenized):
+
     def __getitem__(start, stop):
         """ return a slice of the results"""
