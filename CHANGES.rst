@@ -6,7 +6,11 @@ Changelog
 
 Breaking changes:
 
-- *add item here*
+- Make zope.formlib optional.
+  [gforcada]
+
+- Mark vocabularies based on zope.formlib as deprecated.
+  [gforcada]
 
 New features:
 
