@@ -41,7 +41,6 @@ setup(
         'setuptools',
         'zope.browser',
         'zope.component',
-        'zope.formlib',
         'zope.i18n',
         'zope.i18nmessageid',
         'zope.interface',

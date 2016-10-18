@@ -14,7 +14,6 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.ZCTextIndex.ParseTree import ParseError
 from zope.browser.interfaces import ITerms
 from zope.component import queryUtility
-from zope.formlib.interfaces import ISourceQueryView
 from zope.interface import implementer
 from zope.interface import provider
 from zope.schema.interfaces import IContextSourceBinder
@@ -26,6 +25,16 @@ from zope.site.hooks import getSite
 
 import itertools
 import os
+import warnings
+
+
+try:
+    from zope.formlib.interfaces import ISourceQueryView
+except ImportError:
+    from zope.interface import Interface
+
+    class ISourceQueryView(Interface):
+        pass
 
 
 def parse_query(query, path_prefix=''):
@@ -317,6 +326,9 @@ class QuerySearchableTextSourceView(object):
     template = ViewPageTemplateFile('searchabletextsource.pt')
 
     def __init__(self, context, request):
+        msg = 'QuerySearchableTextSourceView is deprecated and will be ' \
+              'removed on Plone 6'
+        warnings.warn(msg, DeprecationWarning)
         self.context = context
         self.request = request
 

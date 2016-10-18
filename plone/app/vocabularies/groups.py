@@ -2,12 +2,22 @@
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.browser.interfaces import ITerms
-from zope.formlib.interfaces import ISourceQueryView
 from zope.interface import implementer
 from zope.interface import provider
 from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.interfaces import ISource
 from zope.schema.vocabulary import SimpleTerm
+
+import warnings
+
+
+try:
+    from zope.formlib.interfaces import ISourceQueryView
+except ImportError:
+    from zope.interface import Interface
+
+    class ISourceQueryView(Interface):
+        pass
 
 
 @implementer(ISource)
@@ -137,6 +147,9 @@ class GroupsSourceQueryView(object):
     template = ViewPageTemplateFile('searchabletextsource.pt')
 
     def __init__(self, context, request):
+        msg = 'GroupsSourceQueryView is deprecated and will be removed on ' \
+              'Plone 6'
+        warnings.warn(msg, DeprecationWarning)
         self.context = context
         self.request = request
 

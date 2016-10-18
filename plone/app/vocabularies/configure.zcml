@@ -168,6 +168,7 @@
       />
 
   <adapter
+      zcml:condition="installed zope.formlib"
       for=".catalog.SearchableTextSource
            zope.publisher.interfaces.browser.IBrowserRequest"
       factory=".catalog.QuerySearchableTextSourceView"
@@ -182,6 +183,7 @@
       />
 
   <adapter
+      zcml:condition="installed zope.formlib"
       for=".users.UsersSource
            zope.publisher.interfaces.browser.IBrowserRequest"
       factory=".users.UsersSourceQueryView"
@@ -196,6 +198,7 @@
       />
 
   <adapter
+      zcml:condition="installed zope.formlib"
       for=".groups.GroupsSource
            zope.publisher.interfaces.browser.IBrowserRequest"
       factory=".groups.GroupsSourceQueryView"
