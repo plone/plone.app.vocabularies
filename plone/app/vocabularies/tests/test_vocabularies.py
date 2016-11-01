@@ -105,5 +105,11 @@ def test_suite():
                 optionflags=optionflags,
                 checker=Py23DocChecker(),
             ),
+            DocTestSuite(
+                'plone.app.vocabularies.principals',
+                setUp=vocabSetUp,
+                tearDown=vocabTearDown,
+                optionflags=optionflags
+            ),
         )
     )

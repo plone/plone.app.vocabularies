@@ -72,6 +72,7 @@ class GroupsSource(object):
         # title, only name, and seems to match other random groups if
         # it's unicode
 
+        query = query or ''
         try:
             name = query.encode('ascii')
         except UnicodeEncodeError:
