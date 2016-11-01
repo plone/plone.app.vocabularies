@@ -85,5 +85,11 @@ def test_suite():
                 tearDown=vocabTearDown,
                 optionflags=optionflags
             ),
+            DocTestSuite(
+                'plone.app.vocabularies.principals',
+                setUp=vocabSetUp,
+                tearDown=vocabTearDown,
+                optionflags=optionflags
+            ),
         )
     )

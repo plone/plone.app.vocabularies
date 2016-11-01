@@ -118,12 +118,17 @@ class GroupsVocabulary(object):
       ('Editors', 'editors', 'editors')
     """
 
-    def __call__(self, context):
+    def __call__(self, context, query=''):
         items = []
         site = getSite()
         gtool = getToolByName(site, 'portal_groups', None)
         if gtool is not None:
-            groups = gtool.listGroups()
+            if query:
+                groups = []
+                for group_info in gtool.searchGroups(name=query):
+                    groups.append(gtool.getGroupById(group_info['groupid']))
+            else:
+                groups = gtool.listGroups()
             items = [(g.getGroupId(), g.getGroupTitleOrName()) for g in groups]
             items.sort()
             items = [SimpleTerm(i[0], i[0], i[1]) for i in items]

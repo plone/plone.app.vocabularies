@@ -10,7 +10,8 @@ Breaking changes:
 
 New features:
 
-- *add item here*
+- Add principals vocabularies which combines users and groups into one vocabulary
+  [vangheem]
 
 Bug fixes:
 
