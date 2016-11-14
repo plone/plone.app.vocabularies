@@ -22,7 +22,8 @@ Bug fixes:
   [gforcada]
 
 - Fix in catalog: If ZCTextIndex catches a ParseError, try w/o SearchableText if there is one given.
-  Often ``Query contains only common words`` happen (only stop words given) and results are not fetched, then we want all.
+  Often ``Query contains only common words`` happen (only stop words given) and results are not fetched.
+  Semantically this means that we want all results.
   [jensens]
 
 3.0 (2016-06-12)
