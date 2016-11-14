@@ -508,6 +508,7 @@ class KeywordsVocabulary(object):
             return self.all_keywords(query)
         return self.keywords_of_section(section, query)
 
+
 KeywordsVocabularyFactory = KeywordsVocabulary()
 
 
@@ -536,7 +537,15 @@ class CatalogVocabulary(SlicableVocabulary):
     @property
     @memoize
     def brains(self):
-        return self.catalog(**self.query)
+        try:
+            return self.catalog(**self.query)
+        except ParseError:
+            # a parseError: Query contains only common words may happen,
+            # semantically this means we want all result w/o SearchableText
+            if 'SearchableText' in self.query:
+                del query['SearchableText']
+                return self.catalog(**self.query)
+            raise
 
     def __iter__(self):
         for brain in self.brains:
