@@ -63,6 +63,7 @@ New features:
 ------------------
 
 Bug fixes:
+
 - Import getAllowedSizes from CMFPlone to avoid dependency on plone.app.imaging.
   [davisagli]
 
