@@ -12,10 +12,6 @@ Breaking changes:
 - Mark vocabularies based on zope.formlib as deprecated.
   [gforcada]
 
-New features:
-
-- *add item here*
-
 Bug fixes:
 
 - Adapt code to follow Plone styleguide.
