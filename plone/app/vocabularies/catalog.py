@@ -543,7 +543,7 @@ class CatalogVocabulary(SlicableVocabulary):
             # a parseError: Query contains only common words may happen,
             # semantically this means we want all result w/o SearchableText
             if 'SearchableText' in self.query:
-                del query['SearchableText']
+                del self.query['SearchableText']
                 return self.catalog(**self.query)
             raise
 

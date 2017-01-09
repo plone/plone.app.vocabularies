@@ -14,7 +14,8 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Fix problem in ParseError fallback introduced in 4.0
+  [jensens]
 
 
 4.0 (2016-11-17)
