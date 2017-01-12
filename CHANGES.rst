@@ -4,14 +4,6 @@ Changelog
 4.0.1 (unreleased)
 ------------------
 
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
-
 Bug fixes:
 
 - Fix problem in ParseError fallback introduced in 4.0
