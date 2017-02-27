@@ -14,7 +14,9 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- #1794: use permissive vocabulary type for numeric-indexed weekday and
+  month vocabularies to avoid breaking GenericSetup import.
+  [seanupton]
 
 
 4.0.1 (2017-01-12)

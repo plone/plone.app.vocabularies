@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from plone.app.vocabularies.interfaces import ISlicableVocabulary
+from plone.app.vocabularies.interfaces import IPermissiveVocabulary
 from zope.interface import directlyProvides
 from zope.interface import implementer
+from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 
 
 @implementer(ISlicableVocabulary)
@@ -32,3 +34,28 @@ class SlicableVocabulary(object):
 
     def __len__(self):
         return len(self._terms)
+
+
+@implementer(IPermissiveVocabulary)
+class PermissiveVocabulary(SimpleVocabulary):
+    """
+    Permissive vocabulary for cases of integer-keyed choices or cases
+    where vocabulary may mutate later in a transaction to include a
+    newly inserted value.
+    """
+
+    def __contains__(self, value):
+        return True
+
+    def getTermByToken(self, token):
+        """
+        this works around z3c.form.widget.SequenceWidget.extract()
+        pseudo-validation (which is broken for a permissive vocabulary).
+        """
+        try:
+            v = super(PermissiveVocabulary, self).getTermByToken(token)
+        except LookupError:
+            # fallback using dummy term, assumes token==value
+            return SimpleTerm(token)
+        return v
+
