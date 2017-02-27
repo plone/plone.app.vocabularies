@@ -43,3 +43,16 @@ class ISlicableVocabulary(IVocabularyTokenized):
 
     def __getitem__(start, stop):
         """ return a slice of the results"""
+
+
+class IPermissiveVocabulary(IVocabularyTokenized):
+    """Vocabulary with permissive validation of containment"""
+
+    def __contains__(self, value):
+        """
+        Always returns true, for any value; useful for cases where
+        validation of containment creates practical problems (e.g.
+        vocabulary about to be mutated with insertion of a value not
+        yet within).
+        """
+

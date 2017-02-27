@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from plone.app.vocabularies import PermissiveVocabulary
 from plone.registry.interfaces import IRegistry
 from zope.component import getUtility
 from zope.i18nmessageid import MessageFactory
@@ -66,66 +67,126 @@ WEEKDAY_PREFIXES = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 def WeekdaysFactory(context):
     """Vocabulary for Weekdays - full name
 
-      >>> from zope.component import queryUtility
-      >>> from plone.app.vocabularies.tests.base import create_context
+    Usage:
+    ------
 
-      >>> name = 'plone.app.vocabularies.Weekdays'
-      >>> util = queryUtility(IVocabularyFactory, name)
-      >>> context = create_context()
+    Get vocabulary for all seven days:
 
-      >>> len(util(context))
-      7
+        >>> from zope.component import queryUtility
+        >>> from plone.app.vocabularies.tests.base import create_context
 
-      >>> util(context).by_token['0'].title
-      u'weekday_mon'
+        >>> name = 'plone.app.vocabularies.Weekdays'
+        >>> util = queryUtility(IVocabularyFactory, name)
+        >>> context = create_context()
+
+        >>> len(util(context))
+        7
+
+    Containment is unenforced, as numeric tokens are used, a permissive
+    vocabulary type is in use (to make GenericSetup profile
+    import happy):
+
+        >>> assert '1' in util(context)
+        >>> assert 1 in util(context)
+
+    Term values are all integers:
+
+        >>> assert all(map(lambda t: type(t.value) is int, util(context)))
+
+    Term titles are i18n labels:
+
+        >>> util(context).by_token['0'].title
+        u'weekday_mon'
     """
     items = []
     for idx in range(len(WEEKDAY_PREFIXES)):
         msgstr = PLMF('weekday_{0}'.format(WEEKDAY_PREFIXES[idx]))
         items.append(SimpleTerm(idx, str(idx), msgstr))
-    return SimpleVocabulary(items)
+    return PermissiveVocabulary(items)
 
 
 @provider(IVocabularyFactory)
 def WeekdaysAbbrFactory(context):
     """Vocabulary for Weekdays - abbreviated (3 char)
 
-      >>> from zope.component import queryUtility
-      >>> from plone.app.vocabularies.tests.base import create_context
+    Usage:
+    ------
 
-      >>> name = 'plone.app.vocabularies.WeekdaysAbbr'
-      >>> util = queryUtility(IVocabularyFactory, name)
-      >>> context = create_context()
+    Get vocabulary for all seven days:
 
-      >>> len(util(context))
-      7
+        >>> from zope.component import queryUtility
+        >>> from plone.app.vocabularies.tests.base import create_context
+
+        >>> name = 'plone.app.vocabularies.WeekdaysAbbr'
+        >>> util = queryUtility(IVocabularyFactory, name)
+        >>> context = create_context()
+
+        >>> len(util(context))
+        7
+
+    Containment is unenforced, as numeric tokens are used, a permissive
+    vocabulary type is in use (to make GenericSetup profile
+    import happy):
+
+        >>> assert '1' in util(context)
+        >>> assert 1 in util(context)
+
+    Term values are all integers:
+
+        >>> assert all(map(lambda t: type(t.value) is int, util(context)))
+
+    Term titles are i18n labels:
+
+        >>> util(context).by_token['0'].title
+        u'weekday_mon_abbr'
     """
     items = []
     for idx in range(len(WEEKDAY_PREFIXES)):
         msgstr = PLMF('weekday_{0}_abbr'.format(WEEKDAY_PREFIXES[idx]))
         items.append(SimpleTerm(idx, str(idx), msgstr))
-    return SimpleVocabulary(items)
+    return PermissiveVocabulary(items)
 
 
 @provider(IVocabularyFactory)
 def WeekdaysShortFactory(context):
     """Vocabulary for Weekdays - Short (2 char)
 
-      >>> from zope.component import queryUtility
-      >>> from plone.app.vocabularies.tests.base import create_context
+    Usage:
+    ------
 
-      >>> name = 'plone.app.vocabularies.WeekdaysShort'
-      >>> util = queryUtility(IVocabularyFactory, name)
-      >>> context = create_context()
+    Get vocabulary for all seven days:
 
-      >>> len(util(context))
-      7
+        >>> from zope.component import queryUtility
+        >>> from plone.app.vocabularies.tests.base import create_context
+
+        >>> name = 'plone.app.vocabularies.WeekdaysShort'
+        >>> util = queryUtility(IVocabularyFactory, name)
+        >>> context = create_context()
+
+        >>> len(util(context))
+        7
+
+    Containment is unenforced, as numeric tokens are used, a permissive
+    vocabulary type is in use (to make GenericSetup profile
+    import happy):
+
+        >>> assert '1' in util(context)
+        >>> assert 1 in util(context)
+
+    Term values are all integers:
+
+        >>> assert all(map(lambda t: type(t.value) is int, util(context)))
+
+    Term titles are i18n labels:
+
+        >>> util(context).by_token['0'].title
+        u'weekday_mon_short'
     """
     items = []
     for idx in range(len(WEEKDAY_PREFIXES)):
         msgstr = PLMF('weekday_{0}_short'.format(WEEKDAY_PREFIXES[idx]))
         items.append(SimpleTerm(idx, str(idx), msgstr))
-    return SimpleVocabulary(items)
+    return PermissiveVocabulary(items)
 
 
 MONTH_PREFIXES = ['jan', 'feb', 'mar', 'apr', 'may', 'jun',
@@ -136,39 +197,65 @@ MONTH_PREFIXES = ['jan', 'feb', 'mar', 'apr', 'may', 'jun',
 def MonthFactory(context):
     """Vocabulary for Month. Full name
 
-      >>> from zope.component import queryUtility
-      >>> from plone.app.vocabularies.tests.base import create_context
+    Usage:
 
-      >>> name = 'plone.app.vocabularies.Month'
-      >>> util = queryUtility(IVocabularyFactory, name)
-      >>> context = create_context()
+        >>> from zope.component import queryUtility
+        >>> from plone.app.vocabularies.tests.base import create_context
 
-      >>> len(util(context))
-      12
+        >>> name = 'plone.app.vocabularies.Month'
+        >>> util = queryUtility(IVocabularyFactory, name)
+        >>> context = create_context()
+
+        >>> len(util(context))
+        12
+
+    Containment is unenforced, as numeric tokens are used, a permissive
+    vocabulary type is in use (to make GenericSetup profile
+    import happy):
+
+        >>> assert '1' in util(context)
+        >>> assert 1 in util(context)
+
+    Term values are all integers:
+
+        >>> assert all(map(lambda t: type(t.value) is int, util(context)))
     """
     items = []
     for idx in range(len(MONTH_PREFIXES)):
         msgstr = PLMF('month_{0}'.format(MONTH_PREFIXES[idx]))
         items.append(SimpleTerm(idx, str(idx), msgstr))
-    return SimpleVocabulary(items)
+    return PermissiveVocabulary(items)
 
 
 @provider(IVocabularyFactory)
 def MonthAbbrFactory(context):
     """Vocabulary for Month. Abbreviated Name (3 char)
 
-      >>> from zope.component import queryUtility
-      >>> from plone.app.vocabularies.tests.base import create_context
+    Usage:
 
-      >>> name = 'plone.app.vocabularies.MonthAbbr'
-      >>> util = queryUtility(IVocabularyFactory, name)
-      >>> context = create_context()
+        >>> from zope.component import queryUtility
+        >>> from plone.app.vocabularies.tests.base import create_context
 
-      >>> len(util(context))
-      12
+        >>> name = 'plone.app.vocabularies.MonthAbbr'
+        >>> util = queryUtility(IVocabularyFactory, name)
+        >>> context = create_context()
+
+        >>> len(util(context))
+        12
+
+    Containment is unenforced, as numeric tokens are used, a permissive
+    vocabulary type is in use (to make GenericSetup profile
+    import happy):
+
+        >>> assert '1' in util(context)
+        >>> assert 1 in util(context)
+
+    Term values are all integers:
+
+        >>> assert all(map(lambda t: type(t.value) is int, util(context)))
     """
     items = []
     for idx in range(len(MONTH_PREFIXES)):
         msgstr = PLMF('month_{0}_abbr'.format(MONTH_PREFIXES[idx]))
         items.append(SimpleTerm(idx, str(idx), msgstr))
-    return SimpleVocabulary(items)
+    return PermissiveVocabulary(items)
