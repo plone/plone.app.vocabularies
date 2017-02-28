@@ -14,13 +14,15 @@ New features:
 
 Bug fixes:
 
-- #1794: use permissive vocabulary type for numeric-indexed weekday and
-  month vocabularies to avoid breaking GenericSetup import.
+- plone/Products.CMFPlone#1794: use permissive vocabulary type
+  for numeric-indexed weekday and month vocabularies
+  to avoid breaking GenericSetup import.
   [seanupton]
 
-- #1268: use permissive vocabulary type for ReallyUserFriendlyTypes,
-  to avoid insertion of new types in plone.displayed_types (registry)
-  from breaking GenericSetup profiles in add-ons.
+- plone/Products.CMFPlone#1268: use permissive vocabulary type
+  for ReallyUserFriendlyTypes, to avoid insertion of new types 
+  in plone.displayed_types (registry) from breaking GenericSetup
+  profiles in add-ons.
   [seanupton]
 
 
