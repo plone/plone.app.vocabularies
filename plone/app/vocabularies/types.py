@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from Acquisition import aq_get
+from plone.app.vocabularies import PermissiveVocabulary
 from Products.CMFCore.utils import getToolByName
 from zope.i18n import translate
 from zope.interface import implementer
@@ -263,29 +264,36 @@ BAD_TYPES = [
 class ReallyUserFriendlyTypesVocabulary(object):
     """Vocabulary factory for really user friendly portal types.
 
-      >>> from zope.component import queryUtility
-      >>> from plone.app.vocabularies.tests.base import create_context
-      >>> from plone.app.vocabularies.tests.base import DummyType
-      >>> from plone.app.vocabularies.tests.base import DummyTypeTool
+    Usage:
 
-      >>> name = 'plone.app.vocabularies.ReallyUserFriendlyTypes'
-      >>> util = queryUtility(IVocabularyFactory, name)
-      >>> context = create_context()
+        >>> from zope.component import queryUtility
+        >>> from plone.app.vocabularies.tests.base import create_context
+        >>> from plone.app.vocabularies.tests.base import DummyType
+        >>> from plone.app.vocabularies.tests.base import DummyTypeTool
 
-      >>> tool = DummyTypeTool()
-      >>> tool['ATBooleanCriterion'] = DummyType('Boolean Criterion')
-      >>> context.portal_types = tool
+        >>> name = 'plone.app.vocabularies.ReallyUserFriendlyTypes'
+        >>> util = queryUtility(IVocabularyFactory, name)
+        >>> context = create_context()
 
-      >>> types = util(context)
-      >>> types
-      <zope.schema.vocabulary.SimpleVocabulary object at ...>
+        >>> tool = DummyTypeTool()
+        >>> tool['ATBooleanCriterion'] = DummyType('Boolean Criterion')
+        >>> context.portal_types = tool
 
-      >>> len(types.by_token)
-      2
+        >>> types = util(context)
+        >>> types
+        <plone.app.vocabularies.PermissiveVocabulary object at ...>
 
-      >>> doc = types.by_token['Document']
-      >>> doc.title, doc.token, doc.value
-      (u'Page', 'Document', 'Document')
+        >>> len(types.by_token)
+        2
+
+    Containment is unenforced, to make GenericSetup import validation
+    handle validation triggered by Choice.fromUnicode() on insertion:
+
+        >>> assert 'arbitrary_value' in util(context)
+
+        >>> doc = types.by_token['Document']
+        >>> doc.title, doc.token, doc.value
+        (u'Page', 'Document', 'Document')
     """
 
     def __call__(self, context):
@@ -302,6 +310,6 @@ class ReallyUserFriendlyTypesVocabulary(object):
         ]
         items.sort()
         items = [SimpleTerm(i[1], i[1], i[0]) for i in items]
-        return SimpleVocabulary(items)
+        return PermissiveVocabulary(items)
 
 ReallyUserFriendlyTypesVocabularyFactory = ReallyUserFriendlyTypesVocabulary()

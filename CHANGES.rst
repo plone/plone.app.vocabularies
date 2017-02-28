@@ -18,6 +18,11 @@ Bug fixes:
   month vocabularies to avoid breaking GenericSetup import.
   [seanupton]
 
+- #1268: use permissive vocabulary type for ReallyUserFriendlyTypes,
+  to avoid insertion of new types in plone.displayed_types (registry)
+  from breaking GenericSetup profiles in add-ons.
+  [seanupton]
+
 
 4.0.1 (2017-01-12)
 ------------------
