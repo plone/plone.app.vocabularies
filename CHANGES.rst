@@ -4,14 +4,6 @@ Changelog
 4.0.2 (unreleased)
 ------------------
 
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
-
 Bug fixes:
 
 - plone/Products.CMFPlone#1794: use permissive vocabulary type
