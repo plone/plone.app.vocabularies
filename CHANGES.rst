@@ -14,7 +14,8 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- return empty vocabulary when no imagescales defined
+  [fgrcon]
 
 
 4.0.2 (2017-03-29)

@@ -15,11 +15,12 @@ def ScalesVocabulary(context):
     """Obtains available scales from registry
     """
     terms = []
-    for scale, (width, height) in getAllowedSizes().iteritems():
-        translated = PMF(
-            'imagescale_{0:s}'.format(scale),
-            default='{0:s} ${{width}}x${{height}}'.format(scale),
-            mapping={'width': str(width), 'height': str(height)})
-        terms.append(SimpleTerm(scale, scale, translated))
-
+    allowedSizes = getAllowedSizes()
+    if allowedSizes is not None:
+        for scale, (width, height) in getAllowedSizes().iteritems():
+            translated = PMF(
+                'imagescale_{0:s}'.format(scale),
+                default='{0:s} ${{width}}x${{height}}'.format(scale),
+                mapping={'width': str(width), 'height': str(height)})
+            terms.append(SimpleTerm(scale, scale, translated))
     return SimpleVocabulary(terms)
