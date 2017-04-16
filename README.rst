@@ -110,6 +110,9 @@ Catalog
 ``plone.app.vocabularies.Catalog``
     Generic queryable catalog
 
+``plone.app.vocabularies.SearchIndexes``
+    Default search sort options
+
 
 Theme
 -----

@@ -158,6 +158,11 @@
     name="plone.app.vocabularies.ImagesScales"
     />
 
+  <utility
+    component=".search.SearchIndexesVocabularyFactory"
+    name="plone.app.vocabularies.SearchIndexes"
+    />
+
 
   <!-- All source implementations will be deprecated -->
   <adapter
