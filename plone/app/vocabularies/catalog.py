@@ -549,7 +549,8 @@ class CatalogVocabulary(SlicableVocabulary):
 
     def __iter__(self):
         for brain in self.brains:
-            yield self.createTerm(brain, None)
+            if brain is not None:
+                yield self.createTerm(brain, None)
 
     def __contains__(self, value):
         if isinstance(value, basestring):
@@ -570,7 +571,7 @@ class CatalogVocabulary(SlicableVocabulary):
             start = slice_inst.start
             stop = slice_inst.stop
             return [self.createTerm(brain, None)
-                    for brain in self.brains[start:stop]]
+                    for brain in self.brains[start:stop] if brain is not None]
         else:
             return self.createTerm(self.brains[index], None)
 

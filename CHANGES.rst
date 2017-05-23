@@ -14,7 +14,9 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- If brain is None, ignore and do not create term for catalog vocabulary. This can happen
+  if you have indexing pushed off to another process
+  [vangheem]
 
 
 4.0.3 (2017-05-10)
