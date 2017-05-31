@@ -4,7 +4,7 @@ from plone.registry.interfaces import IRegistry
 from zope.component import getUtility
 from zope.schema.interfaces import IVocabularyFactory
 
-import unittest2 as unittest
+import unittest
 
 
 class TimezoneTest(unittest.TestCase):
