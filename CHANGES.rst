@@ -14,7 +14,8 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Remove unittest2 dependency
+  [kakshay21]
 
 
 4.0.3 (2017-05-10)

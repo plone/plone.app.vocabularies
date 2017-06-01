@@ -4,7 +4,7 @@ from plone.app.vocabularies.testing import PAVocabularies_INTEGRATION_TESTING
 from zope.interface import alsoProvides
 
 import mock
-import unittest2 as unittest
+import unittest
 
 
 class TestKeywordsUnderContext(unittest.TestCase):
