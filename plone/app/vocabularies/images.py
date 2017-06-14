@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from Products.CMFPlone.utils import getAllowedSizes
+from zope.i18n import translate
 from zope.i18nmessageid import MessageFactory
 from zope.interface import provider
 from zope.schema.interfaces import IVocabularyFactory
@@ -18,9 +19,9 @@ def ScalesVocabulary(context):
     allowedSizes = getAllowedSizes()
     if allowedSizes is not None:
         for scale, (width, height) in getAllowedSizes().iteritems():
-            translated = PMF(
+            translated = translate(PMF(
                 'imagescale_{0:s}'.format(scale),
                 default='{0:s} ${{width}}x${{height}}'.format(scale),
-                mapping={'width': str(width), 'height': str(height)})
+                mapping={'width': str(width), 'height': str(height)}))
             terms.append(SimpleTerm(scale, scale, translated))
     return SimpleVocabulary(terms)

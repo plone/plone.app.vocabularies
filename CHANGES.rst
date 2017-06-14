@@ -14,6 +14,9 @@ New features:
 
 Bug fixes:
 
+- Translate imagescales
+  [Gagaro]
+
 - Remove unittest2 dependency
   [kakshay21]
 
