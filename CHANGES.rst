@@ -14,6 +14,9 @@ New features:
 
 Bug fixes:
 
+- Let ``plone.app.vocabularies.SupportedContentLanguages`` return the language title in native language.
+  [thet]
+
 - Remove unittest2 dependency
   [kakshay21]
 
