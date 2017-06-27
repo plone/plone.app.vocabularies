@@ -75,6 +75,10 @@ class SupportedContentLanguageVocabulary(object):
       >>> def listSupportedLanguages():
       ...     return [('en', 'English'), ('de', 'German')]
       >>> tool.listSupportedLanguages = listSupportedLanguages
+      >>> def getAvailableLanguages():
+      ...     return dict(en=dict(name='English', native='English'),
+      ...                 de=dict(name='German', native='Deutsch'))
+      >>> tool.getAvailableLanguages = getAvailableLanguages
       >>> context.portal_languages = tool
 
       >>> languages = util(context)
@@ -86,7 +90,7 @@ class SupportedContentLanguageVocabulary(object):
 
       >>> de = languages.by_token['de']
       >>> de.title, de.token, de.value
-      ('German', 'de', 'de')
+      ('Deutsch', 'de', 'de')
     """
 
     def __call__(self, context):
@@ -95,8 +99,19 @@ class SupportedContentLanguageVocabulary(object):
         ltool = getToolByName(site, 'portal_languages', None)
         if ltool is not None:
             items = ltool.listSupportedLanguages()
+            all_langs = ltool.getAvailableLanguages()
+            items = [
+                (l[0], all_langs[l[0]].get('native', l[1]))
+                for l in items
+            ]
             items.sort(key=itemgetter(1))
-            items = [SimpleTerm(i[0], i[0], i[1]) for i in items]
+            items = [
+                SimpleTerm(
+                    i[0],
+                    i[0],
+                    all_langs.get(i[0], {}).get('native', i[1])
+                ) for i in items
+            ]
         return SimpleVocabulary(items)
 
 SupportedContentLanguageVocabularyFactory = SupportedContentLanguageVocabulary()  # noqa
