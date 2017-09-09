@@ -4,17 +4,10 @@ Changelog
 2.1.25 (unreleased)
 -------------------
 
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
-
 Bug fixes:
 
-- *add item here*
+- Use Plone MessageFactory for translating scale names
+  [vincentfretin]
 
 
 2.1.24 (2016-04-15)
