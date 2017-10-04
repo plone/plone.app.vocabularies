@@ -64,11 +64,20 @@ class RolesVocabulary(object):
         for role_id in missing_roles:
             if role_id in roles:
                 continue
+            if not self.filter(role_id):
+                continue
             role_title = translate(PMF(role_id), context=request)
             items.append(SimpleTerm(role_id, role_id, role_title))
         items.sort(key=attrgetter('title'))
 
         return SimpleVocabulary(items)
+
+    def filter(self, group):
+        """
+        ability to override to provide custom filtering
+        """
+        return True
+
 
 RolesVocabularyFactory = RolesVocabulary()
 
@@ -129,10 +138,18 @@ class GroupsVocabulary(object):
                     groups.append(gtool.getGroupById(group_info['groupid']))
             else:
                 groups = gtool.listGroups()
-            items = [(g.getGroupId(), g.getGroupTitleOrName()) for g in groups]
+            items = [(g.getGroupId(), g.getGroupTitleOrName())
+                     for g in groups if self.filter(g)]
             items.sort()
             items = [SimpleTerm(i[0], i[0], i[1]) for i in items]
         return SimpleVocabulary(items)
+
+    def filter(self, group):
+        """
+        ability to override to provide custom filtering
+        """
+        return True
+
 
 GroupsVocabularyFactory = GroupsVocabulary()
 
@@ -145,7 +162,14 @@ class PermissionsVocabulary(object):
     def __call__(self, context):
         site = getSite()
         items = [SimpleTerm(perm, perm, perm)
-                 for perm in site.possible_permissions()]
+                 for perm in site.possible_permissions() if self.filter(perm)]
         return SimpleVocabulary(items)
+
+    def filter(self, group):
+        """
+        ability to override to provide custom filtering
+        """
+        return True
+
 
 PermissionsVocabularyFactory = PermissionsVocabulary()

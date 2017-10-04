@@ -19,6 +19,10 @@ Bug fixes:
 4.0.6 (2018-02-11)
 ------------------
 
+- Add a simple way to filter users, groups, roles and permissions in custom
+  vocabularies that subclass the original.
+  [pbauer]
+
 Bug fixes:
 
 - Do not wake up all the users when no query is submitted
