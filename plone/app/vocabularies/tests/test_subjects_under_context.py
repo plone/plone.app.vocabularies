@@ -65,6 +65,8 @@ class TestKeywordsUnderContext(unittest.TestCase):
         sm.registerUtility(tool, ICatalogTool)
         registry = Registry()
         sm.registerUtility(registry, IRegistry)
+        from Products.CMFCore.interfaces import IURLTool
+        sm.registerUtility(context.portal_url, IURLTool)
         registry_patcher = mock.patch('plone.registry.registry.Registry.get')
         self.addCleanup(registry_patcher.stop)
         self.registry_mock = registry_patcher.start()
