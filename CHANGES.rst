@@ -14,7 +14,8 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Fix test that breaks when catalog is not registered as a utility in CMF 2.3+
+  [pbauer]
 
 
 4.0.4 (2017-07-03)
@@ -49,7 +50,7 @@ Bug fixes:
   [seanupton]
 
 - plone/Products.CMFPlone#1268: use permissive vocabulary type
-  for ReallyUserFriendlyTypes, to avoid insertion of new types 
+  for ReallyUserFriendlyTypes, to avoid insertion of new types
   in plone.displayed_types (registry) from breaking GenericSetup
   profiles in add-ons.
   [seanupton]

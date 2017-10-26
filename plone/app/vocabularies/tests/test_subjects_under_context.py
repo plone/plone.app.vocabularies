@@ -61,11 +61,11 @@ class TestKeywordsUnderContext(unittest.TestCase):
         from plone.registry.interfaces import IRegistry
         from zope.component import getSiteManager
         sm = getSiteManager()
+        from Products.CMFCore.interfaces import ICatalogTool
+        sm.registerUtility(tool, ICatalogTool)
         registry = Registry()
         sm.registerUtility(registry, IRegistry)
-        registry_patcher = mock.patch(
-            'plone.registry.registry.Registry.get'
-        )
+        registry_patcher = mock.patch('plone.registry.registry.Registry.get')
         self.addCleanup(registry_patcher.stop)
         self.registry_mock = registry_patcher.start()
 
