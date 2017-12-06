@@ -14,7 +14,8 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Do not wake up all the users when no query is submitted
+  [ale-rt]
 
 
 4.0.5 (2018-02-05)
