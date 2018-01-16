@@ -72,7 +72,7 @@ class RolesVocabulary(object):
 
         return SimpleVocabulary(items)
 
-    def filter(self, group):
+    def filter(self, role_id):
         """
         ability to override to provide custom filtering
         """
@@ -165,7 +165,7 @@ class PermissionsVocabulary(object):
                  for perm in site.possible_permissions() if self.filter(perm)]
         return SimpleVocabulary(items)
 
-    def filter(self, group):
+    def filter(self, permission):
         """
         ability to override to provide custom filtering
         """
