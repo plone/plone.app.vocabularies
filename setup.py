@@ -39,6 +39,7 @@ setup(
         'Products.CMFCore',
         'pytz',
         'setuptools',
+        'six',
         'zope.browser',
         'zope.component',
         'zope.i18n',

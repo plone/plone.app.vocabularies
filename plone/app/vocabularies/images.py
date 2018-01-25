@@ -6,6 +6,8 @@ from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 
+import six
+
 
 PMF = MessageFactory('plone')
 
@@ -17,7 +19,7 @@ def ScalesVocabulary(context):
     terms = []
     allowedSizes = getAllowedSizes()
     if allowedSizes is not None:
-        for scale, (width, height) in getAllowedSizes().iteritems():
+        for scale, (width, height) in six.iteritems(getAllowedSizes()):
             translated = PMF(
                 'imagescale_{0:s}'.format(scale),
                 default='{0:s} ${{width}}x${{height}}'.format(scale),
