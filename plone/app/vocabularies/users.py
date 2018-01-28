@@ -11,6 +11,7 @@ from zope.schema.interfaces import ISource
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 
+import six
 import warnings
 
 
@@ -31,7 +32,7 @@ def _createUserTerm(userid, context=None, acl_users=None):
     if user:
         fullname = user.getProperty('fullname', None) or userid
     token = userid.encode('unicode_escape') if isinstance(
-        userid, unicode) else userid
+        userid, six.text_type) else userid
     return SimpleTerm(userid, token, fullname)
 
 

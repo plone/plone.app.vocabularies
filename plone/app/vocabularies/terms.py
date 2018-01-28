@@ -8,9 +8,11 @@ from zope.interface import implementer
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 
+import six
+
 
 def safe_encode(value):
-    if isinstance(value, unicode):
+    if isinstance(value, six.text_type):
         # no need to use portal encoding for transitional encoding from
         # unicode to ascii. utf-8 should be fine.
         value = value.encode('utf-8')

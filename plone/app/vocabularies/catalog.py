@@ -25,6 +25,7 @@ from zope.site.hooks import getSite
 
 import itertools
 import os
+import six
 import warnings
 
 
@@ -385,7 +386,7 @@ class QuerySearchableTextSourceView(object):
             query = 'path:' + path
             results = self.context.search(query)
             if name + '.omitbrowsedfolder' in self.request.form:
-                results = itertools.ifilter(lambda x: x != path, results)
+                results = six.moves.filter(lambda x: x != path, results)
         else:
             results = self.context.search(query)
 
@@ -428,7 +429,7 @@ class KeywordsVocabulary(object):
         u'non-\\xe5scii'
 
         Testing unicode vocabularies
-        First clear the index. Comparing non-unicode to unicode objects fails.
+        First clear the index. Comparing non-six.text_type to six.text_type objects fails.
         >>> index.clear()
         >>> done = index._index_object(
         ...     1,
@@ -552,7 +553,7 @@ class CatalogVocabulary(SlicableVocabulary):
             yield self.createTerm(brain, None)
 
     def __contains__(self, value):
-        if isinstance(value, basestring):
+        if isinstance(value, six.string_types):
             # perhaps it's already a uid
             uid = value
         else:
@@ -685,7 +686,7 @@ class CatalogSource(object):
         value can be either a string (hex value of uuid or path) or a plone
         content object.
         """
-        if not isinstance(value, basestring):
+        if not isinstance(value, six.string_types):
             # here we have a content and fetch the uuid as hex value
             value = IUUID(value)
         # else we have uuid hex value or path

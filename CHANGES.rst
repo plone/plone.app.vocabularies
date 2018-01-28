@@ -17,6 +17,9 @@ Bug fixes:
 - Fix test that breaks when catalog is not registered as a utility in CMF 2.3+
   [pbauer]
 
+- Add Python 2 / 3 compatibility
+  [vincero]
+
 
 4.0.4 (2017-07-03)
 ------------------
