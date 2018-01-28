@@ -23,7 +23,7 @@ def safe_simpleterm_from_value(value):
     """create SimpleTerm from an untrusted value.
 
     - token need cleaned up: Vocabulary term tokens *must* be 7 bit values
-    - anything for display has to be cleaned up, titles *must* be six.text_type
+    - anything for display has to be cleaned up, titles *must* be unicode
     """
     return SimpleTerm(value, b2a_qp(safe_encode(value)), safe_unicode(value))
 

@@ -319,7 +319,7 @@ class QuerySearchableTextSourceView(object):
       >>> list(view.results('t'))
       ['foo', '', '/1234', '']
 
-      Titles need to be six.text_type:
+      Titles need to be unicode:
       >>> view.getTerm(list(view.results('t'))[0]).title
       u'/foo'
     """
@@ -428,7 +428,7 @@ class KeywordsVocabulary(object):
         >>> result.getTermByToken('non-=C3=A5scii').title
         u'non-\\xe5scii'
 
-        Testing six.text_type vocabularies
+        Testing unicode vocabularies
         First clear the index. Comparing non-six.text_type to six.text_type objects fails.
         >>> index.clear()
         >>> done = index._index_object(
