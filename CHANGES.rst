@@ -4,14 +4,6 @@ Changelog
 4.0.5 (unreleased)
 ------------------
 
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
-
 Bug fixes:
 
 - Fix test that breaks when catalog is not registered as a utility in CMF 2.3+
