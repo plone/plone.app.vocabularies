@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 from plone.app.vocabularies import SlicableVocabulary
+from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.browser.interfaces import ITerms
+from zope.component import getUtility
 from zope.component.hooks import getSite
 from zope.interface import implementer
 from zope.interface import provider
@@ -119,16 +121,65 @@ class UsersVocabulary(SlicableVocabulary):
 @implementer(IVocabularyFactory)
 class UsersFactory(object):
     """Factory creating a UsersVocabulary
+
+    >>> from plone.app.vocabularies.tests.base import create_context
+    >>> from plone.app.vocabularies.tests.base import DummyTool
+    >>> from plone.app.vocabularies.tests.base import Request
+
+    >>> context = create_context()
+
+    >>> class User(object):
+    ...     def __init__(self, id):
+    ...         self.id = id
+    ...
+    ...     def getProperty(self, value, default):
+    ...         return self.id
+    ...
+    ...     getId = getProperty
+
+    >>> tool = DummyTool('acl_users')
+    >>> users = ('user1', 'user2')
+    >>> def getUserById(value, default):
+    ...     return value in users and User(value) or None
+    >>> tool.getUserById = getUserById
+    >>> def searchUsers(fullname=None):
+    ...     return [dict(userid=u) for u in users if fullname in u]
+    >>> tool.searchUsers = searchUsers
+    >>> context.acl_users = tool
+    >>> factory = UsersFactory()
+
+    When the registry record 'plone.many_users' is set to True
+    no user is returned to avoid expensive queries if no query filter is passed
+    >>> def patched_getUtility(arg):
+    ...     return {'plone.many_users': True}
+    >>> backup = getUtility.func_code
+    >>> getUtility.func_code = patched_getUtility.func_code
+    >>> [x.title for x in factory(context, '')]
+    []
+    >>> getUtility.func_code = backup
+
+    Passing a non empty query string will work ignore the 'plone.many_users'
+    setting
+    >>> [x.title for x in factory(context, '1')]
+    ['user1']
     """
+    def should_search(self, query):
+        ''' Test if we should search for users
+        '''
+        if query:
+            return True
+        registry = getUtility(IRegistry)
+        return not registry.get('plone.many_users')
 
     def __call__(self, context, query=''):
         if context is None:
             context = getSite()
-        users = getToolByName(context, 'acl_users')
-        return UsersVocabulary.fromItems(
-            users.searchUsers(fullname=query),
-            context
-        )
+        if self.should_search(query):
+            acl_users = getToolByName(context, 'acl_users')
+            users = acl_users.searchUsers(fullname=query)
+        else:
+            users = []
+        return UsersVocabulary.fromItems(users, context)
 
 
 @implementer(ITerms, ISourceQueryView)
