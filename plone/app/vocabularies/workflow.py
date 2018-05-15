@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 from Acquisition import aq_get
+from operator import itemgetter
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import safe_unicode
 from zope.i18n import translate
@@ -129,10 +130,9 @@ class WorkflowStatesVocabulary(object):
             ]
         )
         items_list = [(k, v) for k, v in items_dict.items()]
-        items_list.sort(lambda x, y: cmp(x[1], y[1]))
         terms = [
             SimpleTerm(k, title=u'{0} [{1}]'.format(v, k))
-            for k, v in items_list
+            for k, v in sorted(items_list, key=itemgetter(1))
         ]
         return SimpleVocabulary(terms)
 
