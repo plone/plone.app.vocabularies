@@ -354,8 +354,10 @@ class QuerySearchableTextSourceView(object):
             if brain.is_folderish:
                 browse_token = value
             parent_token = '/'.join(value.split('/')[:-1])
+        if six.PY2 and isinstance(title, six.binary_type):
+            title = title.decode(self.context.encoding)
         return BrowsableTerm(value, token=token,
-                             title=title.decode(self.context.encoding),
+                             title=title,
                              description=value,
                              browse_token=browse_token,
                              parent_token=parent_token)
