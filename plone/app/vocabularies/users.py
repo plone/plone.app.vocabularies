@@ -152,11 +152,11 @@ class UsersFactory(object):
     no user is returned to avoid expensive queries if no query filter is passed
     >>> def patched_getUtility(arg):
     ...     return {'plone.many_users': True}
-    >>> backup = getUtility.func_code
-    >>> getUtility.func_code = patched_getUtility.func_code
+    >>> backup = getUtility.__code__
+    >>> getUtility.__code__ = patched_getUtility.__code__
     >>> [x.title for x in factory(context, '')]
     []
-    >>> getUtility.func_code = backup
+    >>> getUtility.__code__ = backup
 
     Passing a non empty query string will work ignore the 'plone.many_users'
     setting

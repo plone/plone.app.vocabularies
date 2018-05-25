@@ -425,7 +425,7 @@ class KeywordsVocabulary(object):
         >>> tool.indexes['Subject'] = index
         >>> vocab = KeywordsVocabulary()
         >>> result = vocab(context)
-        >>> result.by_token.keys()
+        >>> list(result.by_token.keys())
         ['blee', 'baz', 'foo', 'bar', 'non-=C3=A5scii']
         >>> result.getTermByToken('non-=C3=A5scii').title
         u'non-\\xe5scii'
@@ -440,7 +440,7 @@ class KeywordsVocabulary(object):
         >>> tool.indexes['Subject'] = index
         >>> vocab = KeywordsVocabulary()
         >>> result = vocab(context)
-        >>> result.by_token.keys()
+        >>> list(result.by_token.keys())
         ['nix', '=C3=83=C2=A4=C3=83=C2=BC=C3=83=C2=B6']
         >>> result.by_value.keys() == [u'äüö', u'nix']
         True
