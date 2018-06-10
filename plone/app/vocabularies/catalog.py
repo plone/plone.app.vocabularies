@@ -67,25 +67,30 @@ def parse_query(query, path_prefix=''):
         then all contents of that folder will be searched. If you supply
         additional search words, then all subfolders are searched as well.
 
-        >>> parse_query('path:/dummy')
-        {'path': {'query': '/dummy', 'depth': 1}}
+        >>> expected = {'path': {'query': '/dummy', 'depth': 1}}
+        >>> parse_query('path:/dummy') == expected
+        True
 
-        >>> parse_query('bar path:/dummy')
-        {'path': {'query': '/dummy'}, 'SearchableText': 'bar*'}
+        >>> expected = {'path': {'query': '/dummy'}, 'SearchableText': 'bar*'}
+        >>> parse_query('bar path:/dummy') == expected
+        True
 
-        >>> parse_query('path:/dummy foo')
-        {'path': {'query': '/dummy'}, 'SearchableText': 'foo*'}
+        >>> expected = {'path': {'query': '/dummy'}, 'SearchableText': 'foo*'}
+        >>> parse_query('path:/dummy foo') == expected
+        True
 
         If you supply more then one path, then only the last one is used.
 
-        >>> parse_query('path:/dummy path:/spam')
-        {'path': {'query': '/spam', 'depth': 1}}
+        >>> expected = {'path': {'query': '/spam', 'depth': 1}}
+        >>> parse_query('path:/dummy path:/spam') == expected
+        True
 
         You can also provide a prefix for the path. This is useful for virtual
         hosting.
 
-        >>> parse_query('path:/dummy', path_prefix='/portal')
-        {'path': {'query': '/portal/dummy', 'depth': 1}}
+        >>> expected = {'path': {'query': '/portal/dummy', 'depth': 1}}
+        >>> parse_query('path:/dummy', path_prefix='/portal') == expected
+        True
 
     """
     query_parts = query.split()
@@ -310,14 +315,14 @@ class QuerySearchableTextSourceView(object):
 
       >>> request = Request(form={'t.search' : True, 't.query' : 'value'})
       >>> view = QuerySearchableTextSourceView(source, request)
-      >>> list(view.results('t'))
-      ['', '/1234', '']
+      >>> sorted(view.results('t'))
+      ['', '', '/1234']
 
       >>> request = Request(form={'t.search' : True, 't.query' : 'value',
       ...                         't.browse.foo' : '/foo'})
       >>> view = QuerySearchableTextSourceView(source, request)
-      >>> list(view.results('t'))
-      ['foo', '', '/1234', '']
+      >>> sorted(view.results('t'))
+      ['', '', '/1234', 'foo']
 
       Titles need to be unicode:
       >>> view.getTerm(list(view.results('t'))[0]).title
@@ -407,28 +412,41 @@ class KeywordsVocabulary(object):
 
         >>> context = create_context()
 
+        First test bytes vocabularies
         >>> rids = ('/1234', '/2345', '/dummy/1234')
         >>> tool = DummyCatalog(rids)
         >>> context.portal_catalog = tool
         >>> index = KeywordIndex('Subject')
         >>> done = index._index_object(
         ...     1,
-        ...     DummyContent('ob1', ['foo', 'bar', 'baz']), attr='Subject'
+        ...     DummyContent('ob1', [b'foo', b'bar', b'baz']), attr='Subject'
         ... )
         >>> done = index._index_object(
         ...     2,
         ...     DummyContent(
         ...         'ob2',
-        ...         ['blee', 'bar', 'non-\xc3\xa5scii']),
+        ...         [b'blee', b'bar', u'non-åscii'.encode('utf8')]),
         ...         attr='Subject',
         ... )
         >>> tool.indexes['Subject'] = index
         >>> vocab = KeywordsVocabulary()
         >>> result = vocab(context)
-        >>> list(result.by_token.keys())
-        ['blee', 'baz', 'foo', 'bar', 'non-=C3=A5scii']
-        >>> result.getTermByToken('non-=C3=A5scii').title
-        u'non-\\xe5scii'
+
+        Value type is kept ...
+        >>> expected = [b'bar', b'baz', b'blee', b'foo', u'non-åscii'.encode('utf8')]
+        >>> sorted(result.by_value) == expected
+        True
+
+        ... but tokens are bytes on Python 2 and text in Python 3
+        >>> if six.PY2:
+        ...     expected = [b'bar', b'baz', b'blee', b'foo', b'non-=C3=83=C2=A5scii']
+        ... else:
+        ...     expected = [u'bar', u'baz', u'blee', u'foo', u'non-=C3=A5scii']
+        >>> sorted(result.by_token) == expected
+        True
+
+        >>> result.getTermByToken(expected[-1]).title == u'non-åscii'
+        True
 
         Testing unicode vocabularies
         First clear the index. Comparing non-six.text_type to six.text_type objects fails.
@@ -440,17 +458,16 @@ class KeywordsVocabulary(object):
         >>> tool.indexes['Subject'] = index
         >>> vocab = KeywordsVocabulary()
         >>> result = vocab(context)
-        >>> list(result.by_token.keys())
-        ['nix', '=C3=83=C2=A4=C3=83=C2=BC=C3=83=C2=B6']
-        >>> result.by_value.keys() == [u'äüö', u'nix']
+        >>> if six.PY2:
+        ...     expected = [b'=C3=83=C2=A4=C3=83=C2=BC=C3=83=C2=B6', b'nix']
+        ... else:
+        ...     expected = [u'=C3=A4=C3=BC=C3=B6', u'nix']
+        >>> sorted(result.by_token) == expected
         True
-        >>> test_title = result.getTermByToken(
-        ...     '=C3=83=C2=A4=C3=83=C2=BC=C3=83=C2=B6'
-        ... ).title
-        >>> test_title == u'äüö'
+        >>> set(result.by_value) == {u'nix', u'äüö'}
         True
-
-
+        >>> result.getTermByToken(expected[0]).title == u'äüö'
+        True
 
     """
     # Allow users to customize the index to easily create
@@ -599,8 +616,8 @@ class CatalogVocabularyFactory(object):
       >>> context.portal_url = DummyUrlTool(context)
       >>> factory = CatalogVocabularyFactory()
 
-      >>> [t.token for t in factory(context)]
-      ['/dummy/sub-site', '/abcd', '/dummy/sub-site/ghij', '/defg']
+      >>> sorted(t.token for t in factory(context))
+      ['/abcd', '/defg', '/dummy/sub-site', '/dummy/sub-site/ghij']
 
       >>> from plone.app.vocabularies.tests.base import DummyNavRoot
       >>> nav_root = DummyNavRoot('sub-site', parent=context)
