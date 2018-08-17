@@ -9,6 +9,7 @@ from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 
+import six
 
 try:
     # XXX: this is a circular dependency (not declared in setup.py)
@@ -58,8 +59,11 @@ class SyndicatableFeedItems(object):
         items = []
         for brain in catalog(**query):
             uid = brain.UID
+            title = brain.Title
+            if isinstance(title, six.binary_type):
+                title = title.decode('utf8')
             title = u'{0}({1})'.format(
-                brain.Title.decode('utf8'),
+                title,
                 brain.getPath()[len(site_path) + 1:],
             )
             items.append(SimpleTerm(uid, uid, title))

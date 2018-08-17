@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 from Acquisition import aq_get
+from operator import itemgetter
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import safe_unicode
 from zope.i18n import translate
@@ -21,6 +22,7 @@ class WorkflowsVocabulary(object):
       >>> from zope.component import queryUtility
       >>> from plone.app.vocabularies.tests.base import create_context
       >>> from plone.app.vocabularies.tests.base import DummyTool
+      >>> import six
 
       >>> name = 'plone.app.vocabularies.Workflows'
       >>> util = queryUtility(IVocabularyFactory, name)
@@ -51,7 +53,9 @@ class WorkflowsVocabulary(object):
       (u'Intranet Workflow', 'intranet', 'intranet')
 
       >>> noticias = workflows.by_token['noticias']
-      >>> noticias.title == 'Workflow de Notícias'.decode('utf-8')
+      >>> title = 'Workflow de Notícias'
+      >>> title = title.decode('utf-8') if six.PY2 else title
+      >>> noticias.title == title
       True
     """
 
@@ -79,6 +83,7 @@ class WorkflowStatesVocabulary(object):
       >>> from zope.component import queryUtility
       >>> from plone.app.vocabularies.tests.base import create_context
       >>> from plone.app.vocabularies.tests.base import DummyTool
+      >>> import six
 
       >>> name = 'plone.app.vocabularies.WorkflowStates'
       >>> util = queryUtility(IVocabularyFactory, name)
@@ -104,7 +109,9 @@ class WorkflowStatesVocabulary(object):
       (u'Published [published]', 'published', 'published')
 
       >>> rev = states.by_token['revisao']
-      >>> rev.title == 'Revisão [revisao]'.decode('utf-8')
+      >>> title = 'Revisão [revisao]'
+      >>> title = title.decode('utf-8') if six.PY2 else title
+      >>> rev.title == title
       True
     """
 
@@ -129,10 +136,9 @@ class WorkflowStatesVocabulary(object):
             ]
         )
         items_list = [(k, v) for k, v in items_dict.items()]
-        items_list.sort(lambda x, y: cmp(x[1], y[1]))
         terms = [
             SimpleTerm(k, title=u'{0} [{1}]'.format(v, k))
-            for k, v in items_list
+            for k, v in sorted(items_list, key=itemgetter(1))
         ]
         return SimpleVocabulary(terms)
 
@@ -227,8 +233,7 @@ class WorkflowTransitionsVocabulary(object):
                         dict(title=transition_title, wf_name=wf_name))
         items = []
         transition_items = transitions.items()
-        transition_items.sort(key=lambda transition: transition[0])
-        for transition_id, info in transition_items:
+        for transition_id, info in sorted(transition_items, key=itemgetter(0)):
             titles = set([i['title'] for i in info])
             item_title = ' // '.join(sorted(titles))
             item_title = u'{0} [{1}]'.format(item_title, transition_id)

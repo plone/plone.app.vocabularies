@@ -20,9 +20,8 @@ class ActionCategoriesVocabulary(object):
         except Exception:
             portal = context.portal_url.getPortalObject()
             categories = portal.portal_actions.objectIds()
-        categories.sort()
         return SimpleVocabulary(
-            [SimpleTerm(cat, title=cat) for cat in categories]
+            [SimpleTerm(cat, title=cat) for cat in sorted(categories)]
         )
 
 
@@ -36,9 +35,8 @@ class PortalActionCategoriesVocabulary(object):
     def __call__(self, context):
         portal_actions = getToolByName(context, 'portal_actions')
         categories = portal_actions.objectIds()
-        categories.sort()
         terms = []
-        for category in categories:
+        for category in sorted(categories):
             if category == 'controlpanel':
                 continue
             title = portal_actions.get(category).title

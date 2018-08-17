@@ -14,7 +14,7 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Python 3 support [ale-rt, pbauer]
 
 
 4.0.6 (2018-02-11)
