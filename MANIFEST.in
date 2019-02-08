@@ -1,7 +1,11 @@
 include *.rst
 include *.GPL
 include *.txt
+include pyproject.toml
 
 recursive-include plone *
 
 global-exclude *pyc
+
+recursive-exclude news *
+exclude news
