@@ -1,180 +1,118 @@
 # -*- coding: utf-8 -*-
+from plone.app.vocabularies import SlicableVocabulary
+from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from zope.browser.interfaces import ITerms
+from zope.component import getUtility
+from zope.component.hooks import getSite
 from zope.interface import implementer
-from zope.interface import provider
-from zope.schema.interfaces import IContextSourceBinder
-from zope.schema.interfaces import ISource
+from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 
-import warnings
+import six
 
 
-try:
-    from zope.formlib.interfaces import ISourceQueryView
-except ImportError:
-    from zope.interface import Interface
+def _createGroupTerm(groupid, context=None, acl_users=None):
+    if acl_users is None:
+        acl_users = getToolByName(context, 'acl_users')
+    user = acl_users.getGroupById(groupid, None)
+    title = groupid
+    if user:
+        title = user.getProperty('title', None) or groupid
+    token = groupid.encode('unicode_escape') if isinstance(
+        groupid, six.text_type) else groupid
+    return SimpleTerm(groupid, token, title)
 
-    class ISourceQueryView(Interface):
-        pass
 
+class GroupsVocabulary(SlicableVocabulary):
 
-@implementer(ISource)
-@provider(IContextSourceBinder)
-class GroupsSource(object):
-    """
-      >>> from plone.app.vocabularies.tests.base import create_context
-      >>> from plone.app.vocabularies.tests.base import DummyTool
+    def __init__(self, terms, context, *interfaces):
+        super(GroupsVocabulary, self).__init__(terms, *interfaces)
+        self._acl_users = getToolByName(context, 'acl_users')
 
-      >>> context = create_context()
+    @classmethod
+    def fromItems(cls, items, context, *interfaces):
+        def lazy(items):
+            for item in items:
+                yield cls.createTerm(item['groupid'], context)
+        return cls(lazy(items), context, *interfaces)
+    fromValues = fromItems
 
-      >>> tool = DummyTool('acl_users')
-      >>> groups = ('group1', 'group2')
-      >>> def getGroupById(value, default):
-      ...     return value in groups and value or default
-      >>> tool.getGroupById = getGroupById
-      >>> def searchGroups(name=None):
-      ...     return [dict(groupid=u) for u in groups]
-      >>> tool.searchGroups = searchGroups
-      >>> context.acl_users = tool
-
-      >>> source = GroupsSource(context)
-      >>> source
-      <plone.app.vocabularies.groups.GroupsSource object at ...>
-
-      >>> len(source.search(''))
-      2
-
-      >>> len(source.search(u'\xa4'))
-      2
-
-      >>> 'group1' in source, 'noone' in source
-      (True, False)
-
-      >>> source.get('group1'), source.get('noone')
-      ('group1', None)
-    """
-
-    def __init__(self, context):
-        self.context = context
-        self.users = getToolByName(context, 'acl_users')
+    @classmethod
+    def createTerm(cls, groupid, context):
+        return _createGroupTerm(groupid, context=context)
 
     def __contains__(self, value):
-        """Return whether the value is available in this source
-        """
-        if self.get(value) is None:
-            return False
-        return True
+        return bool(self._acl_users.getGroupById(value, None))
 
-    def search(self, query):
-        # XXX: For some reason, this doesn't seem to know how to match on
-        # title, only name, and seems to match other random groups if
-        # it's unicode
+    def getTerm(self, groupid):
+        return _createGroupTerm(groupid, acl_users=self._acl_users)
 
-        query = query or ''
-        try:
-            name = query.encode('ascii')
-        except UnicodeEncodeError:
-            name = query
+    getTermByToken = getTerm
 
-        return [u['groupid'] for u in self.users.searchGroups(name=name)]
-
-    def get(self, value):
-        return self.users.getGroupById(value, None)
+    def __iter__(self):
+        return self._terms
 
 
-@implementer(ITerms, ISourceQueryView)
-class GroupsSourceQueryView(object):
+@implementer(IVocabularyFactory)
+class GroupsFactory(object):
+    """Factory creating a GroupsVocabulary
+
+    >>> from plone.app.vocabularies.tests.base import create_context
+    >>> from plone.app.vocabularies.tests.base import DummyTool
+    >>> from plone.app.vocabularies.tests.base import Request
+
+    >>> context = create_context()
+
+    >>> class Group(object):
+    ...     def __init__(self, id):
+    ...         self.id = id
+    ...
+    ...     def getProperty(self, value, default):
+    ...         return self.id
+    ...
+    ...     getId = getProperty
+
+    >>> tool = DummyTool('acl_users')
+    >>> groups = ('group1', 'group2')
+    >>> def getGroupById(value, default):
+    ...     return value in groups and Group(value) or None
+    >>> tool.getGroupById = getGroupById
+    >>> def searchGroups(title=None):
+    ...     return [dict(groupid=u) for u in groups if title in u]
+    >>> tool.searchGroups = searchGroups
+    >>> context.acl_users = tool
+    >>> factory = GroupsFactory()
+
+    When the registry record 'plone.many_groups' is set to True
+    no group is returned to avoid expensive queries if no query filter is passed
+    >>> def patched_getUtility(arg):
+    ...     return {'plone.many_groups': True}
+    >>> backup = getUtility.__code__
+    >>> getUtility.__code__ = patched_getUtility.__code__
+    >>> [x.title for x in factory(context, '')]
+    []
+    >>> getUtility.__code__ = backup
+
+    Passing a non empty query string will work ignore the 'plone.many_groups'
+    setting
+    >>> [x.title for x in factory(context, '1')]
+    ['group1']
     """
-      >>> from plone.app.vocabularies.tests.base import create_context
-      >>> from plone.app.vocabularies.tests.base import DummyTool
-      >>> from plone.app.vocabularies.tests.base import Request
+    def should_search(self, query):
+        ''' Test if we should search for groups
+        '''
+        if query:
+            return True
+        registry = getUtility(IRegistry)
+        return not registry.get('plone.many_groups')
 
-      >>> context = create_context()
-
-      >>> class Group(object):
-      ...     def __init__(self, id):
-      ...         self.id = id
-      ...
-      ...     def getProperty(self, value, default):
-      ...         return self.id
-      ...
-      ...     getId = getProperty
-
-      >>> tool = DummyTool('acl_users')
-      >>> groups = ('group1', 'group2')
-      >>> def getGroupById(value, default):
-      ...     return value in groups and Group(value) or None
-      >>> tool.getGroupById = getGroupById
-      >>> def searchGroups(name=None):
-      ...     return [dict(groupid=u) for u in groups]
-      >>> tool.searchGroups = searchGroups
-      >>> context.acl_users = tool
-
-      >>> source = GroupsSource(context)
-      >>> source
-      <plone.app.vocabularies.groups.GroupsSource object at ...>
-
-      >>> view = GroupsSourceQueryView(source, Request())
-      >>> view
-      <plone.app.vocabularies.groups.GroupsSourceQueryView object at ...>
-
-      >>> view.getTerm('group1')
-      <zope.schema.vocabulary.SimpleTerm object at ...>
-
-      >>> view.getValue('group1')
-      'group1'
-
-      >>> view.getValue('noone')
-      Traceback (most recent call last):
-      ...
-      LookupError: noone
-
-      >>> template = view.render(name='t')
-
-      >>> u'<input type="text" name="t.query" value="" />' in template
-      True
-
-      >>> u'<input type="submit" name="t.search" value="Search" />' in template
-      True
-
-      >>> request = Request(form={'t.search' : True, 't.query' : 'value'})
-      >>> view = GroupsSourceQueryView(source, request)
-      >>> view.results('t')
-      ['group1', 'group2']
-    """
-
-    template = ViewPageTemplateFile('searchabletextsource.pt')
-
-    def __init__(self, context, request):
-        msg = 'GroupsSourceQueryView is deprecated and will be removed on ' \
-              'Plone 6'
-        warnings.warn(msg, DeprecationWarning)
-        self.context = context
-        self.request = request
-
-    def getTerm(self, value):
-        group = self.context.get(value)
-        token = value
-        title = value
-        if group is not None:
-            title = group.getProperty('title', None) or group.getId()
-        return SimpleTerm(value, token=token, title=title)
-
-    def getValue(self, token):
-        if token not in self.context:
-            raise LookupError(token)
-        return token
-
-    def render(self, name):
-        return self.template(name=name)
-
-    def results(self, name):
-        # check whether the normal search button was pressed
-        if name + '.search' in self.request.form:
-            query_fieldname = name + '.query'
-            if query_fieldname in self.request.form:
-                query = self.request.form[query_fieldname]
-                if query != '':
-                    return self.context.search(query)
+    def __call__(self, context, query=''):
+        if context is None:
+            context = getSite()
+        if self.should_search(query):
+            acl_users = getToolByName(context, 'acl_users')
+            # name is passed and expected, but also searched as title
+            groups = acl_users.searchGroups(name=query)
+        else:
+            groups = []
+        return GroupsVocabulary.fromItems(groups, context)
