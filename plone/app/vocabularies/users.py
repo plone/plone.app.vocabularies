@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# KEPT HERE FOR BBB UNTIL PLONE 6
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.browser.interfaces import ITerms

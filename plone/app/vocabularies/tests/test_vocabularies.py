@@ -3,7 +3,7 @@ from doctest import DocTestSuite
 from zope.component.testing import setUp
 from zope.component.testing import tearDown
 from zope.configuration.xmlconfig import XMLConfig
-from zope.site import hooks
+from zope.component import hooks
 
 import doctest
 import re
