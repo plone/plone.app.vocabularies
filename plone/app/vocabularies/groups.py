@@ -57,6 +57,9 @@ class GroupsSource(object):
     """
 
     def __init__(self, context):
+        msg = 'GroupsSource is deprecated and will be removed on ' \
+              'Plone 6'
+        warnings.warn(msg, DeprecationWarning)
         self.context = context
         self.users = getToolByName(context, 'acl_users')
 

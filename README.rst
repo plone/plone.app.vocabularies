@@ -24,13 +24,20 @@ Users, Groups, Security
 -----------------------
 
 ``plone.app.vocabularies.Users``
-    user of the portal (searchable)
+    Users of the portal (searchable).
 
 ``plone.app.vocabularies.Groups``
-    groups of the portal (searchable)
+    Groups of the portal (searchable).
+
+``plone.app.vocabularies.Principals``
+    Combined groups and users of the portal (searchable).
+    Values are prefixed by ``group:...`` or ``user:...``.
 
 ``plone.app.vocabularies.Roles``
     all possible roles in the portal
+
+``plone.app.vocabularies.Permissions``
+    all possible permissions in the portal
 
 Text Input Field
 ----------------

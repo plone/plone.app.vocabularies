@@ -1,21 +1,22 @@
 # -*- coding: utf-8 -*-
-from plone.app.vocabularies import SlicableVocabulary
-from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.browser.interfaces import ITerms
-from zope.component import getUtility
-from zope.component.hooks import getSite
 from zope.interface import implementer
 from zope.interface import provider
 from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.interfaces import ISource
-from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 
 import six
 import warnings
+import zope.deferredimport
 
+zope.deferredimport.deprecated(
+    "Import from plone.app.vocabularies.principals instead",
+    UsersFactory='plone.app.vocabularies:principals.UsersFactory',
+    UsersVocabulary='plone.app.vocabularies:principals.UsersVocabulary',
+)
 
 try:
     from zope.formlib.interfaces import ISourceQueryView
@@ -72,6 +73,9 @@ class UsersSource(object):
     """
 
     def __init__(self, context):
+        msg = 'UsersSource is deprecated and will be removed on ' \
+              'Plone 6'
+        warnings.warn(msg, DeprecationWarning)
         self.context = context
         self.users = getToolByName(context, 'acl_users')
 
@@ -87,99 +91,6 @@ class UsersSource(object):
 
     def get(self, value):
         return self.users.getUserById(value, None)
-
-
-class UsersVocabulary(SlicableVocabulary):
-
-    def __init__(self, terms, context, *interfaces):
-        super(UsersVocabulary, self).__init__(terms, *interfaces)
-        self._users = getToolByName(context, 'acl_users')
-
-    @classmethod
-    def fromItems(cls, items, context, *interfaces):
-        def lazy(items):
-            for item in items:
-                yield cls.createTerm(item['userid'], context)
-        return cls(lazy(items), context, *interfaces)
-    fromValues = fromItems
-
-    @classmethod
-    def createTerm(cls, userid, context):
-        return _createUserTerm(userid, context=context)
-
-    def __contains__(self, value):
-        return self._users.getUserById(value, None) and True or False
-
-    def getTerm(self, userid):
-        return _createUserTerm(userid, acl_users=self._users)
-    getTermByToken = getTerm
-
-    def __iter__(self):
-        return self._terms
-
-
-@implementer(IVocabularyFactory)
-class UsersFactory(object):
-    """Factory creating a UsersVocabulary
-
-    >>> from plone.app.vocabularies.tests.base import create_context
-    >>> from plone.app.vocabularies.tests.base import DummyTool
-    >>> from plone.app.vocabularies.tests.base import Request
-
-    >>> context = create_context()
-
-    >>> class User(object):
-    ...     def __init__(self, id):
-    ...         self.id = id
-    ...
-    ...     def getProperty(self, value, default):
-    ...         return self.id
-    ...
-    ...     getId = getProperty
-
-    >>> tool = DummyTool('acl_users')
-    >>> users = ('user1', 'user2')
-    >>> def getUserById(value, default):
-    ...     return value in users and User(value) or None
-    >>> tool.getUserById = getUserById
-    >>> def searchUsers(fullname=None):
-    ...     return [dict(userid=u) for u in users if fullname in u]
-    >>> tool.searchUsers = searchUsers
-    >>> context.acl_users = tool
-    >>> factory = UsersFactory()
-
-    When the registry record 'plone.many_users' is set to True
-    no user is returned to avoid expensive queries if no query filter is passed
-    >>> def patched_getUtility(arg):
-    ...     return {'plone.many_users': True}
-    >>> backup = getUtility.__code__
-    >>> getUtility.__code__ = patched_getUtility.__code__
-    >>> [x.title for x in factory(context, '')]
-    []
-    >>> getUtility.__code__ = backup
-
-    Passing a non empty query string will work ignore the 'plone.many_users'
-    setting
-    >>> [x.title for x in factory(context, '1')]
-    ['user1']
-    """
-    def should_search(self, query):
-        ''' Test if we should search for users
-        '''
-        if query:
-            return True
-        registry = getUtility(IRegistry)
-        return not registry.get('plone.many_users')
-
-    def __call__(self, context, query=''):
-        if context is None:
-            context = getSite()
-        if self.should_search(query):
-            acl_users = getToolByName(context, 'acl_users')
-            users = acl_users.searchUsers(fullname=query)
-        else:
-            users = []
-        return UsersVocabulary.fromItems(users, context)
 
 
 @implementer(ITerms, ISourceQueryView)

@@ -18,11 +18,6 @@
     />
 
   <utility
-    component=".security.GroupsVocabularyFactory"
-    name="plone.app.vocabularies.Groups"
-    />
-
-  <utility
     component=".security.PermissionsVocabularyFactory"
     name="plone.app.vocabularies.Permissions"
     />
@@ -93,8 +88,16 @@
     />
 
   <utility
-    factory=".users.UsersFactory"
+    factory=".principals.UsersFactory"
     name="plone.app.vocabularies.Users"
+    />
+  <utility
+    factory=".principals.GroupsFactory"
+    name="plone.app.vocabularies.Groups"
+    />
+  <utility
+    factory=".principals.PrincipalsFactory"
+    name="plone.app.vocabularies.Principals"
     />
 
   <utility
