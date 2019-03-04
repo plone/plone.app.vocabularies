@@ -8,6 +8,7 @@ from zope.interface import implementer
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleVocabulary
 
+
 GETTER = {'user': 'getUserById', 'group': 'getGroupById'}
 
 SOURCES = {

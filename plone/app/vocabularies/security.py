@@ -12,6 +12,7 @@ from zope.site.hooks import getSite
 
 import zope.deferredimport
 
+
 zope.deferredimport.deprecated(
     "Import from plone.app.vocabularies.principals instead",
     GroupsFactory='plone.app.vocabularies:principals.GroupsFactory',

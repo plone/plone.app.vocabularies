@@ -12,4 +12,3 @@ class TimezoneTest(unittest.TestCase):
 
     def setUp(self):
         self.portal = self.layer['portal']
-

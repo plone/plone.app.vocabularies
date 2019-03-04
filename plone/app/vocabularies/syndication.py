@@ -11,6 +11,7 @@ from zope.schema.vocabulary import SimpleVocabulary
 
 import six
 
+
 try:
     # XXX: this is a circular dependency (not declared in setup.py)
     from Products.CMFPlone.interfaces.syndication import ISiteSyndicationSettings  # noqa

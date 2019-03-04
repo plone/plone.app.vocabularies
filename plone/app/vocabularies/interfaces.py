@@ -55,4 +55,3 @@ class IPermissiveVocabulary(IVocabularyTokenized):
         vocabulary about to be mutated with insertion of a value not
         yet within).
         """
-
