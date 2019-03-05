@@ -47,6 +47,10 @@ SOURCES = {
 }
 
 
+def _get_acl_users():
+    return getToolByName(getSite(), 'acl_users')
+
+
 @implementer(ISlicableVocabulary)
 class PrincipalsVocabulary(SimpleVocabulary):
     """Vocabulary dealing with users/ groups (or in theory any other principal)
@@ -64,7 +68,7 @@ class PrincipalsVocabulary(SimpleVocabulary):
     def _acl_users(self):
         aclu = getattr(self, '_aclu', None)
         if not aclu:
-            aclu = self._aclu = getToolByName(getSite(), 'acl_users')
+            aclu = self._aclu = _get_acl_users()
         return aclu
 
     def _get_from_source(self, value, default=None):
@@ -156,7 +160,7 @@ class BaseFactory(object):
     def __call__(self, context, query=''):
         if not self.should_search(query):
             return PrincipalsVocabulary.fromItems([])
-        acl_users = getToolByName(context, 'acl_users')
+        acl_users = _get_acl_users()
         cfg = SOURCES[self.source]
 
         def principal_triples():
