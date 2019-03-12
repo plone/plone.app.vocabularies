@@ -186,8 +186,8 @@ class BaseFactory(object):
         filtered_principal_triples = filter(
             self.use_principal_triple, principal_triples()
         )
-        terms = [SimpleTerm(token, id_, title) for
-                 (token, id_, title) in filtered_principal_triples]
+        terms = [SimpleTerm(value, token, title) for
+                 (token, value, title) in filtered_principal_triples]
         vocabulary = PrincipalsVocabulary(terms)
         vocabulary.principal_source = self.source
         return vocabulary
