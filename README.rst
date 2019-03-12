@@ -33,6 +33,14 @@ Users, Groups, Security
     Combined groups and users of the portal (searchable).
     Values are prefixed by ``group:...`` or ``user:...``.
 
+The factory-class of the above three vocabularies is made for subclassing to filter the results in the subclass.
+The post-filtering approach works by overriding the ``def use_principal_triple(self, principal_triple):`` method of the ``plone.app.vocabularies.principals.BaseFactory`` subclass.
+``use_principal_triple`` argument ``principal_triple`` is a triple ``(token, value, title)``.
+``use_principal_triple`` is expected to return ``True`` when the triple has be added to the vocabulary or ``False`` if it has to be skipped.
+Be aware there might be many values, like several 1000, in the vocabulary and the filtering has to be perform.
+The subclass needs to have a ``source`` attribute with value one out of ``user``, ``group`` or ``principal``.
+Don't forget to register the new vocabulary in ZCML!
+
 ``plone.app.vocabularies.Roles``
     all possible roles in the portal
 
