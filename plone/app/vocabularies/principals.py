@@ -6,6 +6,7 @@ from zope.component import getUtility
 from zope.component.hooks import getSite
 from zope.interface import implementer
 from zope.schema.interfaces import IVocabularyFactory
+from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 
 
@@ -162,7 +163,9 @@ class BaseFactory(object):
 
     def __call__(self, context, query=''):
         if not self.should_search(query):
-            return PrincipalsVocabulary.fromItems([])
+            vocabulary = PrincipalsVocabulary([])
+            vocabulary.principal_source = self.source
+            return vocabulary
         acl_users = _get_acl_users()
         cfg = SOURCES[self.source]
 
@@ -183,7 +186,9 @@ class BaseFactory(object):
         filtered_principal_triples = filter(
             self.use_principal_triple, principal_triples()
         )
-        vocabulary = PrincipalsVocabulary.fromItems(filtered_principal_triples)
+        terms = [SimpleTerm(value, token, title) for
+                 (token, value, title) in filtered_principal_triples]
+        vocabulary = PrincipalsVocabulary(terms)
         vocabulary.principal_source = self.source
         return vocabulary
 
