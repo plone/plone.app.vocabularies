@@ -23,7 +23,7 @@ _USER_SEARCH = {
 _GROUP_SEARCH = {
     'search': 'searchGroups',
     # Hint: The fullname search is excluded in i.e. in IUserEnumeration of
-    # the property plugin in PlonePAS. title  is supported.
+    # the property plugin in PlonePAS. title is supported.
     'searchattr': 'title',
     'searchargs': {'sort_by': 'title'},
     'many': 'plone.many_groups',
@@ -46,6 +46,17 @@ SOURCES = {
         'prefix': True,
     },
 }
+
+
+def token_from_principal_info(info, prefix=False):
+    # we assume the id is always ready to be consumed as a token, either
+    # for patternlib or for options tag (where the standard wants
+    # something CDATA compatible)
+    if not prefix:
+        return info['id']
+    # we use a double underscore here, a colon is already used in pattern
+    # values as separator
+    return '{0}__{1}'.format(info['principal_type'], info['id'])
 
 
 def _get_acl_users():
@@ -72,24 +83,59 @@ class PrincipalsVocabulary(SimpleVocabulary):
             aclu = self._aclu = _get_acl_users()
         return aclu
 
-    def _get_from_source(self, value, default=None):
+    def _get_principal_from_source(self, value=None, token=None, default=None):
         """Helper to get a user or group from users folder.
         """
+        if not (bool(value) ^ bool(token)):  # not (value xor token)
+            raise ValueError(
+                'value or token must be provided (only one of those)'
+            )
         if SOURCES[self._principal_source]['prefix']:
-            if ':' not in value:
-                return default
-            principal_type, principal_id = value.split(':', 2)
+            if value:
+                if ':' not in value:
+                    return default
+                principal_type, principal_id = value.split(':', 2)
+            else:
+                if '__' not in token:
+                    return default
+                principal_type, principal_id = token.split('__', 2)
         else:
             principal_type = self._principal_source
-            principal_id = value
+            principal_id = value or token
         getter = getattr(self._acl_users, GETTER[principal_type])
         return getter(principal_id, default)
+
+    def _get_term_from_source(self, value=None, token=None):
+        """Helper to get a user or group from users folder.
+        """
+        if not (bool(value) ^ bool(token)):  # not (value xor token)
+            raise ValueError(
+                'value or token must be provided (only one of those)'
+            )
+        principal = self._get_principal_from_source(value=value, token=token)
+        if principal is None:
+            raise LookupError('Principal {} not found'.format(value or token))
+        if principal.isGroup():
+            title = principal.getProperty('title', principal.getId())
+            principal_type = 'group'
+        else:
+            title = principal.getProperty('fullname', principal.getId())
+            principal_type = 'user'
+        if token:
+            value = principal.getId()
+            if SOURCES[self._principal_source]['prefix']:
+                value = '{0}:{1}'.format(principal_type, value)
+        else:
+            token = principal.getId()
+            if SOURCES[self._principal_source]['prefix']:
+                token = '{0}__{1}'.format(principal_type, token)
+        return self.__class__.createTerm(value, token, title)
 
     def __contains__(self, value):
         """Checks if the principal exists in current subset or in PAS.
         """
         result = super(PrincipalsVocabulary, self).__contains__(value)
-        return result or bool(self._get_from_source(value))
+        return result or bool(self._get_principal_from_source(value=value))
 
     def getTerm(self, value):
         """Checks also for values not in the current subset.
@@ -98,18 +144,16 @@ class PrincipalsVocabulary(SimpleVocabulary):
         try:
             return super(PrincipalsVocabulary, self).getTerm(value)
         except LookupError:
-            user = self._get_from_source(value)
-            if user is None:
-                raise
-            if user.isGroup():
-                title = user.getProperty('title', value) or value
-            else:
-                title = user.getProperty('fullname', value) or value
-            if SOURCES[self._principal_source]['prefix']:
-                token = value.replace(':', '__', 1)
-            else:
-                token = value
-            return self.__class__.createTerm(value, token, title)
+            return self._get_term_from_source(value=value)
+
+    def getTermByToken(self, token):
+        """Checks also for tokens not in the current subset.
+        This allows to lookup already saved values by token.
+        """
+        try:
+            return super(PrincipalsVocabulary, self).getTermByToken(token)
+        except LookupError:
+            return self._get_term_from_source(token=token)
 
     def __getitem__(self, start, stop=None):
         """Sliceable"""
@@ -148,11 +192,11 @@ class BaseFactory(object):
         """Used by ``functools.filter`` to decide if the triple should be used.
 
         principal_triple
-            A triple (token, value, title).
+            A triple (value, token, title).
             Like (johndoe, johndoe, 'John Doe') (unprefixed).
             Value might be a prefixed Id by principal_type, like
-            (user__johndoe, user:johndoe, 'John Doe') or
-            (group__editors, group:editors, 'Editors').
+            (user:johndoe, user__johndoe, 'John Doe') or
+            (group:editors, group__editors, 'Editors').
 
         returns wether the triple shall be included in the vocabulary or not
         (bool).
@@ -169,26 +213,29 @@ class BaseFactory(object):
         acl_users = _get_acl_users()
         cfg = SOURCES[self.source]
 
-        def principal_triples():
+        def term_triples():
+            """Generator for term triples (value, token, name)"""
             for search_cfg in cfg['searches']:
                 search = getattr(acl_users, search_cfg['search'])
                 searchargs = search_cfg['searchargs'].copy()
                 searchargs[search_cfg['searchattr']] = query
                 for info in search(**searchargs):
-                    principal_id = info['id']
+                    value = info['id']
                     if cfg['prefix']:
-                        principal_id = '{0}:{1}'.format(
-                            info['principal_type'], principal_id
-                        )
-                    principal_token = principal_id.replace(':', '__')
-                    yield (principal_token, principal_id, info['title'])
+                        value = '{0}:{1}'.format(info['principal_type'], value)
+                    token = token_from_principal_info(
+                        info, prefix=cfg['prefix']
+                    )
+                    yield (value, token, info['title'])
 
-        filtered_principal_triples = filter(
-            self.use_principal_triple, principal_triples()
+        vocabulary = PrincipalsVocabulary(
+            [
+                SimpleTerm(*term_triple)
+                for term_triple in filter(
+                    self.use_principal_triple, term_triples()
+                )
+            ]
         )
-        terms = [SimpleTerm(value, token, title) for
-                 (token, value, title) in filtered_principal_triples]
-        vocabulary = PrincipalsVocabulary(terms)
         vocabulary.principal_source = self.source
         return vocabulary
 
