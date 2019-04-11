@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# KEPT HERE FOR BBB UNTIL PLONE 6
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.browser.interfaces import ITerms
@@ -57,6 +58,9 @@ class GroupsSource(object):
     """
 
     def __init__(self, context):
+        msg = 'GroupsSource is deprecated and will be removed on ' \
+              'Plone 6'
+        warnings.warn(msg, DeprecationWarning)
         self.context = context
         self.users = getToolByName(context, 'acl_users')
 
