@@ -56,7 +56,7 @@ def token_from_principal_info(info, prefix=False):
         return info['id']
     # we use a double underscore here, a colon is already used in pattern
     # values as separator
-    return '{0}__{1}'.format(info['principal_type'], info['id'])
+    return u'{0}__{1}'.format(info['principal_type'], info['id'])
 
 
 def _get_acl_users():
@@ -114,7 +114,7 @@ class PrincipalsVocabulary(SimpleVocabulary):
             )
         principal = self._get_principal_from_source(value=value, token=token)
         if principal is None:
-            raise LookupError('Principal {} not found'.format(value or token))
+            raise LookupError(u'Principal {} not found'.format(value or token))
         if principal.isGroup():
             title = principal.getProperty('title', principal.getId())
             principal_type = 'group'
@@ -124,11 +124,11 @@ class PrincipalsVocabulary(SimpleVocabulary):
         if token:
             value = principal.getId()
             if SOURCES[self._principal_source]['prefix']:
-                value = '{0}:{1}'.format(principal_type, value)
+                value = u'{0}:{1}'.format(principal_type, value)
         else:
             token = principal.getId()
             if SOURCES[self._principal_source]['prefix']:
-                token = '{0}__{1}'.format(principal_type, token)
+                token = u'{0}__{1}'.format(principal_type, token)
         return self.__class__.createTerm(value, token, title)
 
     def __contains__(self, value):
@@ -222,7 +222,7 @@ class BaseFactory(object):
                 for info in search(**searchargs):
                     value = info['id']
                     if cfg['prefix']:
-                        value = '{0}:{1}'.format(info['principal_type'], value)
+                        value = u'{}:{}'.format(info['principal_type'], value)
                     token = token_from_principal_info(
                         info, prefix=cfg['prefix']
                     )
