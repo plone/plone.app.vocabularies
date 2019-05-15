@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+from binascii import b2a_qp
 from plone.app.vocabularies.interfaces import ISlicableVocabulary
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.utils import safe_encode
 from zope.component import getUtility
 from zope.component.hooks import getSite
 from zope.interface import implementer
@@ -52,11 +54,15 @@ def token_from_principal_info(info, prefix=False):
     # we assume the id is always ready to be consumed as a token, either
     # for patternlib or for options tag (where the standard wants
     # something CDATA compatible)
+    token = info['id']
+    # Vocabulary term tokens *must* be 7 bit values. Especially with LDAP
+    # it is wrong to assume the id is already safe to use as a token.
+    token = b2a_qp(safe_encode(token))
     if not prefix:
-        return info['id']
+        return token
     # we use a double underscore here, a colon is already used in pattern
     # values as separator
-    return u'{0}__{1}'.format(info['principal_type'], info['id'])
+    return '{0}__{1}'.format(info['principal_type'], token)
 
 
 def _get_acl_users():
