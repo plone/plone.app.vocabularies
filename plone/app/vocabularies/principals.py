@@ -54,10 +54,9 @@ def token_from_principal_info(info, prefix=False):
     # we assume the id is always ready to be consumed as a token, either
     # for patternlib or for options tag (where the standard wants
     # something CDATA compatible)
-    token = info['id']
     # Vocabulary term tokens *must* be 7 bit values. Especially with LDAP
     # it is wrong to assume the id is already safe to use as a token.
-    token = b2a_qp(safe_encode(token))
+    token = safe_token(info['id'])
     if not prefix:
         return token
     # we use a double underscore here, a colon is already used in pattern
@@ -67,6 +66,10 @@ def token_from_principal_info(info, prefix=False):
 
 def _get_acl_users():
     return getToolByName(getSite(), 'acl_users')
+
+
+def safe_token(value):
+    return b2a_qp(safe_encode(value))
 
 
 @implementer(ISlicableVocabulary)
@@ -132,9 +135,9 @@ class PrincipalsVocabulary(SimpleVocabulary):
             if SOURCES[self._principal_source]['prefix']:
                 value = u'{0}:{1}'.format(principal_type, value)
         else:
-            token = principal.getId()
+            token = safe_token(principal.getId())
             if SOURCES[self._principal_source]['prefix']:
-                token = u'{0}__{1}'.format(principal_type, token)
+                token = '{0}__{1}'.format(principal_type, token)
         return self.__class__.createTerm(value, token, title)
 
     def __contains__(self, value):
