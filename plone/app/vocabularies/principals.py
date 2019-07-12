@@ -69,9 +69,11 @@ def merge_principal_infos(infos, prefix=False):
             # Principals with the same ID but different types. Should not
             # happen.
             raise ValueError('Principal ID not unique: {}'.format(info['id']))
-        info['title'] = ';'.join(
-            [info['title'] for info in infos if info['title']]
-        )
+        if not info['title']:
+            for candidate in infos:
+                if candidate['title']:
+                    info['title'] = candidate['title']
+                    break
     return info
 
 
