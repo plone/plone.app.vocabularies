@@ -59,6 +59,24 @@ def token_from_principal_info(info, prefix=False):
     return '{0}__{1}'.format(info['principal_type'], info['id'])
 
 
+def merge_principal_infos(infos, prefix=False):
+    info = infos[0]
+    if len(infos) > 1:
+        principal_types = set([
+            info['principal_type'] for info in infos if info['principal_type']]
+        )
+        if len(principal_types) > 1:
+            # Principals with the same ID but different types. Should not
+            # happen.
+            raise ValueError('Principal ID not unique: {}'.format(info['id']))
+        if not info['title']:
+            for candidate in infos:
+                if candidate['title']:
+                    info['title'] = candidate['title']
+                    break
+    return info
+
+
 def _get_acl_users():
     return getToolByName(getSite(), 'acl_users')
 
@@ -219,14 +237,26 @@ class BaseFactory(object):
                 search = getattr(acl_users, search_cfg['search'])
                 searchargs = search_cfg['searchargs'].copy()
                 searchargs[search_cfg['searchattr']] = query
+                infotree = {}
                 for info in search(**searchargs):
-                    value = info['id']
-                    if cfg['prefix']:
-                        value = '{0}:{1}'.format(info['principal_type'], value)
-                    token = token_from_principal_info(
-                        info, prefix=cfg['prefix']
-                    )
-                    yield (value, token, info['title'])
+                    infotree.setdefault(
+                        info['id'], {}).setdefault(
+                            info['principal_type'], []).append(
+                                info)
+                for principal_id, types_infos in infotree.items():
+                    if len(types_infos) > 1 and not cfg['prefix']:
+                        raise ValueError('Principal ID not unique: {}'.format(
+                            principal_id))
+                    for principal_type, principal_infos in types_infos.items():
+                        value = principal_id
+                        info = merge_principal_infos(principal_infos)
+                        if cfg['prefix']:
+                            value = '{0}:{1}'.format(
+                                info['principal_type'], value)
+                        token = token_from_principal_info(
+                            info, prefix=cfg['prefix']
+                        )
+                        yield (value, token, info['title'])
 
         vocabulary = PrincipalsVocabulary(
             [

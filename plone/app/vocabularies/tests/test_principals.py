@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from plone.app.vocabularies.testing import PAVocabularies_INTEGRATION_TESTING
 
+import mock
 import unittest
 
 
@@ -387,3 +388,103 @@ class PrincipalsTest(unittest.TestCase):
         self.assertTrue('user:usér2' in vocab)
         self.assertTrue('group:groüp0' in vocab)
         self.assertTrue('group:groüp2' in vocab)
+
+    def test_factory_user_duplicate(self):
+        """ For an LDAP user that has logged in at least once, we get one
+        result each from pasldap and from mutable_properties. This should be
+        treated as one user.
+        """
+        with mock.patch(
+            'plone.app.vocabularies.principals._get_acl_users',
+        ) as fake_get_acl_users:
+            fake_get_acl_users.return_value.searchUsers.return_value = (
+                    {'id': 'ldapusér',
+                     'login': 'ldapusér',
+                     'pluginid': 'pasldap',
+                     'userid': 'ldapusér',
+                     'principal_type': 'user',
+                     'title': 'LDAP Usér'},
+                    {'id': 'ldapusér',
+                     'login': 'ldapusér',
+                     'title': '',
+                     'description': '',
+                     'email': '',
+                     'pluginid': 'mutable_properties',
+                     'userid': 'ldapusér',
+                     'principal_type': 'user'},
+            )
+            from plone.app.vocabularies.principals import UsersFactory
+
+            factory = UsersFactory()
+            vocab = factory(self.portal)
+            self.assertEqual(vocab.getTerm('ldapusér').title, 'LDAP Usér')
+
+    def test_factory_user_conflict(self):
+        """ In a user vocabulary, multiple results for the same principal ID
+        but with different principal_type values indicate some problem. Raise
+        an error.
+        """
+        with mock.patch(
+            'plone.app.vocabularies.principals._get_acl_users',
+        ) as fake_get_acl_users:
+            fake_get_acl_users.return_value.searchUsers.return_value = (
+                    {'id': 'ldapusér',
+                     'login': 'ldapusér',
+                     'pluginid': 'pasldap',
+                     'userid': 'ldapusér',
+                     'principal_type': 'user',
+                     'title': 'LDAP Usér'},
+                    {'id': 'ldapusér',
+                     'login': 'ldapusér',
+                     'title': '',
+                     'description': '',
+                     'email': '',
+                     'pluginid': 'mutable_properties',
+                     'userid': 'ldapusér',
+                     'principal_type': 'unknown'},
+            )
+            from plone.app.vocabularies.principals import UsersFactory
+
+            factory = UsersFactory()
+            self.assertRaises(
+                ValueError,
+                factory,
+                self.portal,
+            )
+
+    def test_factory_principal_conflict(self):
+        """ In a principal vocabulary, multiple results for the same principal
+        ID but with different principal_type values can be handled because they
+        are prefixed.
+        """
+        with mock.patch(
+            'plone.app.vocabularies.principals._get_acl_users',
+        ) as fake_get_acl_users:
+            fake_get_acl_users.return_value.searchUsers.return_value = (
+                    {'id': 'duplicaté',
+                     'login': 'duplicaté',
+                     'pluginid': 'pasldap',
+                     'userid': 'duplicaté',
+                     'principal_type': 'user',
+                     'title': 'Duplicaté User'},
+                    {'id': 'duplicaté',
+                     'login': 'duplicaté',
+                     'title': 'Duplicaté Group',
+                     'description': '',
+                     'email': '',
+                     'pluginid': 'source_groups',
+                     'userid': 'duplicaté',
+                     'principal_type': 'group'},
+            )
+            from plone.app.vocabularies.principals import PrincipalsFactory
+
+            factory = PrincipalsFactory()
+            vocab = factory(self.portal)
+            self.assertEqual(
+                vocab.getTerm('user:duplicaté').title,
+                'Duplicaté User',
+            )
+            self.assertEqual(
+                vocab.getTerm('group:duplicaté').title,
+                'Duplicaté Group',
+            )
