@@ -1,1 +1,0 @@
-Principals vocabularies: Fixed handling of results from multiple PAS plugins (like pasldap and mutable_properties).

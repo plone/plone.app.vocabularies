@@ -8,6 +8,15 @@ Changelog
 
 .. towncrier release notes start
 
+4.1.1 (2019-08-29)
+------------------
+
+Bug fixes:
+
+
+- Principals vocabularies: Fixed handling of results from multiple PAS plugins (like pasldap and mutable_properties). (#60)
+
+
 4.1.0 (2019-04-29)
 ------------------
 
