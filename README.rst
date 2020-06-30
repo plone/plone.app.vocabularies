@@ -125,6 +125,10 @@ Catalog
 ``plone.app.vocabularies.Catalog``
     Generic queryable catalog
 
+``plone.app.vocabularies.MetadataFields``
+    List of available metadata fields (catalog brain columns) that can be used
+    as table columns in a folder or collection listing.
+
 
 Theme
 -----

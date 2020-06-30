@@ -71,6 +71,13 @@ def test_suite():
                 checker=Py23DocChecker(),
             ),
             DocTestSuite(
+                'plone.app.vocabularies.metadatafields',
+                setUp=vocabSetUp,
+                tearDown=vocabTearDown,
+                optionflags=optionflags,
+                checker=Py23DocChecker(),
+            ),
+            DocTestSuite(
                 'plone.app.vocabularies.security',
                 setUp=vocabSetUp,
                 tearDown=vocabTearDown,
