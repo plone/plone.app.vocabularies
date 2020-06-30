@@ -8,6 +8,16 @@ Changelog
 
 .. towncrier release notes start
 
+4.2.0 (2020-06-30)
+------------------
+
+New features:
+
+
+- Add new plone.app.vocabularies.MetadataFields vocabulary.
+  [vincentfretin] (#62)
+
+
 4.1.2 (2020-04-20)
 ------------------
 
