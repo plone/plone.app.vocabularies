@@ -161,6 +161,9 @@
     name="plone.app.vocabularies.ImagesScales"
     />
 
+  <utility
+      component=".metadatafields.MetaDataFieldsVocabularyFactory"
+      name="plone.app.vocabularies.MetadataFields" />
 
   <!-- All source implementations will be deprecated -->
   <adapter
