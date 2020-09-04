@@ -5,7 +5,7 @@ from zope.interface import implementer
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
-from zope.site.hooks import getSite
+from zope.component.hooks import getSite
 
 
 @implementer(IVocabularyFactory)
