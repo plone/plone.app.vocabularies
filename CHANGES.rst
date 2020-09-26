@@ -8,6 +8,15 @@ Changelog
 
 .. towncrier release notes start
 
+4.2.1 (2020-09-26)
+------------------
+
+Bug fixes:
+
+
+- Fixed deprecation warning for zope.site.hooks. (#3130)
+
+
 4.2.0 (2020-06-30)
 ------------------
 
