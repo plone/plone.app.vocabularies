@@ -1,0 +1,2 @@
+change vocabulary tokens to be base64 encoded and make sure they do not have newlines.
+see https://community.plone.org/t/tags-subject-field-mangling-long-terms/13067
