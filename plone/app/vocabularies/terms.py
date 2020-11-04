@@ -27,7 +27,7 @@ def safe_simpleterm_from_value(value):
     """
     if isinstance(value, six.text_type):
         try:
-            token = value.decode('ascii')
+            token = value.encode('ascii')
         except UnicodeDecodeError:
             token = b2a_base64(safe_encode(value)).strip()
     else:
