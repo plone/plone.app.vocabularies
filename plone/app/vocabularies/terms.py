@@ -25,10 +25,14 @@ def safe_simpleterm_from_value(value):
     - token need cleaned up: Vocabulary term tokens *must* be 7 bit values
     - anything for display has to be cleaned up, titles *must* be unicode
     """
-    return SimpleTerm(value,
-                      b2a_base64(safe_encode(value), newline=False),
-                      safe_unicode(value)
-                      )
+    if isinstance(value, six.text_type):
+        try:
+            token = value.decode('ascii')
+        except UnicodeDecodeError:
+            token = b2a_base64(safe_encode(value)).strip()
+    else:
+        token = b2a_base64(safe_encode(value)).strip()
+    return SimpleTerm(value, token, safe_unicode(value))
 
 
 def safe_simplevocabulary_from_values(values, query=None):
