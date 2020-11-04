@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from binascii import b2a_qp
+from binascii import b2a_base64
 from plone.app.vocabularies.interfaces import IBrowsableTerm
 from plone.app.vocabularies.interfaces import ITermWithDescription
 from Products.CMFPlone.utils import safe_unicode
@@ -25,7 +25,10 @@ def safe_simpleterm_from_value(value):
     - token need cleaned up: Vocabulary term tokens *must* be 7 bit values
     - anything for display has to be cleaned up, titles *must* be unicode
     """
-    return SimpleTerm(value, b2a_qp(safe_encode(value)), safe_unicode(value))
+    return SimpleTerm(value,
+                      b2a_base64(safe_encode(value), newline=False),
+                      safe_unicode(value)
+                      )
 
 
 def safe_simplevocabulary_from_values(values, query=None):
