@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from binascii import b2a_base64
+from base64 import urlsafe_b64encode
 from plone.app.vocabularies.interfaces import IBrowsableTerm
 from plone.app.vocabularies.interfaces import ITermWithDescription
 from Products.CMFPlone.utils import safe_unicode
@@ -23,16 +23,10 @@ def safe_simpleterm_from_value(value):
     """create SimpleTerm from an untrusted value.
 
     - token need cleaned up: Vocabulary term tokens *must* be 7 bit values
+    - tokens cannot contain newlines
     - anything for display has to be cleaned up, titles *must* be unicode
     """
-    if isinstance(value, six.text_type):
-        try:
-            token = value.encode('ascii')
-        except UnicodeEncodeError:
-            token = b2a_base64(safe_encode(value)).strip()
-    else:
-        token = b2a_base64(safe_encode(value)).strip()
-    return SimpleTerm(value, token, safe_unicode(value))
+    return SimpleTerm(value, urlsafe_b64encode(safe_encode(value)), safe_unicode(value))
 
 
 def safe_simplevocabulary_from_values(values, query=None):

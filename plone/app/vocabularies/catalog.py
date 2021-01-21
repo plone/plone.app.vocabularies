@@ -437,11 +437,8 @@ class KeywordsVocabulary(object):
         >>> sorted(result.by_value) == expected
         True
 
-        ... but tokens are bytes on Python 2 and text in Python 3
-        >>> if six.PY2:
-        ...     expected = [b'bar', b'baz', b'blee', b'foo', b'non-=C3=83=C2=A5scii']
-        ... else:
-        ...     expected = [u'bar', u'baz', u'blee', u'foo', u'non-=C3=A5scii']
+        but tokens are base64 encoded text
+        >>> expected = ['YmF6', 'YmFy', 'YmxlZQ==', 'Zm9v', 'bm9uLcOlc2NpaQ==']
         >>> sorted(result.by_token) == expected
         True
 
@@ -458,15 +455,12 @@ class KeywordsVocabulary(object):
         >>> tool.indexes['Subject'] = index
         >>> vocab = KeywordsVocabulary()
         >>> result = vocab(context)
-        >>> if six.PY2:
-        ...     expected = [b'=C3=83=C2=A4=C3=83=C2=BC=C3=83=C2=B6', b'nix']
-        ... else:
-        ...     expected = [u'=C3=A4=C3=BC=C3=B6', u'nix']
+        >>> expected = ['bml4', 'w6TDvMO2']
         >>> sorted(result.by_token) == expected
         True
         >>> set(result.by_value) == {u'nix', u'äüö'}
         True
-        >>> result.getTermByToken(expected[0]).title == u'äüö'
+        >>> result.getTermByToken(expected[0]).title == u'nix'
         True
 
     """
