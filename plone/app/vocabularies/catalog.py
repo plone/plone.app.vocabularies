@@ -402,7 +402,7 @@ class QuerySearchableTextSourceView(object):
 
 @implementer(IVocabularyFactory)
 class KeywordsVocabulary(object):
-    """Vocabulary factory listing all catalog keywords from the 'Subject' index
+    u"""Vocabulary factory listing all catalog keywords from the 'Subject' index
 
         >>> from plone.app.vocabularies.tests.base import DummyCatalog
         >>> from plone.app.vocabularies.tests.base import create_context
