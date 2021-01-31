@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 from BTrees.IIBTree import intersection
 from plone.app.layout.navigation.root import getNavigationRootObject
 from plone.app.vocabularies import SlicableVocabulary
@@ -7,6 +8,7 @@ from plone.app.vocabularies.terms import safe_encode
 from plone.app.vocabularies.terms import safe_simplevocabulary_from_values
 from plone.app.vocabularies.utils import parseQueryString
 from plone.memoize.instance import memoize
+from plone.memoize import request
 from plone.registry.interfaces import IRegistry
 from plone.uuid.interfaces import IUUID
 from Products.CMFCore.utils import getToolByName
@@ -22,6 +24,12 @@ from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 from zope.component.hooks import getSite
+
+try:
+    from zope.globalrequest import getRequest
+except ImportError:
+    def getRequest():
+        return None
 
 import itertools
 import os
@@ -588,6 +596,21 @@ class CatalogVocabulary(SlicableVocabulary):
         else:
             return self.createTerm(self.brains[index], None)
 
+    def getTerm(self, value):
+        if not isinstance(value, six.string_types):
+            # here we have a content and fetch the uuid as hex value
+            value = IUUID(value)
+        query = {'UID': value}
+        brains = self.catalog(**query)
+        for b in brains:
+            return SimpleTerm(
+                title=u'{} ({})'.format(b.Title, b.getPath()),
+                token=b.UID,
+                value=b.UID,
+            )
+
+    getTermByToken = getTerm
+
 
 @implementer(IVocabularyFactory)
 class CatalogVocabularyFactory(object):
@@ -644,6 +667,51 @@ class CatalogVocabularyFactory(object):
                     'depth': -1
                 }
         return CatalogVocabulary.fromItems(parsed, context)
+
+
+def request_query_cache_key(func, vocab):
+    return json.dumps((vocab.query, vocab.default_text_search_index))
+
+
+class StaticCatalogVocabulary(CatalogVocabulary):
+    """Catalog Vocabulary for static lists of content based on a fixed query.
+    """
+
+    def __init__(self, query, default_text_search_index='SearchableText'):
+        self.query = query
+        self.default_text_search_index = default_text_search_index
+
+    @staticmethod
+    def get_request():
+        return getRequest()
+
+    @property
+    @request.cache(get_key=request_query_cache_key, get_request='self.get_request()')
+    def brains(self):
+        return self.catalog(**self.query)
+
+    @classmethod
+    def createTerm(cls, brain, context):
+        return SimpleTerm(
+            value=brain.UID, token=brain.UID,
+            title='{} ({})'.format(brain.Title, brain.getPath())
+        )
+
+    def search(self, query):
+        """Required by plone.app.content.browser.vocabulary for simple queryable
+        vocabs, e.g. for AJAXSelectWidget."""
+        if not query.endswith(' '):
+            query += '*'
+        query = {self.default_text_search_index: query}
+        query.update(self.query)
+        brains = self.catalog(**query)
+        return SimpleVocabulary([
+            SimpleTerm(
+                title=u'{} ({})'.format(b.Title, b.getPath()),
+                token=b.UID,
+                value=b.UID,
+            ) for b in brains
+        ])
 
 
 @implementer(ISource)
