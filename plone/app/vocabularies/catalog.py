@@ -603,11 +603,7 @@ class CatalogVocabulary(SlicableVocabulary):
         query = {'UID': value}
         brains = self.catalog(**query)
         for b in brains:
-            return SimpleTerm(
-                title=u'{} ({})'.format(b.Title, b.getPath()),
-                token=b.UID,
-                value=b.UID,
-            )
+            return self.createTerm(b, None)
 
     getTermByToken = getTerm
 
@@ -670,47 +666,112 @@ class CatalogVocabularyFactory(object):
 
 
 def request_query_cache_key(func, vocab):
-    return json.dumps((vocab.query, vocab.default_text_search_index))
+    return json.dumps([
+        vocab.query, vocab.text_search_index, vocab.title_template
+    ])
 
 
 class StaticCatalogVocabulary(CatalogVocabulary):
-    """Catalog Vocabulary for static lists of content based on a fixed query.
-    """
+    """Catalog Vocabulary for static queries of content based on a fixed query.
+    Intended for use in a zope.schema, e.g.:
 
-    def __init__(self, query, default_text_search_index='SearchableText'):
+        my_relation = RelationChoice(
+            title="Custom Relation",
+            vocabulary=StaticCatalogVocabulary({
+                "portal_type": "Document",
+                "review_state": "published",
+            })
+        )
+
+    Can be used with TextLine values (to store a UUID) or
+    Relation/RelationChoice values (to create a z3c.relationfield style
+    relation). This vocabulary will work with a variety of selection widgets,
+    and provides a text search method to work with the
+    plone.app.z3cform.widget.AjaxSelectWidget.
+
+    This vocabulary can be used to make a named vocabulary with a factory
+    function:
+
+        from zope.interface import provider
+        from zope.schema.interfaces import IVocabularyFactory
+
+
+        @provider(IVocabularyFactory)
+        def my_vocab_factory(context):
+            return StaticCatalogVocabulary({
+                'portal_type': 'Event',
+                'path': '/'.join(context.getPhysicalPath())
+            })
+
+    The default item title looks like "Object Title (/path/to/object)", but this
+    can be customized by passing a format string as the "title_template"
+    parameter. The format string has "brain" and "path" arguments available:
+
+        MY_VOCABULARY = StaticCatalogVocabulary(
+            {'portal_type': 'Event'},
+            title_template="{brain.Type}: {brain.Title} at {path}"
+        )
+
+    When using this vocabulary for dynamic queries, e.g. with the
+    AjaxSelectWidget, you can customize the index searched using the
+    "text_search_index" parameter. By default it uses the "SearchableText"
+    index, but you could have your vocabulary search on "Title" instead:
+
+        from plone.autoform import directives
+        from plone.app.z3cform.widget import AjaxSelectFieldWidget
+
+
+        directives.widget(
+            'my_relation',
+            AjaxSelectFieldWidget,
+            vocabulary=StaticCatalogVocabulary(
+                {'portal_type': 'Event'},
+                text_search_index="Title",
+                title_template="{brain.Type}: {brain.Title} at {path}"
+            )
+        )
+
+    This vocabulary lazily caches the result set for the base query on the
+    request to optimize performance.
+    """
+    title_template = "{brain.Title} ({path})"
+    text_search_index = "SearchableText"
+
+    def __init__(self, query, text_search_index=None,
+                 title_template=None):
         self.query = query
-        self.default_text_search_index = default_text_search_index
+        if text_search_index:
+            self.text_search_index = text_search_index
+        if title_template:
+            self.title_template = title_template
 
     @staticmethod
     def get_request():
         return getRequest()
 
     @property
-    @request.cache(get_key=request_query_cache_key, get_request='self.get_request()')
+    @request.cache(get_key=request_query_cache_key, get_request="self.get_request()")
     def brains(self):
         return self.catalog(**self.query)
 
-    @classmethod
-    def createTerm(cls, brain, context):
+    def createTerm(self, brain, context=None):
         return SimpleTerm(
             value=brain.UID, token=brain.UID,
-            title='{} ({})'.format(brain.Title, brain.getPath())
+            title=self.title_template.format(
+                brain=brain, path=brain.getPath()
+            )
         )
 
     def search(self, query):
         """Required by plone.app.content.browser.vocabulary for simple queryable
         vocabs, e.g. for AJAXSelectWidget."""
-        if not query.endswith(' '):
-            query += '*'
-        query = {self.default_text_search_index: query}
+        if not query.endswith(" "):
+            query += "*"
+        query = {self.text_search_index: query}
         query.update(self.query)
         brains = self.catalog(**query)
         return SimpleVocabulary([
-            SimpleTerm(
-                title=u'{} ({})'.format(b.Title, b.getPath()),
-                token=b.UID,
-                value=b.UID,
-            ) for b in brains
+            self.createTerm(b) for b in brains
         ])
 
 
