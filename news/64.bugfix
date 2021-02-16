@@ -1,2 +1,4 @@
-change vocabulary tokens to use base64.urlsafe_b64encode().  No newlines and safe to use as an xml attribute
-see https://community.plone.org/t/tags-subject-field-mangling-long-terms/13067 [flipmcf]
+Change vocabulary tokens to use ``base64.urlsafe_b64encode()``.
+No newlines and safe to use as an xml attribute.
+See `community post <https://community.plone.org/t/tags-subject-field-mangling-long-terms/13067>`_.
+[flipmcf]
