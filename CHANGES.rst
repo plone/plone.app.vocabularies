@@ -8,6 +8,18 @@ Changelog
 
 .. towncrier release notes start
 
+4.2.2 (2021-02-16)
+------------------
+
+Bug fixes:
+
+
+- Change vocabulary tokens to use ``base64.urlsafe_b64encode()``.
+  No newlines and safe to use as an xml attribute.
+  See `community post <https://community.plone.org/t/tags-subject-field-mangling-long-terms/13067>`_.
+  [flipmcf] (#64)
+
+
 4.2.1 (2020-09-26)
 ------------------
 
