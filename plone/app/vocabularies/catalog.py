@@ -8,7 +8,7 @@ from plone.app.vocabularies.terms import safe_encode
 from plone.app.vocabularies.terms import safe_simplevocabulary_from_values
 from plone.app.vocabularies.utils import parseQueryString
 from plone.memoize.instance import memoize
-from plone.memoize import request
+from plone.memoize.view import memoize as view_memoize
 from plone.registry.interfaces import IRegistry
 from plone.uuid.interfaces import IUUID
 from Products.CMFCore.utils import getToolByName
@@ -822,7 +822,7 @@ class StaticCatalogVocabulary(CatalogVocabulary):
         return getRequest()
 
     @property
-    @request.cache(get_key=request_query_cache_key, get_request="self.get_request()")
+    @view_memoize
     def brains(self):
         return self.catalog(**self.query)
 
