@@ -14,6 +14,7 @@ from plone.uuid.interfaces import IUUID
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.ZCTextIndex.ParseTree import ParseError
+from z3c.formwidget.query.interfaces import IQuerySource
 from zope.browser.interfaces import ITerms
 from zope.component import queryUtility
 from zope.interface import implementer
@@ -671,6 +672,7 @@ def request_query_cache_key(func, vocab):
     ])
 
 
+@implementer(IQuerySource, IVocabularyFactory)
 class StaticCatalogVocabulary(CatalogVocabulary):
     """Catalog Vocabulary for static queries of content based on a fixed query.
     Intended for use in a zope.schema, e.g.:
@@ -733,6 +735,62 @@ class StaticCatalogVocabulary(CatalogVocabulary):
 
     This vocabulary lazily caches the result set for the base query on the
     request to optimize performance.
+
+    Here are some doctests::
+
+      >>> from plone.app.vocabularies.tests.base import Brain
+      >>> from plone.app.vocabularies.tests.base import DummyCatalog
+      >>> from plone.app.vocabularies.tests.base import create_context
+      >>> from plone.app.vocabularies.tests.base import DummyTool
+
+      >>> context = create_context()
+
+      >>> catalog = DummyCatalog(('/1234', '/2345'))
+      >>> context.portal_catalog = catalog
+
+      >>> tool = DummyTool('portal_url')
+      >>> def getPortalPath():
+      ...     return '/'
+      >>> tool.getPortalPath = getPortalPath
+      >>> context.portal_url = tool
+
+      >>> vocab = StaticCatalogVocabulary({'portal_type': ['Document']})
+      >>> vocab
+      <plone.app.vocabularies.catalog.StaticCatalogVocabulary object at ...>
+
+      >>> vocab.search('')
+      <zope.schema.vocabulary.SimpleVocabulary object at ...>
+      >>> list(vocab.search(''))
+      []
+
+      >>> vocab.search('foo')
+      <zope.schema.vocabulary.SimpleVocabulary object at ...>
+
+      >>> [(t.title, t.value) for t in vocab.search('foo')]
+      [('BrainTitle (/1234)', '/1234'), ('BrainTitle (/2345)', '/2345')]
+
+    We strip out the site path from the rendered path in the title template:
+
+      >>> catalog = DummyCatalog(('/site/1234', '/site/2345'))
+      >>> context.portal_catalog = catalog
+      >>> vocab = StaticCatalogVocabulary({'portal_type': ['Document']})
+      >>> [(t.title, t.value) for t in vocab.search('bar')]
+      [('BrainTitle (/site/1234)', '/site/1234'),
+       ('BrainTitle (/site/2345)', '/site/2345')]
+
+      >>> context.__name__ = 'site'
+      >>> vocab = StaticCatalogVocabulary({'portal_type': ['Document']})
+      >>> [(t.title, t.value) for t in vocab.search('bar')]
+      [('BrainTitle (/1234)', '/site/1234'),
+       ('BrainTitle (/2345)', '/site/2345')]
+
+    The title template can be customized:
+
+      >>> vocab.title_template = "{url} {brain.UID} - {brain.Title} {path}"
+      >>> [(t.title, t.value) for t in vocab.search('bar')]
+      [('proto:/site/1234 /site/1234 - BrainTitle /1234', '/site/1234'),
+       ('proto:/site/2345 /site/2345 - BrainTitle /2345', '/site/2345')]
+
     """
     title_template = "{brain.Title} ({path})"
     text_search_index = "SearchableText"
@@ -744,6 +802,20 @@ class StaticCatalogVocabulary(CatalogVocabulary):
             self.text_search_index = text_search_index
         if title_template:
             self.title_template = title_template
+
+    @property
+    @memoize
+    def nav_root_path(self):
+        site = getSite()
+        nav_root = getNavigationRootObject(site, site)
+        return '/'.join(nav_root.getPhysicalPath())
+
+    def get_brain_path(self, brain):
+        nav_root_path = self.nav_root_path
+        path = brain.getPath()
+        if path.startswith(nav_root_path):
+            path = path[len(nav_root_path):]
+        return path
 
     @staticmethod
     def get_request():
@@ -758,13 +830,17 @@ class StaticCatalogVocabulary(CatalogVocabulary):
         return SimpleTerm(
             value=brain.UID, token=brain.UID,
             title=self.title_template.format(
-                brain=brain, path=brain.getPath()
+                brain=brain, path=self.get_brain_path(brain),
+                url=brain.getURL(),
             )
         )
 
     def search(self, query):
         """Required by plone.app.content.browser.vocabulary for simple queryable
         vocabs, e.g. for AJAXSelectWidget."""
+        if not query:
+            return SimpleVocabulary([])
+
         if not query.endswith(" "):
             query += "*"
         query = {self.text_search_index: query}
