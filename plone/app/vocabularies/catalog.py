@@ -25,13 +25,6 @@ from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 from zope.component.hooks import getSite
-
-try:
-    from zope.globalrequest import getRequest
-except ImportError:
-    def getRequest():
-        return None
-
 import itertools
 import os
 import six
@@ -666,12 +659,6 @@ class CatalogVocabularyFactory(object):
         return CatalogVocabulary.fromItems(parsed, context)
 
 
-def request_query_cache_key(func, vocab):
-    return json.dumps([
-        vocab.query, vocab.text_search_index, vocab.title_template
-    ])
-
-
 @implementer(IQuerySource, IVocabularyFactory)
 class StaticCatalogVocabulary(CatalogVocabulary):
     """Catalog Vocabulary for static queries of content based on a fixed query.
@@ -816,10 +803,6 @@ class StaticCatalogVocabulary(CatalogVocabulary):
         if path.startswith(nav_root_path):
             path = path[len(nav_root_path):]
         return path
-
-    @staticmethod
-    def get_request():
-        return getRequest()
 
     @property
     @view_memoize
