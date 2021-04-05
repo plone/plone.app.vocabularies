@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import json
 from BTrees.IIBTree import intersection
 from plone.app.layout.navigation.root import getNavigationRootObject
 from plone.app.vocabularies import SlicableVocabulary
@@ -12,6 +11,7 @@ from plone.memoize import request
 from plone.registry.interfaces import IRegistry
 from plone.uuid.interfaces import IUUID
 from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.utils import safe_unicode
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.ZCTextIndex.ParseTree import ParseError
 from z3c.formwidget.query.interfaces import IQuerySource
@@ -33,6 +33,7 @@ except ImportError:
         return None
 
 import itertools
+import json
 import os
 import six
 import warnings
@@ -829,10 +830,10 @@ class StaticCatalogVocabulary(CatalogVocabulary):
     def createTerm(self, brain, context=None):
         return SimpleTerm(
             value=brain.UID, token=brain.UID,
-            title=self.title_template.format(
+            title=safe_unicode(self.title_template.format(
                 brain=brain, path=self.get_brain_path(brain),
                 url=brain.getURL(),
-            )
+            ))
         )
 
     def search(self, query):
