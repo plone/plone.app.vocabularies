@@ -94,6 +94,9 @@ class Brain(object):
     def getPath(self):
         return self.rid
 
+    def getURL(self):
+        return 'proto:' + self.rid
+
     @property
     def UID(self):
         return self.rid
