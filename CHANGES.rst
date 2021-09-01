@@ -8,6 +8,17 @@ Changelog
 
 .. towncrier release notes start
 
+4.3.0 (2021-09-01)
+------------------
+
+New features:
+
+
+- Add new ``StaticCatalogVocabulary`` class providing a simplified mechanism for
+  creating queryable content vocabularies. Allows use of e.g. AJAXSelectWidget for
+  fields that store Relations or UUIDs. (#66)
+
+
 4.2.2 (2021-02-16)
 ------------------
 
