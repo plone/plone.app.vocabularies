@@ -190,7 +190,7 @@ API/ Tools
     Token is encoded carefully and Title converted to unicode.
 
 ``plone.app.vocabularies.terms.safe_simplevocabulary_from_values`` (function)
-    Create a ``SimpleVocabulary`` from a iterable (list) of *dirty* or *untrusted* values.
+    Create a ``SimpleVocabulary`` from a iterable (list or dictionary) of *dirty* or *untrusted* values.
     Utilizes above ``safe_simpleterm_from_value`` to achieve this.
 
 

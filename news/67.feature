@@ -1,0 +1,1 @@
+Allow keyword argument dictionary for safe_simplevocabulary_from_values

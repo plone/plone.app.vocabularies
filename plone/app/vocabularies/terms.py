@@ -22,19 +22,48 @@ def safe_encode(value):
 def safe_simpleterm_from_value(value):
     """create SimpleTerm from an untrusted value.
 
+    Keyword arguments:
+    value -- text or
+        value, title tuple
+
     - token need cleaned up: Vocabulary term tokens *must* be 7 bit values
     - tokens cannot contain newlines
     - anything for display has to be cleaned up, titles *must* be unicode
+
+    >>> st = safe_simpleterm_from_value('Auditorium')
+    >>> st.value, st.token, st.title
+    ('Auditorium', 'QXVkaXRvcml1bQ==', 'Auditorium')
     """
-    return SimpleTerm(value, urlsafe_b64encode(safe_encode(value)), safe_unicode(value))
+    untrustedvalue = isinstance(value, tuple) and value or (value, value)
+    return SimpleTerm(untrustedvalue[0], urlsafe_b64encode(safe_encode(untrustedvalue[0])), safe_unicode(untrustedvalue[1]))
 
 
 def safe_simplevocabulary_from_values(values, query=None):
     """Creates (filtered) SimpleVocabulary from iterable of untrusted values.
+
+    Keyword arguments:
+    values -- list of values or
+        list of value, title tuples or
+        dictionary with key: term value, value: term title
+
+    >>> vcb = safe_simplevocabulary_from_values([u'Hörsaal 1', u'Auditorium'])
+    >>> horsaal1 = vcb.by_token['SMO2cnNhYWwgMQ==']
+    >>> horsaal1.value, horsaal1.token, horsaal1.title
+    ('Hörsaal 1', 'SMO2cnNhYWwgMQ==', 'Hörsaal 1')
+    >>> vcb = safe_simplevocabulary_from_values(
+    ...        {
+    ...            u"Hörsaal 1": u"Hörsaal 1",
+    ...            u"Auditorium": u"Auditorium",
+    ...        }
+    ...    )
+    >>> horsaal1 = vcb.by_token['SMO2cnNhYWwgMQ==']
+    >>> horsaal1.value, horsaal1.token, horsaal1.title
+    ('Hörsaal 1', 'SMO2cnNhYWwgMQ==', 'Hörsaal 1')
     """
+    untrustedvalues = isinstance(values, dict) and tuple(values.items()) or values
     items = [
         safe_simpleterm_from_value(i)
-        for i in values
+        for i in untrustedvalues
         if query is None or safe_encode(query) in safe_encode(i)
     ]
     return SimpleVocabulary(items)
