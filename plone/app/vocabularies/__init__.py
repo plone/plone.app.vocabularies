@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from plone.app.vocabularies.interfaces import IPermissiveVocabulary
 from plone.app.vocabularies.interfaces import ISlicableVocabulary
+from plone.app.vocabularies.registry import queryVocabulary
+from plone.app.vocabularies.registry import vocabulary
 from six.moves import urllib
 from zope.interface import directlyProvides
 from zope.interface import implementer
