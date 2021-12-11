@@ -32,16 +32,6 @@ def fooProtectedVocabularyFactory(context=None):
     return SimpleVocabulary(terms)
 
 
-@vocabulary("plone.app.vocabularies.myvocabulary")
-def foo2VocabularyFactory(context=None):
-    """Provide vocabulary factory.
-    """
-    terms = []
-    for el in ['magenta', 'purple']:
-        terms.append(SimpleVocabulary.createTerm(el, el, el))
-    return SimpleVocabulary(terms)
-
-
 class ProtectedVocabulariesTest(unittest.TestCase):
     layer = PAVocabularies_FUNCTIONAL_TESTING
 
