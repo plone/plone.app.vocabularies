@@ -1,15 +1,14 @@
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
-from plone.app.vocabularies import queryVocabulary
-from plone.app.vocabularies import vocabulary
+from plone.app.vocabularies.registry import IVocabularyRegistry
 from plone.app.vocabularies.testing import PAVocabularies_FUNCTIONAL_TESTING
 from zExceptions import Unauthorized
+from zope.component import queryUtility
 from zope.schema.vocabulary import SimpleVocabulary
 
 import unittest
 
 
-@vocabulary("plone.app.vocabularies.myvocabulary")
 def fooVocabularyFactory(context=None):
     """Provide vocabulary factory.
     """
@@ -19,10 +18,6 @@ def fooVocabularyFactory(context=None):
     return SimpleVocabulary(terms)
 
 
-@vocabulary(
-    "plone.app.vocabularies.myprotectedvocabulary",
-    permission="Modify portal content"
-)
 def fooProtectedVocabularyFactory(context=None):
     """Provide vocabulary factory.
     """
@@ -37,27 +32,39 @@ class ProtectedVocabulariesTest(unittest.TestCase):
 
     def setUp(self):
         self.portal = self.layer['portal']
+        vocabularyRegistry = queryUtility(IVocabularyRegistry)
+        vocabularyRegistry.registerVocabulary(
+            name="plone.app.vocabularies.myvocabulary",
+            component=fooVocabularyFactory
+        )
+        vocabularyRegistry.registerVocabulary(
+            name="plone.app.vocabularies.myprotectedvocabulary",
+            component=fooProtectedVocabularyFactory,
+            permission="Modify portal content"
+        )
 
     def test_vocabularies_listing(self):
         """Get list of vocabularies.
 
         TODO TOBEDISCUSSED Should the listing of vocabularies be protected?
         """
-        # setRoles(self.portal, TEST_USER_ID, ["Anonymous"])
-        # with self.assertRaises(Unauthorized):
-        #     queryVocabulary()
 
-        # setRoles(self.portal, TEST_USER_ID, ["Editor"])
+        vocabularyRegistry = queryUtility(IVocabularyRegistry)
         self.assertTrue(
-            'plone.app.vocabularies.myprotectedvocabulary' in queryVocabulary()
+            'plone.app.vocabularies.myprotectedvocabulary'
+            in vocabularyRegistry.queryVocabulary()
         )
 
     def test_vocabulary_protection(self):
         """Get vocabulary of name"""
         setRoles(self.portal, TEST_USER_ID, ["Authenticated"])
 
+        vocabularyRegistry = queryUtility(IVocabularyRegistry)
+
         # unprotected vocabulary
-        my_vocabulary = queryVocabulary('plone.app.vocabularies.myvocabulary')
+        my_vocabulary = vocabularyRegistry.queryVocabulary(
+            'plone.app.vocabularies.myvocabulary'
+        )
         self.assertEqual(
             sorted(list(my_vocabulary().by_token.keys())),
             ['blue', 'red']
@@ -65,10 +72,12 @@ class ProtectedVocabulariesTest(unittest.TestCase):
 
         # protected vocabulary
         with self.assertRaises(Unauthorized):
-            queryVocabulary('plone.app.vocabularies.myprotectedvocabulary')
+            vocabularyRegistry.queryVocabulary(
+                'plone.app.vocabularies.myprotectedvocabulary'
+            )
 
         setRoles(self.portal, TEST_USER_ID, ["Editor"])
-        my_protected_vocabulary = queryVocabulary(
+        my_protected_vocabulary = vocabularyRegistry.queryVocabulary(
             'plone.app.vocabularies.myprotectedvocabulary')
         self.assertEqual(
             list(my_protected_vocabulary().by_token.keys()),

@@ -3,6 +3,11 @@
   xmlns:zcml="http://namespaces.zope.org/zcml">
 
   <utility
+      provides=".registry.IVocabularyRegistry"
+      factory=".registry.VocabularyRegistry"
+      />
+
+  <utility
     component=".language.AvailableContentLanguageVocabularyFactory"
     name="plone.app.vocabularies.AvailableContentLanguages"
     />
