@@ -18,6 +18,11 @@ class PAVocabulariesLayer(PloneSandboxLayer):
             package=plone.app.vocabularies,
             context=configurationContext
         )
+        self.loadZCML(
+            package=plone.app.vocabularies,
+            name='testing.zcml',
+            context=configurationContext
+        )
 
 
 PAVocabularies_FIXTURE = PAVocabulariesLayer()

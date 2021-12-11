@@ -1,0 +1,18 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:zcml="http://namespaces.zope.org/zcml">
+
+  <include package="plone.app.vocabularies" file="meta.zcml" />
+  
+  <vocabulary
+    name="plone.app.vocabularies.testzeceeml"
+    factory=".test_vocabularies_protected.fooVocabularyFactory"
+  />
+
+  <vocabulary
+    name="plone.app.vocabularies.testzeceemlprotected"
+    factory=".test_vocabularies_protected.fooProtectedVocabularyFactory"
+    permission="Modify portal content"
+  />
+
+</configure>

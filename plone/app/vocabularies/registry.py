@@ -1,13 +1,12 @@
 from AccessControl import getSecurityManager
 from zExceptions import Unauthorized
-from zope.component import queryUtility
-from zope.component import getUtilitiesFor
 from zope.component.hooks import getSite
+from zope.interface import implementer
 from zope.interface import Interface
 
 """
 TODO make vocabulary overwritable
-TODO decorator for vocabulary factory (class), not just vocabulary component (function)
+TODO handle vocabulary factory (class), not just vocabulary component (fct)
 TODO No decorator, but zcml registration (> overwrite vocabulary)
 """
 
@@ -26,6 +25,7 @@ class IVocabularyRegistry(Interface):
         """
 
 
+@implementer(IVocabularyRegistry)
 class VocabularyRegistry():
 
     all_vocabularies = {}
@@ -46,28 +46,32 @@ class VocabularyRegistry():
         """Get vocabulary of name 'name' or get list of vocabularies."""
         if name:
             # fetch permission of vocabulary registration
-            permission = self.all_vocabularies.get(name, {}).get('permission', None)
+            permission = self.all_vocabularies.get(
+                name, {}).get(
+                    'permission', None)
             if permission:
                 if self._check_permission(permission, context):
-                    return self.all_vocabularies.get(name, {}).get('component', None)
+                    return self.all_vocabularies.get(
+                        name, {}).get(
+                            'factory', None)
                 else:
                     raise Unauthorized
             else:
-                return self.all_vocabularies.get(name, {}).get('component', None)
+                return self.all_vocabularies.get(name, {}).get('factory', None)
         else:
             # return list of all vocabularies
             permission = PERMISSION_ACCESS_ALL_VOCABULARIES
             if self._check_permission(permission=permission):
                 return sorted(list(self.all_vocabularies.keys()))
 
-    def registerVocabulary(self, name, component, permission=None):
+    def registerVocabulary(self, name, factory, permission=None):
         """Register vocabulary with name.
 
         permission is optional
         """
         if name:
             self.all_vocabularies[name] = {
-                "component": component,
+                "factory": factory,
                 "permission": permission
             }
         else:

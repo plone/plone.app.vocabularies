@@ -1,11 +1,16 @@
 <configure
   xmlns="http://namespaces.zope.org/zope"
-  xmlns:zcml="http://namespaces.zope.org/zcml">
+  xmlns:zcml="http://namespaces.zope.org/zcml"
+  >
 
   <utility
       provides=".registry.IVocabularyRegistry"
       factory=".registry.VocabularyRegistry"
       />
+
+  <include file="meta.zcml" />
+  <include file="vocabularies.zcml" />
+
 
   <utility
     component=".language.AvailableContentLanguageVocabularyFactory"

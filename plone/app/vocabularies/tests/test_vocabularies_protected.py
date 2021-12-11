@@ -1,7 +1,7 @@
-from plone.app.testing import setRoles
-from plone.app.testing import TEST_USER_ID
 from plone.app.vocabularies.registry import IVocabularyRegistry
 from plone.app.vocabularies.testing import PAVocabularies_FUNCTIONAL_TESTING
+from plone.app.vocabularies.testing import setRoles
+from plone.app.vocabularies.testing import TEST_USER_ID
 from zExceptions import Unauthorized
 from zope.component import queryUtility
 from zope.schema.vocabulary import SimpleVocabulary
@@ -35,11 +35,11 @@ class ProtectedVocabulariesTest(unittest.TestCase):
         vocabularyRegistry = queryUtility(IVocabularyRegistry)
         vocabularyRegistry.registerVocabulary(
             name="plone.app.vocabularies.myvocabulary",
-            component=fooVocabularyFactory
+            factory=fooVocabularyFactory
         )
         vocabularyRegistry.registerVocabulary(
             name="plone.app.vocabularies.myprotectedvocabulary",
-            component=fooProtectedVocabularyFactory,
+            factory=fooProtectedVocabularyFactory,
             permission="Modify portal content"
         )
 
@@ -79,6 +79,36 @@ class ProtectedVocabulariesTest(unittest.TestCase):
         setRoles(self.portal, TEST_USER_ID, ["Editor"])
         my_protected_vocabulary = vocabularyRegistry.queryVocabulary(
             'plone.app.vocabularies.myprotectedvocabulary')
+        self.assertEqual(
+            list(my_protected_vocabulary().by_token.keys()),
+            ['orange', 'pink']
+        )
+
+    def test_vocabulary_zcml_registration(self):
+        """Get vocabulary of name"""
+        setRoles(self.portal, TEST_USER_ID, ["Authenticated"])
+
+        vocabularyRegistry = queryUtility(IVocabularyRegistry)
+
+        # unprotected vocabulary
+        my_vocabulary = vocabularyRegistry.queryVocabulary(
+            'plone.app.vocabularies.testzeceeml'
+        )
+        self.assertTrue(my_vocabulary is not None)
+        self.assertEqual(
+            sorted(list(my_vocabulary().by_token.keys())),
+            ['blue', 'red']
+        )
+
+        # protected vocabulary
+        with self.assertRaises(Unauthorized):
+            vocabularyRegistry.queryVocabulary(
+                'plone.app.vocabularies.testzeceemlprotected'
+            )
+
+        setRoles(self.portal, TEST_USER_ID, ["Editor"])
+        my_protected_vocabulary = vocabularyRegistry.queryVocabulary(
+            'plone.app.vocabularies.testzeceemlprotected')
         self.assertEqual(
             list(my_protected_vocabulary().by_token.keys()),
             ['orange', 'pink']
