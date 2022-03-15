@@ -823,7 +823,7 @@ class StaticCatalogVocabulary(CatalogVocabulary):
         return getRequest()
 
     @property
-    @request.cache(get_key=request_query_cache_key, get_request="self.get_request()")
+    # @request.cache(get_key=request_query_cache_key, get_request="self.get_request()")
     def brains(self):
         return self.catalog(**self.query)
 
