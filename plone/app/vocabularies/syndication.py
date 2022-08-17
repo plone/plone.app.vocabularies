@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+from plone.base.interfaces import ISiteSyndicationSettings
+from plone.base import MessageFactory as _
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
 from zope.component import getUtility
@@ -9,26 +10,11 @@ from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 
-import six
-
-
-try:
-    # XXX: this is a circular dependency (not declared in setup.py)
-    from Products.CMFPlone.interfaces.syndication import ISiteSyndicationSettings  # noqa
-    HAS_SYNDICATION = True
-except ImportError:
-    # new syndication not available
-    HAS_SYNDICATION = False
-
-_ = MessageFactory('plone')
-
 
 @implementer(IVocabularyFactory)
 class SyndicationFeedTypesVocabulary(object):
 
     def __call__(self, context):
-        if not HAS_SYNDICATION:
-            return SimpleVocabulary([])
         registry = getUtility(IRegistry)
         try:
             settings = registry.forInterface(ISiteSyndicationSettings)
@@ -61,7 +47,7 @@ class SyndicatableFeedItems(object):
         for brain in catalog(**query):
             uid = brain.UID
             title = brain.Title
-            if isinstance(title, six.binary_type):
+            if isinstance(title, bytes):
                 title = title.decode('utf8')
             title = u'{0}({1})'.format(
                 title,

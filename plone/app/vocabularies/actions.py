@@ -1,6 +1,5 @@
-# -*- coding:utf-8 -*-
+from plone.base import PloneMessageFactory as _
 from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone import PloneMessageFactory as _
 from zope.interface import implementer
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
