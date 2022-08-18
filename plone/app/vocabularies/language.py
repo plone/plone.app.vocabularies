@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from operator import itemgetter
 from Products.CMFCore.utils import getToolByName
+from zope.component.hooks import getSite
 from zope.interface import implementer
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
-from zope.component.hooks import getSite
 
 
 @implementer(IVocabularyFactory)

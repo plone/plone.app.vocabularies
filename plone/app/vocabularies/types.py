@@ -2,12 +2,12 @@
 from Acquisition import aq_get
 from plone.app.vocabularies import PermissiveVocabulary
 from Products.CMFCore.utils import getToolByName
+from zope.component.hooks import getSite
 from zope.i18n import translate
 from zope.interface import implementer
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
-from zope.component.hooks import getSite
 
 
 def getAllowedContentTypes(context):

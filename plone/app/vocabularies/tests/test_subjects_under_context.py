@@ -22,10 +22,14 @@ class TestKeywordsUnderContext(unittest.TestCase):
         context.portal_catalog = tool
         context.portal_url = base.DummyUrlTool(context)
 
-        from Products.PluginIndexes.KeywordIndex.KeywordIndex import KeywordIndex  # noqa
+        from Products.PluginIndexes.KeywordIndex.KeywordIndex import (  # noqa
+            KeywordIndex,
+        )
         kwindex = KeywordIndex('Subject')
         tool.indexes['Subject'] = kwindex
-        from Products.ExtendedPathIndex.ExtendedPathIndex import ExtendedPathIndex  # noqa
+        from Products.ExtendedPathIndex.ExtendedPathIndex import (  # noqa
+            ExtendedPathIndex,
+        )
         pathindex = ExtendedPathIndex('path')
         tool.indexes['path'] = pathindex
 

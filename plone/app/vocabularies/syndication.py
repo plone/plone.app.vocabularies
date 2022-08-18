@@ -1,5 +1,5 @@
-from plone.base.interfaces import ISiteSyndicationSettings
 from plone.base import MessageFactory as _
+from plone.base.interfaces import ISiteSyndicationSettings
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
 from zope.component import getUtility

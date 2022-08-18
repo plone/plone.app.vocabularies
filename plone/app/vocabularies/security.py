@@ -2,13 +2,13 @@
 from Acquisition import aq_get
 from operator import attrgetter
 from Products.CMFCore.utils import getToolByName
+from zope.component.hooks import getSite
 from zope.i18n import translate
 from zope.i18nmessageid import MessageFactory
 from zope.interface import implementer
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
-from zope.component.hooks import getSite
 
 import zope.deferredimport
 
