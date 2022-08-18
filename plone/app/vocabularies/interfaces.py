@@ -5,14 +5,14 @@ from zope.schema.interfaces import IVocabularyTokenized
 
 
 class ITermWithDescription(Interface):
-    """A term which carries an additional description
-    """
+    """A term which carries an additional description"""
 
     description = Attribute(
-        'description',
+        "description",
         """Description of the term, which will be displayed to distinguish
            between terms with similar labels.
-        """)
+        """,
+    )
 
 
 class IBrowsableTerm(Interface):
@@ -21,28 +21,29 @@ class IBrowsableTerm(Interface):
     """
 
     browse_token = Attribute(
-        'browse_token',
+        "browse_token",
         """Token which can be used to get contents of browsable terms in
            queryable sources.
 
         The value of this attribute must be a non-empty 7-bit string.
         Control characters are not allowed.
-        """)
+        """,
+    )
 
     parent_token = Attribute(
-        'parent_token',
+        "parent_token",
         """Token which can be used to get contents of the parent of browsable
            terms in queryable sources.
 
         The value of this attribute must be a non-empty 7-bit string.
         Control characters are not allowed.
-        """)
+        """,
+    )
 
 
 class ISlicableVocabulary(IVocabularyTokenized):
-
     def __getitem__(start, stop):
-        """ return a slice of the results"""
+        """return a slice of the results"""
 
 
 class IPermissiveVocabulary(IVocabularyTokenized):

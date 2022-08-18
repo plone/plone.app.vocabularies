@@ -11,7 +11,7 @@ class ActionCategoriesVocabulary(object):
     """Provides an actions categories vocabulary"""
 
     def __call__(self, context):
-        portal_actions = getToolByName(context, 'portal_actions')
+        portal_actions = getToolByName(context, "portal_actions")
 
         # Building the list of action categories
         try:
@@ -32,11 +32,11 @@ class PortalActionCategoriesVocabulary(object):
     """Provides portal action categories vocabulary."""
 
     def __call__(self, context):
-        portal_actions = getToolByName(context, 'portal_actions')
+        portal_actions = getToolByName(context, "portal_actions")
         categories = portal_actions.objectIds()
         terms = []
         for category in sorted(categories):
-            if category == 'controlpanel':
+            if category == "controlpanel":
                 continue
             title = portal_actions.get(category).title
             if title:
@@ -45,5 +45,6 @@ class PortalActionCategoriesVocabulary(object):
                 title = category
             terms.append(SimpleTerm(category, title=title))
         return SimpleVocabulary(terms)
+
 
 PortalActionCategoriesVocabularyFactory = PortalActionCategoriesVocabulary()

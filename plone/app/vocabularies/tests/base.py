@@ -13,25 +13,25 @@ def create_context():
 
 
 class DummyContext(object):
-
     def __init__(self):
-        self.__name__ = 'dummy'
+        self.__name__ = "dummy"
         self.__parent__ = None
 
     def getSiteManager(self):
         from zope.component import getSiteManager
+
         return getSiteManager()
 
     def getPhysicalPath(self):
-        return ['', self.__name__]
+        return ["", self.__name__]
 
     def absolute_url(self, relative=False):
-        return '/'.join(self.getPhysicalPath())
+        return "/".join(self.getPhysicalPath())
 
 
 class DummyUrlTool(object):
 
-    name = 'portal_url'
+    name = "portal_url"
 
     def __init__(self, context):
         self.portal = context
@@ -44,13 +44,11 @@ class DummyUrlTool(object):
 
 
 class DummyTool(object):
-
     def __init__(self, name):
         self.name = name
 
 
 class DummyType(object):
-
     def __init__(self, title):
         self.title = title
 
@@ -59,19 +57,17 @@ class DummyType(object):
 
 
 class DummyTypeTool(dict):
-
     def __init__(self):
-        self['Document'] = DummyType('Page')
-        self['Event'] = DummyType('Event')
+        self["Document"] = DummyType("Page")
+        self["Event"] = DummyType("Event")
 
     def listContentTypes(self):
         return self.keys()
 
 
 class Response(dict):
-
     def getHeader(self, value):
-        return 'header {0}'.format(value)
+        return "header {0}".format(value)
 
 
 class Request(dict):
@@ -85,7 +81,7 @@ class Request(dict):
 
 class Brain(object):
 
-    Title = 'BrainTitle'
+    Title = "BrainTitle"
     is_folderish = True
 
     def __init__(self, rid):
@@ -95,7 +91,7 @@ class Brain(object):
         return self.rid
 
     def getURL(self):
-        return 'proto:' + self.rid
+        return "proto:" + self.rid
 
     @property
     def UID(self):
@@ -104,16 +100,15 @@ class Brain(object):
 
 @implementer(IItem)
 class DummyCatalog(dict):
-
     def __init__(self, values):
         self.indexes = {}
         for r in values:
             self[r] = Brain(r)
 
     def __call__(self, **values):
-        if 'SearchableText' in values:
-            st = values['SearchableText']
-            if st.startswith('error'):
+        if "SearchableText" in values:
+            st = values["SearchableText"]
+            if st.startswith("error"):
                 raise ParseError
         return self.values()
 
@@ -129,7 +124,6 @@ class DummyCatalog(dict):
 
 
 class DummyContent(object):
-
     def __init__(self, title, subjects=[]):
         self.title = title
         self.subjects = subjects
@@ -160,7 +154,7 @@ class DummyContentWithParent(object):
         return self.__parent__.getPhysicalPath() + [self.__name__]
 
     def absolute_url(self, relative=False):
-        return '/'.join(self.getPhysicalPath())
+        return "/".join(self.getPhysicalPath())
 
 
 @implementer(INavigationRoot)
@@ -174,10 +168,10 @@ class DummyNavRoot(object):
             self.__parent__ = parent
 
     def getPhysicalPath(self):
-        return ['', self.__parent__.__name__, self.__name__]
+        return ["", self.__parent__.__name__, self.__name__]
 
     def absolute_url(self, relative=False):
-        return '/'.join(self.getPhysicalPath())
+        return "/".join(self.getPhysicalPath())
 
     @property
     def portal_catalog(self):

@@ -13,7 +13,6 @@ from zope.schema.vocabulary import SimpleVocabulary
 
 @implementer(IVocabularyFactory)
 class SyndicationFeedTypesVocabulary(object):
-
     def __call__(self, context):
         registry = getUtility(IRegistry)
         try:
@@ -22,38 +21,38 @@ class SyndicationFeedTypesVocabulary(object):
             return SimpleVocabulary([])
         items = []
         for _type in settings.allowed_feed_types:
-            split = _type.split('|')
+            split = _type.split("|")
             if len(split) == 2:
                 name, title = split
                 items.append(SimpleTerm(name, name, title))
         return SimpleVocabulary(items)
+
 
 SyndicationFeedTypesVocabularyFactory = SyndicationFeedTypesVocabulary()
 
 
 @implementer(IVocabularyFactory)
 class SyndicatableFeedItems(object):
-
     def __call__(self, context):
         site = getSite()
-        catalog = getToolByName(site, 'portal_catalog')
-        site_path = '/'.join(site.getPhysicalPath())
+        catalog = getToolByName(site, "portal_catalog")
+        site_path = "/".join(site.getPhysicalPath())
         query = {
-            'portal_type': ('Folder', 'Collection', 'Topic'),
-            'path': {'query': site_path,
-                     'depth': 2}
+            "portal_type": ("Folder", "Collection", "Topic"),
+            "path": {"query": site_path, "depth": 2},
         }
         items = []
         for brain in catalog(**query):
             uid = brain.UID
             title = brain.Title
             if isinstance(title, bytes):
-                title = title.decode('utf8')
-            title = u'{0}({1})'.format(
+                title = title.decode("utf8")
+            title = "{0}({1})".format(
                 title,
-                brain.getPath()[len(site_path) + 1:],
+                brain.getPath()[len(site_path) + 1 :],
             )
             items.append(SimpleTerm(uid, uid, title))
         return SimpleVocabulary(items)
+
 
 SyndicatableFeedItemsFactory = SyndicatableFeedItems()

@@ -8,8 +8,8 @@ from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 
 
-_token_parse_py3 = getattr(urllib, 'parse', None)
-_token_parse_py27 = lambda token: urllib.unquote_plus(token).decode('utf8')
+_token_parse_py3 = getattr(urllib, "parse", None)
+_token_parse_py27 = lambda token: urllib.unquote_plus(token).decode("utf8")
 parse = _token_parse_py3.unquote if _token_parse_py3 else _token_parse_py27
 
 

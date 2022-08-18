@@ -8,25 +8,21 @@ from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 
 
-_ = MessageFactory('plone')
+_ = MessageFactory("plone")
 
 
 @implementer(IVocabularyFactory)
 class AvailableEditorsVocabulary(object):
-
     def __call__(self, context):
         items = []
 
         registry = getUtility(IRegistry)
-        settings = registry.forInterface(
-            IEditingSchema,
-            prefix='plone',
-            check=False
-        )
+        settings = registry.forInterface(IEditingSchema, prefix="plone", check=False)
 
         if settings:
             editors = settings.available_editors
             items = [SimpleTerm(e, e, _(e)) for e in editors]
         return SimpleVocabulary(items)
+
 
 AvailableEditorsVocabularyFactory = AvailableEditorsVocabulary()

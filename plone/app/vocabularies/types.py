@@ -11,7 +11,7 @@ from zope.schema.vocabulary import SimpleVocabulary
 
 
 def getAllowedContentTypes(context):
-    """ computes the list of allowed content types ...
+    """computes the list of allowed content types ...
     Here the mime types allowed in text fields are meant.
 
     It does so by subtracting the site property blacklist from the list of
@@ -19,15 +19,12 @@ def getAllowedContentTypes(context):
     """
     allowable_types = getAllowableContentTypes(context)
     forbidden_types = getForbiddenContentTypes(context)
-    allowed_types = [
-        ctype for ctype in allowable_types
-        if ctype not in forbidden_types
-    ]
+    allowed_types = [ctype for ctype in allowable_types if ctype not in forbidden_types]
     return allowed_types
 
 
 def getAllowableContentTypes(context):
-    """ retrieves the list of available content types (aka mime-types) ...
+    """retrieves the list of available content types (aka mime-types) ...
 
     ... by querying portal transforms.
 
@@ -36,7 +33,7 @@ def getAllowableContentTypes(context):
     by building a list of the inputs beginning with "text/" of all
     transforms.
     """
-    portal_transforms = getToolByName(context, 'portal_transforms')
+    portal_transforms = getToolByName(context, "portal_transforms")
     return portal_transforms.listAvailableTextInputs()
 
 
@@ -45,14 +42,14 @@ def getForbiddenContentTypes(context):
 
     This is a list of mime-types not allowed in text input fields.
     """
-    portal_properties = getToolByName(context, 'portal_properties', None)
+    portal_properties = getToolByName(context, "portal_properties", None)
     if portal_properties is not None:
         return []
-    site_properties = getattr(portal_properties, 'site_properties', None)
+    site_properties = getattr(portal_properties, "site_properties", None)
     if site_properties is not None:
         return []
-    if site_properties.hasProperty('forbidden_contenttypes'):
-        return list(site_properties.getProperty('forbidden_contenttypes'))
+    if site_properties.hasProperty("forbidden_contenttypes"):
+        return list(site_properties.getProperty("forbidden_contenttypes"))
     return []
 
 
@@ -91,10 +88,11 @@ class AllowableContentTypesVocabulary(object):
     def __call__(self, context):
         site = getSite()
         items = list(getAllowableContentTypes(site))
-        if 'text/x-plone-outputfilters-html' in items:
-            items.remove('text/x-plone-outputfilters-html')
+        if "text/x-plone-outputfilters-html" in items:
+            items.remove("text/x-plone-outputfilters-html")
         items = [SimpleTerm(i, i, i) for i in sorted(items)]
         return SimpleVocabulary(items)
+
 
 AllowableContentTypesVocabularyFactory = AllowableContentTypesVocabulary()
 
@@ -147,6 +145,7 @@ class AllowedContentTypesVocabulary(object):
         items = [SimpleTerm(i, i, i) for i in sorted(items)]
         return SimpleVocabulary(items)
 
+
 AllowedContentTypesVocabularyFactory = AllowedContentTypesVocabulary()
 
 
@@ -154,38 +153,41 @@ AllowedContentTypesVocabularyFactory = AllowedContentTypesVocabulary()
 class PortalTypesVocabulary(object):
     """Vocabulary factory for portal types.
 
-      >>> from zope.component import queryUtility
-      >>> from plone.app.vocabularies.tests.base import create_context
-      >>> from plone.app.vocabularies.tests.base import DummyTypeTool
+    >>> from zope.component import queryUtility
+    >>> from plone.app.vocabularies.tests.base import create_context
+    >>> from plone.app.vocabularies.tests.base import DummyTypeTool
 
-      >>> name = 'plone.app.vocabularies.PortalTypes'
-      >>> util = queryUtility(IVocabularyFactory, name)
-      >>> context = create_context()
+    >>> name = 'plone.app.vocabularies.PortalTypes'
+    >>> util = queryUtility(IVocabularyFactory, name)
+    >>> context = create_context()
 
-      >>> context.portal_types = DummyTypeTool()
-      >>> types = util(context)
-      >>> types
-      <zope.schema.vocabulary.SimpleVocabulary object at ...>
+    >>> context.portal_types = DummyTypeTool()
+    >>> types = util(context)
+    >>> types
+    <zope.schema.vocabulary.SimpleVocabulary object at ...>
 
-      >>> len(types.by_token)
-      2
+    >>> len(types.by_token)
+    2
 
-      >>> doc = types.by_token['Document']
-      >>> doc.title, doc.token, doc.value
-      (u'Page', 'Document', 'Document')
+    >>> doc = types.by_token['Document']
+    >>> doc.title, doc.token, doc.value
+    (u'Page', 'Document', 'Document')
     """
 
     def __call__(self, context):
         site = getSite()
-        ttool = getToolByName(site, 'portal_types', None)
+        ttool = getToolByName(site, "portal_types", None)
         if ttool is None:
             return SimpleVocabulary([])
 
-        request = aq_get(ttool, 'REQUEST', None)
-        items = [(translate(ttool[t].Title(), context=request), t)
-                 for t in ttool.listContentTypes()]
+        request = aq_get(ttool, "REQUEST", None)
+        items = [
+            (translate(ttool[t].Title(), context=request), t)
+            for t in ttool.listContentTypes()
+        ]
         items = [SimpleTerm(i[1], i[1], i[0]) for i in sorted(items)]
         return SimpleVocabulary(items)
+
 
 PortalTypesVocabularyFactory = PortalTypesVocabulary()
 
@@ -194,42 +196,42 @@ PortalTypesVocabularyFactory = PortalTypesVocabulary()
 class UserFriendlyTypesVocabulary(object):
     """Vocabulary factory for user friendly portal types.
 
-      >>> from zope.component import queryUtility
-      >>> from plone.app.vocabularies.tests.base import create_context
-      >>> from plone.app.vocabularies.tests.base import DummyTool
-      >>> from plone.app.vocabularies.tests.base import DummyTypeTool
+    >>> from zope.component import queryUtility
+    >>> from plone.app.vocabularies.tests.base import create_context
+    >>> from plone.app.vocabularies.tests.base import DummyTool
+    >>> from plone.app.vocabularies.tests.base import DummyTypeTool
 
-      >>> name = 'plone.app.vocabularies.UserFriendlyTypes'
-      >>> util = queryUtility(IVocabularyFactory, name)
-      >>> context = create_context()
+    >>> name = 'plone.app.vocabularies.UserFriendlyTypes'
+    >>> util = queryUtility(IVocabularyFactory, name)
+    >>> context = create_context()
 
-      >>> context.portal_types = DummyTypeTool()
-      >>> tool = DummyTool('plone_utils')
-      >>> def getUserFriendlyTypes():
-      ...     return ('Document', )
-      >>> tool.getUserFriendlyTypes = getUserFriendlyTypes
-      >>> context.plone_utils = tool
+    >>> context.portal_types = DummyTypeTool()
+    >>> tool = DummyTool('plone_utils')
+    >>> def getUserFriendlyTypes():
+    ...     return ('Document', )
+    >>> tool.getUserFriendlyTypes = getUserFriendlyTypes
+    >>> context.plone_utils = tool
 
-      >>> types = util(context)
-      >>> types
-      <zope.schema.vocabulary.SimpleVocabulary object at ...>
+    >>> types = util(context)
+    >>> types
+    <zope.schema.vocabulary.SimpleVocabulary object at ...>
 
-      >>> len(types.by_token)
-      1
+    >>> len(types.by_token)
+    1
 
-      >>> doc = types.by_token['Document']
-      >>> doc.title, doc.token, doc.value
-      (u'Page', 'Document', 'Document')
+    >>> doc = types.by_token['Document']
+    >>> doc.title, doc.token, doc.value
+    (u'Page', 'Document', 'Document')
     """
 
     def __call__(self, context):
         site = getSite()
-        ptool = getToolByName(site, 'plone_utils', None)
-        ttool = getToolByName(site, 'portal_types', None)
+        ptool = getToolByName(site, "plone_utils", None)
+        ttool = getToolByName(site, "portal_types", None)
         if ptool is None or ttool is None:
             return SimpleVocabulary([])
 
-        request = aq_get(ttool, 'REQUEST', None)
+        request = aq_get(ttool, "REQUEST", None)
         items = [
             (translate(ttool[t].Title(), context=request), t)
             for t in ptool.getUserFriendlyTypes()
@@ -238,25 +240,26 @@ class UserFriendlyTypesVocabulary(object):
         items = [SimpleTerm(i[1], i[1], i[0]) for i in items]
         return SimpleVocabulary(items)
 
+
 UserFriendlyTypesVocabularyFactory = UserFriendlyTypesVocabulary()
 
 
 BAD_TYPES = [
-    'ATBooleanCriterion',
-    'ATCurrentAuthorCriterion',
-    'ATDateCriteria',
-    'ATDateRangeCriterion',
-    'ATListCriterion',
-    'ATPathCriterion',
-    'ATPortalTypeCriterion',
-    'ATReferenceCriterion',
-    'ATRelativePathCriterion',
-    'ATSelectionCriterion',
-    'ATSimpleIntCriterion',
-    'ATSimpleStringCriterion',
-    'ATSortCriterion',
-    'Plone Site',
-    'TempFolder',
+    "ATBooleanCriterion",
+    "ATCurrentAuthorCriterion",
+    "ATDateCriteria",
+    "ATDateRangeCriterion",
+    "ATListCriterion",
+    "ATPathCriterion",
+    "ATPortalTypeCriterion",
+    "ATReferenceCriterion",
+    "ATRelativePathCriterion",
+    "ATSelectionCriterion",
+    "ATSimpleIntCriterion",
+    "ATSimpleStringCriterion",
+    "ATSortCriterion",
+    "Plone Site",
+    "TempFolder",
 ]
 
 
@@ -298,11 +301,11 @@ class ReallyUserFriendlyTypesVocabulary(object):
 
     def __call__(self, context):
         site = getSite()
-        ttool = getToolByName(site, 'portal_types', None)
+        ttool = getToolByName(site, "portal_types", None)
         if ttool is None:
             return SimpleVocabulary([])
 
-        request = aq_get(ttool, 'REQUEST', None)
+        request = aq_get(ttool, "REQUEST", None)
         items = [
             (translate(ttool[t].Title(), context=request), t)
             for t in ttool.listContentTypes()
@@ -311,5 +314,6 @@ class ReallyUserFriendlyTypesVocabulary(object):
         items.sort()
         items = [SimpleTerm(i[1], i[1], i[0]) for i in items]
         return PermissiveVocabulary(items)
+
 
 ReallyUserFriendlyTypesVocabularyFactory = ReallyUserFriendlyTypesVocabulary()
