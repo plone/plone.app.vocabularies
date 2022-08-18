@@ -28,7 +28,6 @@ from zope.schema.vocabulary import SimpleVocabulary
 import itertools
 import json
 import os
-import six
 import warnings
 
 
@@ -362,8 +361,6 @@ class QuerySearchableTextSourceView:
             if brain.is_folderish:
                 browse_token = value
             parent_token = "/".join(value.split("/")[:-1])
-        if six.PY2 and isinstance(title, bytes):
-            title = title.decode(self.context.encoding)
         return BrowsableTerm(
             value,
             token=token,
@@ -451,7 +448,7 @@ class KeywordsVocabulary:
     True
 
     Testing unicode vocabularies
-    First clear the index. Comparing non-six.text_type to six.text_type objects fails.
+    First clear the index. Comparing bytes to str objects fails.
     >>> index.clear()
     >>> done = index._index_object(
     ...     1,

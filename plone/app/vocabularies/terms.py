@@ -86,9 +86,7 @@ class BrowsableTerm(TermWithDescription):
         browse_token=None,
         parent_token=None,
     ):
-        super().__init__(
-            value, token=token, title=title, description=description
-        )
+        super().__init__(value, token=token, title=title, description=description)
         self.browse_token = browse_token
         self.parent_token = parent_token
         if browse_token is not None or parent_token is not None:

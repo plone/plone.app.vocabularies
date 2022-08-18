@@ -1,10 +1,11 @@
 from plone.app.vocabularies.interfaces import IPermissiveVocabulary
 from plone.app.vocabularies.interfaces import ISlicableVocabulary
-from six.moves import urllib
 from zope.interface import directlyProvides
 from zope.interface import implementer
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
+
+import urllib
 
 
 _token_parse_py3 = getattr(urllib, "parse", None)

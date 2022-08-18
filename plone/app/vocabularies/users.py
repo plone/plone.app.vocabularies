@@ -1,4 +1,3 @@
-# KEPT HERE FOR BBB UNTIL PLONE 6
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.browser.interfaces import ITerms
@@ -8,7 +7,6 @@ from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.interfaces import ISource
 from zope.schema.vocabulary import SimpleTerm
 
-import six
 import warnings
 import zope.deferredimport
 
@@ -35,9 +33,7 @@ def _createUserTerm(userid, context=None, acl_users=None):
     fullname = userid
     if user:
         fullname = user.getProperty("fullname", None) or userid
-    token = (
-        userid.encode("unicode_escape") if isinstance(userid, str) else userid
-    )
+    token = userid.encode("unicode_escape") if isinstance(userid, str) else userid
     return SimpleTerm(userid, token, fullname)
 
 

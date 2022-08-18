@@ -233,9 +233,7 @@ class BaseFactory:
                     ).append(info)
                 for principal_id, types_infos in infotree.items():
                     if len(types_infos) > 1 and not cfg["prefix"]:
-                        raise ValueError(
-                            f"Principal ID not unique: {principal_id}"
-                        )
+                        raise ValueError(f"Principal ID not unique: {principal_id}")
                     for principal_type, principal_infos in types_infos.items():
                         value = principal_id
                         info = merge_principal_infos(principal_infos)

@@ -1,6 +1,6 @@
 from plone.app.vocabularies.testing import PAVocabularies_INTEGRATION_TESTING
-
 from unittest import mock
+
 import unittest
 
 

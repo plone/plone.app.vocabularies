@@ -6,7 +6,6 @@ from zope.configuration.xmlconfig import XMLConfig
 
 import doctest
 import re
-import six
 import unittest
 import zope.component
 

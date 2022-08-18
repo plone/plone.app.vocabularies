@@ -21,7 +21,6 @@ class WorkflowsVocabulary:
     >>> from zope.component import queryUtility
     >>> from plone.app.vocabularies.tests.base import create_context
     >>> from plone.app.vocabularies.tests.base import DummyTool
-    >>> import six
 
     >>> name = 'plone.app.vocabularies.Workflows'
     >>> util = queryUtility(IVocabularyFactory, name)
@@ -53,7 +52,6 @@ class WorkflowsVocabulary:
 
     >>> noticias = workflows.by_token['noticias']
     >>> title = 'Workflow de Notícias'
-    >>> title = title.decode('utf-8') if six.PY2 else title
     >>> noticias.title == title
     True
     """
@@ -80,7 +78,6 @@ class WorkflowStatesVocabulary:
     >>> from zope.component import queryUtility
     >>> from plone.app.vocabularies.tests.base import create_context
     >>> from plone.app.vocabularies.tests.base import DummyTool
-    >>> import six
 
     >>> name = 'plone.app.vocabularies.WorkflowStates'
     >>> util = queryUtility(IVocabularyFactory, name)
@@ -107,7 +104,6 @@ class WorkflowStatesVocabulary:
 
     >>> rev = states.by_token['revisao']
     >>> title = 'Revisão [revisao]'
-    >>> title = title.decode('utf-8') if six.PY2 else title
     >>> rev.title == title
     True
     """
