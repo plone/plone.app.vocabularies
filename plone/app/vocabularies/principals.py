@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from plone.app.vocabularies.interfaces import ISlicableVocabulary
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
@@ -56,15 +55,15 @@ def token_from_principal_info(info, prefix=False):
         return info["id"]
     # we use a double underscore here, a colon is already used in pattern
     # values as separator
-    return "{0}__{1}".format(info["principal_type"], info["id"])
+    return "{}__{}".format(info["principal_type"], info["id"])
 
 
 def merge_principal_infos(infos, prefix=False):
     info = infos[0]
     if len(infos) > 1:
-        principal_types = set(
-            [info["principal_type"] for info in infos if info["principal_type"]]
-        )
+        principal_types = {
+            info["principal_type"] for info in infos if info["principal_type"]
+        }
         if len(principal_types) > 1:
             # Principals with the same ID but different types. Should not
             # happen.
@@ -125,7 +124,7 @@ class PrincipalsVocabulary(SimpleVocabulary):
             raise ValueError("value or token must be provided (only one of those)")
         principal = self._get_principal_from_source(value=value, token=token)
         if principal is None:
-            raise LookupError("Principal {} not found".format(value or token))
+            raise LookupError(f"Principal {value or token} not found")
         if principal.isGroup():
             title = principal.getProperty("title", principal.getId())
             principal_type = "group"
@@ -135,16 +134,16 @@ class PrincipalsVocabulary(SimpleVocabulary):
         if token:
             value = principal.getId()
             if SOURCES[self._principal_source]["prefix"]:
-                value = "{0}:{1}".format(principal_type, value)
+                value = f"{principal_type}:{value}"
         else:
             token = principal.getId()
             if SOURCES[self._principal_source]["prefix"]:
-                token = "{0}__{1}".format(principal_type, token)
+                token = f"{principal_type}__{token}"
         return self.__class__.createTerm(value, token, title)
 
     def __contains__(self, value):
         """Checks if the principal exists in current subset or in PAS."""
-        result = super(PrincipalsVocabulary, self).__contains__(value)
+        result = super().__contains__(value)
         return result or bool(self._get_principal_from_source(value=value))
 
     def getTerm(self, value):
@@ -152,7 +151,7 @@ class PrincipalsVocabulary(SimpleVocabulary):
         This allows to lookup already saved values.
         """
         try:
-            return super(PrincipalsVocabulary, self).getTerm(value)
+            return super().getTerm(value)
         except LookupError:
             return self._get_term_from_source(value=value)
 
@@ -161,7 +160,7 @@ class PrincipalsVocabulary(SimpleVocabulary):
         This allows to lookup already saved values by token.
         """
         try:
-            return super(PrincipalsVocabulary, self).getTermByToken(token)
+            return super().getTermByToken(token)
         except LookupError:
             return self._get_term_from_source(token=token)
 
@@ -178,7 +177,7 @@ class PrincipalsVocabulary(SimpleVocabulary):
         return self._terms[start:stop]
 
 
-class BaseFactory(object):
+class BaseFactory:
     """Factory creating a PrincipalsVocabulary"""
 
     source = None
@@ -235,13 +234,13 @@ class BaseFactory(object):
                 for principal_id, types_infos in infotree.items():
                     if len(types_infos) > 1 and not cfg["prefix"]:
                         raise ValueError(
-                            "Principal ID not unique: {}".format(principal_id)
+                            f"Principal ID not unique: {principal_id}"
                         )
                     for principal_type, principal_infos in types_infos.items():
                         value = principal_id
                         info = merge_principal_infos(principal_infos)
                         if cfg["prefix"]:
-                            value = "{0}:{1}".format(info["principal_type"], value)
+                            value = "{}:{}".format(info["principal_type"], value)
                         token = token_from_principal_info(info, prefix=cfg["prefix"])
                         yield (value, token, info["title"])
 

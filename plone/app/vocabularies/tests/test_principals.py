@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 from plone.app.vocabularies.testing import PAVocabularies_INTEGRATION_TESTING
 
-import mock
+from unittest import mock
 import unittest
 
 
@@ -108,9 +107,9 @@ class PrincipalsTest(unittest.TestCase):
 
         terms = [
             SimpleTerm(
-                "user_{0}".format(idx),
-                "user{0}".format(idx),
-                "User {0}".format(idx),
+                f"user_{idx}",
+                f"user{idx}",
+                f"User {idx}",
             )
             for idx in range(0, 10)
         ]
@@ -142,9 +141,9 @@ class PrincipalsTest(unittest.TestCase):
 
         terms = [
             SimpleTerm(
-                "group_{0}".format(idx),
-                "group{0}".format(idx),
-                "Group {0}".format(idx),
+                f"group_{idx}",
+                f"group{idx}",
+                f"Group {idx}",
             )
             for idx in range(0, 10)
         ]
@@ -176,17 +175,17 @@ class PrincipalsTest(unittest.TestCase):
 
         terms = [
             SimpleTerm(
-                "user:user_{0}".format(idx),
-                "user__user{0}".format(idx),
-                "User {0}".format(idx),
+                f"user:user_{idx}",
+                f"user__user{idx}",
+                f"User {idx}",
             )
             for idx in range(0, 10)
         ]
         terms += [
             SimpleTerm(
-                "group:group_{0}".format(idx),
-                "group__group{0}".format(idx),
-                "Group {0}".format(idx),
+                f"group:group_{idx}",
+                f"group__group{idx}",
+                f"Group {idx}",
             )
             for idx in range(0, 10)
         ]
@@ -235,7 +234,7 @@ class PrincipalsTest(unittest.TestCase):
     def test_factory_user_blank(self):
         for idx in range(0, 10):
             # creates user0: 'Abc User'; user1, 'Bcd User', ...
-            userid = "usér{0}".format(idx)
+            userid = f"usér{idx}"
             fullname = chr(65 + idx) + chr(98 + idx) + chr(99 + idx) + " Üser"
             self._make_user(userid, fullname)
 
@@ -251,7 +250,7 @@ class PrincipalsTest(unittest.TestCase):
     def test_factory_user_query(self):
         for idx in range(0, 10):
             # creates user0: 'Abc User'; user1, 'Bcd User', ...
-            userid = "usér{0}".format(idx)
+            userid = f"usér{idx}"
             fullname = chr(65 + idx) + chr(98 + idx) + chr(99 + idx) + " Üser"
             self._make_user(userid, fullname)
 
@@ -276,7 +275,7 @@ class PrincipalsTest(unittest.TestCase):
     def test_factory_group_blank(self):
         for idx in range(0, 10):
             # creates group0: 'Abc Group'; group1, 'Bcd Group', ...
-            groupid = "groüp{0}".format(idx)
+            groupid = f"groüp{idx}"
             fullname = chr(65 + idx) + chr(98 + idx) + chr(99 + idx) + " Gröüp"
             self._make_group(groupid, fullname)
 
@@ -292,7 +291,7 @@ class PrincipalsTest(unittest.TestCase):
     def test_factory_group_query(self):
         for idx in range(0, 10):
             # creates user0: 'Abc User'; user1, 'Bcd User', ...
-            groupid = "groüp{0}".format(idx)
+            groupid = f"groüp{idx}"
             fullname = chr(65 + idx) + chr(98 + idx) + chr(99 + idx) + " Gröüp"
             self._make_group(groupid, fullname)
 
@@ -317,12 +316,12 @@ class PrincipalsTest(unittest.TestCase):
     def test_factory_principal_blank(self):
         for idx in range(0, 10):
             # creates user0: 'Abc User'; user1, 'Bcd User', ...
-            userid = "usér{0}".format(idx)
+            userid = f"usér{idx}"
             fullname = chr(65 + idx) + chr(98 + idx) + chr(99 + idx) + " Üser"
             self._make_user(userid, fullname)
         for idx in range(0, 10):
             # creates group0: 'Abc Group'; group1, 'Bcd Group', ...
-            groupid = "groüp{0}".format(idx)
+            groupid = f"groüp{idx}"
             fullname = chr(65 + idx) + chr(98 + idx) + chr(99 + idx) + " Gröüp"
             self._make_group(groupid, fullname)
 
@@ -342,12 +341,12 @@ class PrincipalsTest(unittest.TestCase):
     def test_factory_principal_query(self):
         for idx in range(0, 10):
             # creates user0: 'Abc User'; user1, 'Bcd User', ...
-            userid = "usér{0}".format(idx)
+            userid = f"usér{idx}"
             fullname = chr(65 + idx) + chr(98 + idx) + chr(99 + idx) + " Üser"
             self._make_user(userid, fullname)
         for idx in range(0, 10):
             # creates group0: 'Abc Group'; group1, 'Bcd Group', ...
-            groupid = "groüp{0}".format(idx)
+            groupid = f"groüp{idx}"
             fullname = chr(65 + idx) + chr(98 + idx) + chr(99 + idx) + " Gröüp"
             self._make_group(groupid, fullname)
 

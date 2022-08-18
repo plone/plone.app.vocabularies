@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from plone.app.vocabularies import PermissiveVocabulary
 from plone.registry.interfaces import IRegistry
 from zope.component import getUtility
@@ -104,7 +103,7 @@ def WeekdaysFactory(context):
     """
     items = []
     for idx in range(len(WEEKDAY_PREFIXES)):
-        msgstr = PLMF("weekday_{0}".format(WEEKDAY_PREFIXES[idx]))
+        msgstr = PLMF(f"weekday_{WEEKDAY_PREFIXES[idx]}")
         items.append(SimpleTerm(idx, str(idx), msgstr))
     return PermissiveVocabulary(items)
 
@@ -146,7 +145,7 @@ def WeekdaysAbbrFactory(context):
     """
     items = []
     for idx in range(len(WEEKDAY_PREFIXES)):
-        msgstr = PLMF("weekday_{0}_abbr".format(WEEKDAY_PREFIXES[idx]))
+        msgstr = PLMF(f"weekday_{WEEKDAY_PREFIXES[idx]}_abbr")
         items.append(SimpleTerm(idx, str(idx), msgstr))
     return PermissiveVocabulary(items)
 
@@ -188,7 +187,7 @@ def WeekdaysShortFactory(context):
     """
     items = []
     for idx in range(len(WEEKDAY_PREFIXES)):
-        msgstr = PLMF("weekday_{0}_short".format(WEEKDAY_PREFIXES[idx]))
+        msgstr = PLMF(f"weekday_{WEEKDAY_PREFIXES[idx]}_short")
         items.append(SimpleTerm(idx, str(idx), msgstr))
     return PermissiveVocabulary(items)
 
@@ -238,7 +237,7 @@ def MonthFactory(context):
     """
     items = []
     for idx in range(len(MONTH_PREFIXES)):
-        msgstr = PLMF("month_{0}".format(MONTH_PREFIXES[idx]))
+        msgstr = PLMF(f"month_{MONTH_PREFIXES[idx]}")
         items.append(SimpleTerm(idx, str(idx), msgstr))
     return PermissiveVocabulary(items)
 
@@ -272,6 +271,6 @@ def MonthAbbrFactory(context):
     """
     items = []
     for idx in range(len(MONTH_PREFIXES)):
-        msgstr = PLMF("month_{0}_abbr".format(MONTH_PREFIXES[idx]))
+        msgstr = PLMF(f"month_{MONTH_PREFIXES[idx]}_abbr")
         items.append(SimpleTerm(idx, str(idx), msgstr))
     return PermissiveVocabulary(items)

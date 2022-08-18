@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # KEPT HERE FOR BBB UNTIL PLONE 6
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -23,7 +22,7 @@ except ImportError:
 
 @implementer(ISource)
 @provider(IContextSourceBinder)
-class GroupsSource(object):
+class GroupsSource:
     """
     >>> from plone.app.vocabularies.tests.base import create_context
     >>> from plone.app.vocabularies.tests.base import DummyTool
@@ -86,7 +85,7 @@ class GroupsSource(object):
 
 
 @implementer(ITerms, ISourceQueryView)
-class GroupsSourceQueryView(object):
+class GroupsSourceQueryView:
     """
     >>> from plone.app.vocabularies.tests.base import create_context
     >>> from plone.app.vocabularies.tests.base import DummyTool

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from doctest import DocTestSuite
 from zope.component import hooks
 from zope.component.testing import setUp
@@ -29,9 +28,8 @@ def vocabTearDown(self):
 
 class Py23DocChecker(doctest.OutputChecker):
     def check_output(self, want, got, optionflags):
-        if not six.PY2:
-            want = re.sub("u'(.*?)'", "'\\1'", want)
-            want = re.sub('u"(.*?)"', '"\\1"', want)
+        want = re.sub("u'(.*?)'", "'\\1'", want)
+        want = re.sub('u"(.*?)"', '"\\1"', want)
         return doctest.OutputChecker.check_output(self, want, got, optionflags)
 
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from Products.CMFCore.utils import getToolByName
 from zope.component.hooks import getSite
 from zope.i18nmessageid import MessageFactory
@@ -12,7 +11,7 @@ _ = MessageFactory("plone")
 
 
 @implementer(IVocabularyFactory)
-class SkinsVocabulary(object):
+class SkinsVocabulary:
     """Vocabulary factory for skins.
 
     >>> from zope.component import queryUtility

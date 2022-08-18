@@ -8,7 +8,7 @@ setup(
     name="plone.app.vocabularies",
     version=version,
     description="Collection of generally useful vocabularies for Plone.",
-    long_description="{0}\n{1}".format(
+    long_description="{}\n{}".format(
         open("README.rst").read(), open("CHANGES.rst").read()
     ),
     classifiers=[

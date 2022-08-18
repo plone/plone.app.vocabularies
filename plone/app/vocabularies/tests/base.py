@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from OFS.interfaces import IItem
 from plone.app.layout.navigation.interfaces import INavigationRoot
 from Products.ZCTextIndex.ParseTree import ParseError
@@ -12,7 +11,7 @@ def create_context():
     return context
 
 
-class DummyContext(object):
+class DummyContext:
     def __init__(self):
         self.__name__ = "dummy"
         self.__parent__ = None
@@ -29,7 +28,7 @@ class DummyContext(object):
         return "/".join(self.getPhysicalPath())
 
 
-class DummyUrlTool(object):
+class DummyUrlTool:
 
     name = "portal_url"
 
@@ -43,12 +42,12 @@ class DummyUrlTool(object):
         return self.portal
 
 
-class DummyTool(object):
+class DummyTool:
     def __init__(self, name):
         self.name = name
 
 
-class DummyType(object):
+class DummyType:
     def __init__(self, title):
         self.title = title
 
@@ -67,7 +66,7 @@ class DummyTypeTool(dict):
 
 class Response(dict):
     def getHeader(self, value):
-        return "header {0}".format(value)
+        return f"header {value}"
 
 
 class Request(dict):
@@ -79,7 +78,7 @@ class Request(dict):
         self.form = form
 
 
-class Brain(object):
+class Brain:
 
     Title = "BrainTitle"
     is_folderish = True
@@ -123,7 +122,7 @@ class DummyCatalog(dict):
         return self.indexes[name]
 
 
-class DummyContent(object):
+class DummyContent:
     def __init__(self, title, subjects=[]):
         self.title = title
         self.subjects = subjects
@@ -135,7 +134,7 @@ class DummyContent(object):
         return self.subjects
 
 
-class DummyContentWithParent(object):
+class DummyContentWithParent:
     __parent__ = None
 
     def __init__(self, cid, title=None, subjects=[], parent=None):
@@ -158,7 +157,7 @@ class DummyContentWithParent(object):
 
 
 @implementer(INavigationRoot)
-class DummyNavRoot(object):
+class DummyNavRoot:
     __parent__ = None
 
     def __init__(self, _id, title=None, parent=None):

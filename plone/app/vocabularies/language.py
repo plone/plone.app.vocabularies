@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from operator import itemgetter
 from Products.CMFCore.utils import getToolByName
 from zope.component.hooks import getSite
@@ -9,7 +8,7 @@ from zope.schema.vocabulary import SimpleVocabulary
 
 
 @implementer(IVocabularyFactory)
-class AvailableContentLanguageVocabulary(object):
+class AvailableContentLanguageVocabulary:
     """Vocabulary factory for available content languages in the portal.
 
     >>> from zope.component import queryUtility
@@ -58,7 +57,7 @@ AvailableContentLanguageVocabularyFactory = AvailableContentLanguageVocabulary()
 
 
 @implementer(IVocabularyFactory)
-class SupportedContentLanguageVocabulary(object):
+class SupportedContentLanguageVocabulary:
     """Vocabulary factory for supported content languages in the portal.
 
     >>> from zope.component import queryUtility

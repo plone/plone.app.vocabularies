@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from Acquisition import aq_get
 from plone.app.vocabularies import PermissiveVocabulary
 from Products.CMFCore.utils import getToolByName
@@ -54,7 +53,7 @@ def getForbiddenContentTypes(context):
 
 
 @implementer(IVocabularyFactory)
-class AllowableContentTypesVocabulary(object):
+class AllowableContentTypesVocabulary:
     """Vocabulary factory for allowable content types.
 
     A list of mime-types that can be used as input for textfields.
@@ -98,7 +97,7 @@ AllowableContentTypesVocabularyFactory = AllowableContentTypesVocabulary()
 
 
 @implementer(IVocabularyFactory)
-class AllowedContentTypesVocabulary(object):
+class AllowedContentTypesVocabulary:
     """Vocabulary factory for allowed content types.
 
     A list of mime-types that is allowed to be used as input for textfields.
@@ -150,7 +149,7 @@ AllowedContentTypesVocabularyFactory = AllowedContentTypesVocabulary()
 
 
 @implementer(IVocabularyFactory)
-class PortalTypesVocabulary(object):
+class PortalTypesVocabulary:
     """Vocabulary factory for portal types.
 
     >>> from zope.component import queryUtility
@@ -193,7 +192,7 @@ PortalTypesVocabularyFactory = PortalTypesVocabulary()
 
 
 @implementer(IVocabularyFactory)
-class UserFriendlyTypesVocabulary(object):
+class UserFriendlyTypesVocabulary:
     """Vocabulary factory for user friendly portal types.
 
     >>> from zope.component import queryUtility
@@ -264,7 +263,7 @@ BAD_TYPES = [
 
 
 @implementer(IVocabularyFactory)
-class ReallyUserFriendlyTypesVocabulary(object):
+class ReallyUserFriendlyTypesVocabulary:
     """Vocabulary factory for really user friendly portal types.
 
     Usage:

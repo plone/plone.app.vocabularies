@@ -118,7 +118,7 @@ def parse_query(query, path_prefix=""):
 
 @implementer(ISource)
 @provider(IContextSourceBinder)
-class SearchableTextSource(object):
+class SearchableTextSource:
     """
     >>> from plone.app.vocabularies.tests.base import Brain
     >>> from plone.app.vocabularies.tests.base import DummyCatalog
@@ -208,7 +208,7 @@ class SearchableTextSource(object):
 
 
 @implementer(IContextSourceBinder)
-class SearchableTextSourceBinder(object):
+class SearchableTextSourceBinder:
     """Use this to instantiate a new SearchableTextSource with custom
     parameters. For example:
 
@@ -264,7 +264,7 @@ class SearchableTextSourceBinder(object):
 
 
 @implementer(ITerms, ISourceQueryView)
-class QuerySearchableTextSourceView(object):
+class QuerySearchableTextSourceView:
     """
     >>> from plone.app.vocabularies.tests.base import DummyCatalog
     >>> from plone.app.vocabularies.tests.base import create_context
@@ -362,7 +362,7 @@ class QuerySearchableTextSourceView(object):
             if brain.is_folderish:
                 browse_token = value
             parent_token = "/".join(value.split("/")[:-1])
-        if six.PY2 and isinstance(title, six.binary_type):
+        if six.PY2 and isinstance(title, bytes):
             title = title.decode(self.context.encoding)
         return BrowsableTerm(
             value,
@@ -398,7 +398,7 @@ class QuerySearchableTextSourceView(object):
             query = "path:" + path
             results = self.context.search(query)
             if name + ".omitbrowsedfolder" in self.request.form:
-                results = six.moves.filter(lambda x: x != path, results)
+                results = filter(lambda x: x != path, results)
         else:
             results = self.context.search(query)
 
@@ -406,7 +406,7 @@ class QuerySearchableTextSourceView(object):
 
 
 @implementer(IVocabularyFactory)
-class KeywordsVocabulary(object):
+class KeywordsVocabulary:
     """Vocabulary factory listing all catalog keywords from the 'Subject' index
 
     >>> from plone.app.vocabularies.tests.base import DummyCatalog
@@ -571,7 +571,7 @@ class CatalogVocabulary(SlicableVocabulary):
             yield self.createTerm(brain, None)
 
     def __contains__(self, value):
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             # perhaps it's already a uid
             uid = value
         else:
@@ -593,7 +593,7 @@ class CatalogVocabulary(SlicableVocabulary):
             return self.createTerm(self.brains[index], None)
 
     def getTerm(self, value):
-        if not isinstance(value, six.string_types):
+        if not isinstance(value, str):
             # here we have a content and fetch the uuid as hex value
             value = IUUID(value)
         query = {"UID": value}
@@ -605,7 +605,7 @@ class CatalogVocabulary(SlicableVocabulary):
 
 
 @implementer(IVocabularyFactory)
-class CatalogVocabularyFactory(object):
+class CatalogVocabularyFactory:
     """
     Test application of Navigation Root:
 
@@ -848,7 +848,7 @@ class StaticCatalogVocabulary(CatalogVocabulary):
 
 
 @implementer(ISource)
-class CatalogSource(object):
+class CatalogSource:
     """Catalog source for use with Choice fields.
 
     When instantiating the source, you can pass keyword arguments
@@ -900,7 +900,7 @@ class CatalogSource(object):
         value can be either a string (hex value of uuid or path) or a plone
         content object.
         """
-        if not isinstance(value, six.string_types):
+        if not isinstance(value, str):
             # here we have a content and fetch the uuid as hex value
             value = IUUID(value)
         # else we have uuid hex value or path

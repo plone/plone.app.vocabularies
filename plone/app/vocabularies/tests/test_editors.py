@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from plone.app.vocabularies.testing import PAVocabularies_INTEGRATION_TESTING
 from zope.component import getUtility
 from zope.schema.interfaces import IVocabularyFactory

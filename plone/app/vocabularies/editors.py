@@ -12,7 +12,7 @@ _ = MessageFactory("plone")
 
 
 @implementer(IVocabularyFactory)
-class AvailableEditorsVocabulary(object):
+class AvailableEditorsVocabulary:
     def __call__(self, context):
         items = []
 

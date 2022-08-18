@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 from plone.app.layout.navigation.interfaces import INavigationRoot
 from plone.app.vocabularies.testing import PAVocabularies_INTEGRATION_TESTING
 from zope.interface import alsoProvides
 
-import mock
+from unittest import mock
 import unittest
 
 

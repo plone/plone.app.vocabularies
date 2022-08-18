@@ -12,7 +12,7 @@ from zope.schema.vocabulary import SimpleVocabulary
 
 
 @implementer(IVocabularyFactory)
-class SyndicationFeedTypesVocabulary(object):
+class SyndicationFeedTypesVocabulary:
     def __call__(self, context):
         registry = getUtility(IRegistry)
         try:
@@ -32,7 +32,7 @@ SyndicationFeedTypesVocabularyFactory = SyndicationFeedTypesVocabulary()
 
 
 @implementer(IVocabularyFactory)
-class SyndicatableFeedItems(object):
+class SyndicatableFeedItems:
     def __call__(self, context):
         site = getSite()
         catalog = getToolByName(site, "portal_catalog")
@@ -47,7 +47,7 @@ class SyndicatableFeedItems(object):
             title = brain.Title
             if isinstance(title, bytes):
                 title = title.decode("utf8")
-            title = "{0}({1})".format(
+            title = "{}({})".format(
                 title,
                 brain.getPath()[len(site_path) + 1 :],
             )

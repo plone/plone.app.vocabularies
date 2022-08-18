@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # KEPT HERE FOR BBB UNTIL PLONE 6
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -37,14 +36,14 @@ def _createUserTerm(userid, context=None, acl_users=None):
     if user:
         fullname = user.getProperty("fullname", None) or userid
     token = (
-        userid.encode("unicode_escape") if isinstance(userid, six.text_type) else userid
+        userid.encode("unicode_escape") if isinstance(userid, str) else userid
     )
     return SimpleTerm(userid, token, fullname)
 
 
 @implementer(ISource)
 @provider(IContextSourceBinder)
-class UsersSource(object):
+class UsersSource:
     """
     >>> from plone.app.vocabularies.tests.base import create_context
     >>> from plone.app.vocabularies.tests.base import DummyTool
@@ -95,7 +94,7 @@ class UsersSource(object):
 
 
 @implementer(ITerms, ISourceQueryView)
-class UsersSourceQueryView(object):
+class UsersSourceQueryView:
     """
     >>> from plone.app.vocabularies.tests.base import create_context
     >>> from plone.app.vocabularies.tests.base import DummyTool

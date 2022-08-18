@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from Acquisition import aq_get
 from operator import attrgetter
 from Products.CMFCore.utils import getToolByName
@@ -23,7 +22,7 @@ PMF = MessageFactory("plone")
 
 
 @implementer(IVocabularyFactory)
-class RolesVocabulary(object):
+class RolesVocabulary:
     """Vocabulary factory for roles in the portal
 
     >>> from zope.component import queryUtility
@@ -83,7 +82,7 @@ RolesVocabularyFactory = RolesVocabulary()
 
 
 @implementer(IVocabularyFactory)
-class PermissionsVocabulary(object):
+class PermissionsVocabulary:
     """Vocabulary factory for permissions."""
 
     def __call__(self, context):

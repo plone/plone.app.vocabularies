@@ -15,7 +15,7 @@ _ = MessageFactory("plone")
 
 
 @implementer(IVocabularyFactory)
-class WorkflowsVocabulary(object):
+class WorkflowsVocabulary:
     """Vocabulary factory for workflows.
 
     >>> from zope.component import queryUtility
@@ -74,7 +74,7 @@ WorkflowsVocabularyFactory = WorkflowsVocabulary()
 
 
 @implementer(IVocabularyFactory)
-class WorkflowStatesVocabulary(object):
+class WorkflowStatesVocabulary:
     """Vocabulary factory for workflow states.
 
     >>> from zope.component import queryUtility
@@ -126,9 +126,9 @@ class WorkflowStatesVocabulary(object):
 
         items = wtool.listWFStatesByTitle(filter_similar=True)
         items = [(safe_text(i[0]), i[1]) for i in items]
-        items_dict = dict(  # no dict comprehension in py 2.6
-            [(i[1], translate(_(i[0]), context=request)) for i in items]
-        )
+        items_dict = {  # no dict comprehension in py 2.6
+            i[1]: translate(_(i[0]), context=request) for i in items
+        }
         terms = [
             SimpleTerm(k, title=f"{v} [{k}]")
             for k, v in sorted(items_dict.items(), key=itemgetter(1))
@@ -140,7 +140,7 @@ WorkflowStatesVocabularyFactory = WorkflowStatesVocabulary()
 
 
 @implementer(IVocabularyFactory)
-class WorkflowTransitionsVocabulary(object):
+class WorkflowTransitionsVocabulary:
     """Vocabulary factory for workflow transitions
 
     >>> from zope.component import queryUtility
@@ -229,9 +229,9 @@ class WorkflowTransitionsVocabulary(object):
         items = []
         transition_items = transitions.items()
         for transition_id, info in sorted(transition_items, key=itemgetter(0)):
-            titles = set([i["title"] for i in info])
+            titles = {i["title"] for i in info}
             item_title = " // ".join(sorted(titles))
-            item_title = "{0} [{1}]".format(item_title, transition_id)
+            item_title = f"{item_title} [{transition_id}]"
             items.append(SimpleTerm(transition_id, transition_id, item_title))
 
         return SimpleVocabulary(items)
