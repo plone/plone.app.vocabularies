@@ -1,10 +1,10 @@
-from Products.CMFPlone.utils import getAllowedSizes
+from plone.namedfile.interfaces import IAvailableSizes
+from zope.component import getUtility
 from zope.i18nmessageid import MessageFactory
 from zope.interface import provider
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
-
 
 PMF = MessageFactory("plone")
 
@@ -13,9 +13,9 @@ PMF = MessageFactory("plone")
 def ScalesVocabulary(context):
     """Obtains available scales from registry"""
     terms = []
-    allowedSizes = getAllowedSizes()
-    if allowedSizes is not None:
-        for scale, (width, height) in getAllowedSizes().items():
+    available_sizes = getUtility(IAvailableSizes)()
+    if available_sizes is not None:
+        for scale, (width, height) in available_sizes.items():
             translated = PMF(
                 f"imagescale_{scale:s}",
                 default=f"{scale:s} ${{width}}x${{height}}",
