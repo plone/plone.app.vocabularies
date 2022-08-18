@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 from OFS.interfaces import IItem
 from plone.app.layout.navigation.interfaces import INavigationRoot
 from Products.ZCTextIndex.ParseTree import ParseError
-from zope.interface import implementer
 from zope.component.hooks import setSite
+from zope.interface import implementer
 
 
 def create_context():
@@ -12,26 +11,26 @@ def create_context():
     return context
 
 
-class DummyContext(object):
-
+class DummyContext:
     def __init__(self):
-        self.__name__ = 'dummy'
+        self.__name__ = "dummy"
         self.__parent__ = None
 
     def getSiteManager(self):
         from zope.component import getSiteManager
+
         return getSiteManager()
 
     def getPhysicalPath(self):
-        return ['', self.__name__]
+        return ["", self.__name__]
 
     def absolute_url(self, relative=False):
-        return '/'.join(self.getPhysicalPath())
+        return "/".join(self.getPhysicalPath())
 
 
-class DummyUrlTool(object):
+class DummyUrlTool:
 
-    name = 'portal_url'
+    name = "portal_url"
 
     def __init__(self, context):
         self.portal = context
@@ -43,14 +42,12 @@ class DummyUrlTool(object):
         return self.portal
 
 
-class DummyTool(object):
-
+class DummyTool:
     def __init__(self, name):
         self.name = name
 
 
-class DummyType(object):
-
+class DummyType:
     def __init__(self, title):
         self.title = title
 
@@ -59,19 +56,17 @@ class DummyType(object):
 
 
 class DummyTypeTool(dict):
-
     def __init__(self):
-        self['Document'] = DummyType('Page')
-        self['Event'] = DummyType('Event')
+        self["Document"] = DummyType("Page")
+        self["Event"] = DummyType("Event")
 
     def listContentTypes(self):
         return self.keys()
 
 
 class Response(dict):
-
     def getHeader(self, value):
-        return 'header {0}'.format(value)
+        return f"header {value}"
 
 
 class Request(dict):
@@ -83,9 +78,9 @@ class Request(dict):
         self.form = form
 
 
-class Brain(object):
+class Brain:
 
-    Title = 'BrainTitle'
+    Title = "BrainTitle"
     is_folderish = True
 
     def __init__(self, rid):
@@ -95,7 +90,7 @@ class Brain(object):
         return self.rid
 
     def getURL(self):
-        return 'proto:' + self.rid
+        return "proto:" + self.rid
 
     @property
     def UID(self):
@@ -104,16 +99,15 @@ class Brain(object):
 
 @implementer(IItem)
 class DummyCatalog(dict):
-
     def __init__(self, values):
         self.indexes = {}
         for r in values:
             self[r] = Brain(r)
 
     def __call__(self, **values):
-        if 'SearchableText' in values:
-            st = values['SearchableText']
-            if st.startswith('error'):
+        if "SearchableText" in values:
+            st = values["SearchableText"]
+            if st.startswith("error"):
                 raise ParseError
         return self.values()
 
@@ -128,8 +122,7 @@ class DummyCatalog(dict):
         return self.indexes[name]
 
 
-class DummyContent(object):
-
+class DummyContent:
     def __init__(self, title, subjects=[]):
         self.title = title
         self.subjects = subjects
@@ -141,7 +134,7 @@ class DummyContent(object):
         return self.subjects
 
 
-class DummyContentWithParent(object):
+class DummyContentWithParent:
     __parent__ = None
 
     def __init__(self, cid, title=None, subjects=[], parent=None):
@@ -160,11 +153,11 @@ class DummyContentWithParent(object):
         return self.__parent__.getPhysicalPath() + [self.__name__]
 
     def absolute_url(self, relative=False):
-        return '/'.join(self.getPhysicalPath())
+        return "/".join(self.getPhysicalPath())
 
 
 @implementer(INavigationRoot)
-class DummyNavRoot(object):
+class DummyNavRoot:
     __parent__ = None
 
     def __init__(self, _id, title=None, parent=None):
@@ -174,10 +167,10 @@ class DummyNavRoot(object):
             self.__parent__ = parent
 
     def getPhysicalPath(self):
-        return ['', self.__parent__.__name__, self.__name__]
+        return ["", self.__parent__.__name__, self.__name__]
 
     def absolute_url(self, relative=False):
-        return '/'.join(self.getPhysicalPath())
+        return "/".join(self.getPhysicalPath())
 
     @property
     def portal_catalog(self):

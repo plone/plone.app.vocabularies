@@ -1,20 +1,20 @@
-# -*- coding: utf-8 -*-
 from plone.app.vocabularies.interfaces import IPermissiveVocabulary
 from plone.app.vocabularies.interfaces import ISlicableVocabulary
-from six.moves import urllib
 from zope.interface import directlyProvides
 from zope.interface import implementer
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 
+import urllib
 
-_token_parse_py3 = getattr(urllib, 'parse', None)
-_token_parse_py27 = lambda token: urllib.unquote_plus(token).decode('utf8')
+
+_token_parse_py3 = getattr(urllib, "parse", None)
+_token_parse_py27 = lambda token: urllib.unquote_plus(token).decode("utf8")
 parse = _token_parse_py3.unquote if _token_parse_py3 else _token_parse_py27
 
 
 @implementer(ISlicableVocabulary)
-class SlicableVocabulary(object):
+class SlicableVocabulary:
     """
     A tokenized vocabulary in which the results can be sliced.
     This class does not implement a complete vocabulary. Instead you use
@@ -60,7 +60,7 @@ class PermissiveVocabulary(SimpleVocabulary):
         pseudo-validation (which is broken for a permissive vocabulary).
         """
         try:
-            v = super(PermissiveVocabulary, self).getTermByToken(token)
+            v = super().getTermByToken(token)
         except LookupError:
             # fallback using dummy term, assumes token==value
             return SimpleTerm(token, title=parse(token))

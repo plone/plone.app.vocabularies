@@ -1,22 +1,22 @@
-# -*- coding: utf-8 -*-
 from BTrees.IIBTree import intersection
 from plone.app.layout.navigation.root import getNavigationRootObject
 from plone.app.vocabularies import SlicableVocabulary
 from plone.app.vocabularies.terms import BrowsableTerm
-from plone.app.vocabularies.terms import safe_encode
 from plone.app.vocabularies.terms import safe_simplevocabulary_from_values
 from plone.app.vocabularies.utils import parseQueryString
-from plone.memoize.instance import memoize
+from plone.base.utils import safe_text
 from plone.memoize import request
+from plone.memoize.instance import memoize
 from plone.registry.interfaces import IRegistry
 from plone.uuid.interfaces import IUUID
 from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone.utils import safe_unicode
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.ZCTextIndex.ParseTree import ParseError
 from z3c.formwidget.query.interfaces import IQuerySource
 from zope.browser.interfaces import ITerms
 from zope.component import queryUtility
+from zope.component.hooks import getSite
+from zope.globalrequest import getRequest
 from zope.interface import implementer
 from zope.interface import provider
 from zope.schema.interfaces import IContextSourceBinder
@@ -24,18 +24,10 @@ from zope.schema.interfaces import ISource
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
-from zope.component.hooks import getSite
-
-try:
-    from zope.globalrequest import getRequest
-except ImportError:
-    def getRequest():
-        return None
 
 import itertools
 import json
 import os
-import six
 import warnings
 
 
@@ -48,143 +40,142 @@ except ImportError:
         pass
 
 
-def parse_query(query, path_prefix=''):
-    """ Parse the query string and turn it into a dictionary for querying the
-        catalog.
+def parse_query(query, path_prefix=""):
+    """Parse the query string and turn it into a dictionary for querying the
+    catalog.
 
-        We want to find anything which starts with the given string, so we add
-        a * at the end of words.
+    We want to find anything which starts with the given string, so we add
+    a * at the end of words.
 
-        >>> parse_query('foo')
-        {'SearchableText': 'foo*'}
+    >>> parse_query('foo')
+    {'SearchableText': 'foo*'}
 
-        If we have more than one word, each of them should have the * and
-        they should be combined with the AND operator.
+    If we have more than one word, each of them should have the * and
+    they should be combined with the AND operator.
 
-        >>> parse_query('foo bar')
-        {'SearchableText': 'foo* AND bar*'}
+    >>> parse_query('foo bar')
+    {'SearchableText': 'foo* AND bar*'}
 
-        We also filter out some special characters. They are handled like
-        spaces and seperate words from each other.
+    We also filter out some special characters. They are handled like
+    spaces and seperate words from each other.
 
-        >>> parse_query('foo +bar some-thing')
-        {'SearchableText': 'foo* AND bar* AND some* AND thing*'}
+    >>> parse_query('foo +bar some-thing')
+    {'SearchableText': 'foo* AND bar* AND some* AND thing*'}
 
-        >>> parse_query('what? (spam) *ham')
-        {'SearchableText': 'what* AND spam* AND ham*'}
+    >>> parse_query('what? (spam) *ham')
+    {'SearchableText': 'what* AND spam* AND ham*'}
 
-        You can also limit searches to paths, if you only supply the path,
-        then all contents of that folder will be searched. If you supply
-        additional search words, then all subfolders are searched as well.
+    You can also limit searches to paths, if you only supply the path,
+    then all contents of that folder will be searched. If you supply
+    additional search words, then all subfolders are searched as well.
 
-        >>> expected = {'path': {'query': '/dummy', 'depth': 1}}
-        >>> parse_query('path:/dummy') == expected
-        True
+    >>> expected = {'path': {'query': '/dummy', 'depth': 1}}
+    >>> parse_query('path:/dummy') == expected
+    True
 
-        >>> expected = {'path': {'query': '/dummy'}, 'SearchableText': 'bar*'}
-        >>> parse_query('bar path:/dummy') == expected
-        True
+    >>> expected = {'path': {'query': '/dummy'}, 'SearchableText': 'bar*'}
+    >>> parse_query('bar path:/dummy') == expected
+    True
 
-        >>> expected = {'path': {'query': '/dummy'}, 'SearchableText': 'foo*'}
-        >>> parse_query('path:/dummy foo') == expected
-        True
+    >>> expected = {'path': {'query': '/dummy'}, 'SearchableText': 'foo*'}
+    >>> parse_query('path:/dummy foo') == expected
+    True
 
-        If you supply more then one path, then only the last one is used.
+    If you supply more then one path, then only the last one is used.
 
-        >>> expected = {'path': {'query': '/spam', 'depth': 1}}
-        >>> parse_query('path:/dummy path:/spam') == expected
-        True
+    >>> expected = {'path': {'query': '/spam', 'depth': 1}}
+    >>> parse_query('path:/dummy path:/spam') == expected
+    True
 
-        You can also provide a prefix for the path. This is useful for virtual
-        hosting.
+    You can also provide a prefix for the path. This is useful for virtual
+    hosting.
 
-        >>> expected = {'path': {'query': '/portal/dummy', 'depth': 1}}
-        >>> parse_query('path:/dummy', path_prefix='/portal') == expected
-        True
+    >>> expected = {'path': {'query': '/portal/dummy', 'depth': 1}}
+    >>> parse_query('path:/dummy', path_prefix='/portal') == expected
+    True
 
     """
     query_parts = query.split()
-    query = {'SearchableText': []}
+    query = {"SearchableText": []}
     for part in query_parts:
-        if part.startswith('path:'):
+        if part.startswith("path:"):
             path = part[5:]
-            query['path'] = {'query': path}
+            query["path"] = {"query": path}
         else:
-            query['SearchableText'].append(part)
-    text = ' '.join(query['SearchableText'])
-    for char in '?-+*()':
-        text = text.replace(char, ' ')
-    query['SearchableText'] = ' AND '.join(x + '*' for x in text.split())
-    if 'path' in query:
-        if query['SearchableText'] == '':
-            del query['SearchableText']
-            query['path']['depth'] = 1
-        query['path']['query'] = path_prefix + query['path']['query']
+            query["SearchableText"].append(part)
+    text = " ".join(query["SearchableText"])
+    for char in "?-+*()":
+        text = text.replace(char, " ")
+    query["SearchableText"] = " AND ".join(x + "*" for x in text.split())
+    if "path" in query:
+        if query["SearchableText"] == "":
+            del query["SearchableText"]
+            query["path"]["depth"] = 1
+        query["path"]["query"] = path_prefix + query["path"]["query"]
     return query
 
 
 @implementer(ISource)
 @provider(IContextSourceBinder)
-class SearchableTextSource(object):
+class SearchableTextSource:
     """
-      >>> from plone.app.vocabularies.tests.base import Brain
-      >>> from plone.app.vocabularies.tests.base import DummyCatalog
-      >>> from plone.app.vocabularies.tests.base import create_context
-      >>> from plone.app.vocabularies.tests.base import DummyTool
+    >>> from plone.app.vocabularies.tests.base import Brain
+    >>> from plone.app.vocabularies.tests.base import DummyCatalog
+    >>> from plone.app.vocabularies.tests.base import create_context
+    >>> from plone.app.vocabularies.tests.base import DummyTool
 
-      >>> context = create_context()
+    >>> context = create_context()
 
-      >>> catalog = DummyCatalog(('/1234', '/2345'))
-      >>> context.portal_catalog = catalog
+    >>> catalog = DummyCatalog(('/1234', '/2345'))
+    >>> context.portal_catalog = catalog
 
-      >>> tool = DummyTool('portal_url')
-      >>> def getPortalPath():
-      ...     return '/'
-      >>> tool.getPortalPath = getPortalPath
-      >>> context.portal_url = tool
+    >>> tool = DummyTool('portal_url')
+    >>> def getPortalPath():
+    ...     return '/'
+    >>> tool.getPortalPath = getPortalPath
+    >>> context.portal_url = tool
 
-      >>> source = SearchableTextSource(context)
-      >>> source
-      <plone.app.vocabularies.catalog.SearchableTextSource object at ...>
+    >>> source = SearchableTextSource(context)
+    >>> source
+    <plone.app.vocabularies.catalog.SearchableTextSource object at ...>
 
-      >>> '1234' in source, '1' in source
-      (True, False)
+    >>> '1234' in source, '1' in source
+    (True, False)
 
-      >>> source.search('')
-      []
+    >>> source.search('')
+    []
 
-      >>> source.search('error')
-      []
+    >>> source.search('error')
+    []
 
-      >>> source.search('foo')
-      <generator object ...>
+    >>> source.search('foo')
+    <generator object ...>
 
-      >>> list(source.search('foo'))
-      ['1234', '2345']
+    >>> list(source.search('foo'))
+    ['1234', '2345']
 
-      >>> list(source.search('bar path:/dummy'))
-      ['/dummy', '1234', '2345']
+    >>> list(source.search('bar path:/dummy'))
+    ['/dummy', '1234', '2345']
 
-      >>> u'' in source
-      True
+    >>> u'' in source
+    True
 
-      >>> source = SearchableTextSource(context, default_query='default')
-      >>> list(source.search(''))
-      ['1234', '2345']
+    >>> source = SearchableTextSource(context, default_query='default')
+    >>> list(source.search(''))
+    ['1234', '2345']
     """
 
     def __init__(self, context, base_query={}, default_query=None):
         self.context = context
         self.base_query = base_query
         self.default_query = default_query
-        self.catalog = getToolByName(context, 'portal_catalog')
-        self.portal_tool = getToolByName(context, 'portal_url')
+        self.catalog = getToolByName(context, "portal_catalog")
+        self.portal_tool = getToolByName(context, "portal_url")
         self.portal_path = self.portal_tool.getPortalPath()
-        self.encoding = 'utf-8'
+        self.encoding = "utf-8"
 
     def __contains__(self, value):
-        """Return whether the value is available in this source
-        """
+        """Return whether the value is available in this source"""
         if not value:
             return True
         elif self.catalog.getrid(self.portal_path + value) is None:
@@ -193,7 +184,7 @@ class SearchableTextSource(object):
 
     def search(self, query_string):
         query = self.base_query.copy()
-        if query_string == '':
+        if query_string == "":
             if self.default_query is not None:
                 query.update(parse_query(self.default_query, self.portal_path))
             else:
@@ -203,21 +194,20 @@ class SearchableTextSource(object):
 
         try:
             results = (
-                x.getPath()[len(self.portal_path):]
-                for x in self.catalog(**query)
+                x.getPath()[len(self.portal_path) :] for x in self.catalog(**query)
             )
         except ParseError:
             return []
 
-        if 'path' in query:
-            path = query['path']['query'][len(self.portal_path):]
-            if path != '':
-                return itertools.chain((path, ), results)
+        if "path" in query:
+            path = query["path"]["query"][len(self.portal_path) :]
+            if path != "":
+                return itertools.chain((path,), results)
         return results
 
 
 @implementer(IContextSourceBinder)
-class SearchableTextSourceBinder(object):
+class SearchableTextSourceBinder:
     """Use this to instantiate a new SearchableTextSource with custom
     parameters. For example:
 
@@ -267,83 +257,86 @@ class SearchableTextSourceBinder(object):
         self.default_query = default_query
 
     def __call__(self, context):
-        return SearchableTextSource(context, base_query=self.query.copy(),
-                                    default_query=self.default_query)
+        return SearchableTextSource(
+            context, base_query=self.query.copy(), default_query=self.default_query
+        )
 
 
 @implementer(ITerms, ISourceQueryView)
-class QuerySearchableTextSourceView(object):
+class QuerySearchableTextSourceView:
     """
-      >>> from plone.app.vocabularies.tests.base import DummyCatalog
-      >>> from plone.app.vocabularies.tests.base import create_context
-      >>> from plone.app.vocabularies.tests.base import DummyTool
-      >>> from plone.app.vocabularies.tests.base import Request
+    >>> from plone.app.vocabularies.tests.base import DummyCatalog
+    >>> from plone.app.vocabularies.tests.base import create_context
+    >>> from plone.app.vocabularies.tests.base import DummyTool
+    >>> from plone.app.vocabularies.tests.base import Request
 
-      >>> context = create_context()
+    >>> context = create_context()
 
-      >>> rids = ('/1234', '/2345', '/dummy/1234')
-      >>> tool = DummyCatalog(rids)
-      >>> context.portal_catalog = tool
+    >>> rids = ('/1234', '/2345', '/dummy/1234')
+    >>> tool = DummyCatalog(rids)
+    >>> context.portal_catalog = tool
 
-      >>> tool = DummyTool('portal_url')
-      >>> def getPortalPath():
-      ...     return '/dummy'
-      >>> tool.getPortalPath = getPortalPath
-      >>> context.portal_url = tool
+    >>> tool = DummyTool('portal_url')
+    >>> def getPortalPath():
+    ...     return '/dummy'
+    >>> tool.getPortalPath = getPortalPath
+    >>> context.portal_url = tool
 
-      >>> source = SearchableTextSource(context)
-      >>> source
-      <plone.app.vocabularies.catalog.SearchableTextSource object at ...>
+    >>> source = SearchableTextSource(context)
+    >>> source
+    <plone.app.vocabularies.catalog.SearchableTextSource object at ...>
 
-      >>> view = QuerySearchableTextSourceView(source, Request())
-      >>> view
-      <plone.app.vocabularies.catalog.QuerySearchableTextSourceView object ...>
+    >>> view = QuerySearchableTextSourceView(source, Request())
+    >>> view
+    <plone.app.vocabularies.catalog.QuerySearchableTextSourceView object ...>
 
-      >>> view.getValue('a')
-      Traceback (most recent call last):
-      ...
-      LookupError: a
+    >>> view.getValue('a')
+    Traceback (most recent call last):
+    ...
+    LookupError: a
 
-      >>> view.getValue('/1234')
-      '/1234'
+    >>> view.getValue('/1234')
+    '/1234'
 
-      >>> view.getTerm(None) is None
-      True
+    >>> view.getTerm(None) is None
+    True
 
-      >>> view.getTerm('1234')
-      <plone.app.vocabularies.terms.BrowsableTerm object at ...>
+    >>> view.getTerm('1234')
+    <plone.app.vocabularies.terms.BrowsableTerm object at ...>
 
-      >>> view.getTerm('/1234')
-      <plone.app.vocabularies.terms.BrowsableTerm object at ...>
+    >>> view.getTerm('/1234')
+    <plone.app.vocabularies.terms.BrowsableTerm object at ...>
 
-      >>> template = view.render(name='t')
-      >>> u'<input type="text" name="t.query" value="" />' in template
-      True
+    >>> template = view.render(name='t')
+    >>> u'<input type="text" name="t.query" value="" />' in template
+    True
 
-      >>> u'<input type="submit" name="t.search" value="Search" />' in template
-      True
+    >>> u'<input type="submit" name="t.search" value="Search" />' in template
+    True
 
-      >>> request = Request(form={'t.search' : True, 't.query' : 'value'})
-      >>> view = QuerySearchableTextSourceView(source, request)
-      >>> sorted(view.results('t'))
-      ['', '', '/1234']
+    >>> request = Request(form={'t.search' : True, 't.query' : 'value'})
+    >>> view = QuerySearchableTextSourceView(source, request)
+    >>> sorted(view.results('t'))
+    ['', '', '/1234']
 
-      >>> request = Request(form={'t.search' : True, 't.query' : 'value',
-      ...                         't.browse.foo' : '/foo'})
-      >>> view = QuerySearchableTextSourceView(source, request)
-      >>> sorted(view.results('t'))
-      ['', '', '/1234', 'foo']
+    >>> request = Request(form={'t.search' : True, 't.query' : 'value',
+    ...                         't.browse.foo' : '/foo'})
+    >>> view = QuerySearchableTextSourceView(source, request)
+    >>> sorted(view.results('t'))
+    ['', '', '/1234', 'foo']
 
-      Titles need to be unicode:
-      >>> view.getTerm(list(view.results('t'))[0]).title
-      u'/foo'
+    Titles need to be unicode:
+    >>> view.getTerm(list(view.results('t'))[0]).title
+    u'/foo'
     """
 
-    template = ViewPageTemplateFile('searchabletextsource.pt')
+    template = ViewPageTemplateFile("searchabletextsource.pt")
 
     def __init__(self, context, request):
-        msg = 'QuerySearchableTextSourceView is deprecated and will be ' \
-              'removed on Plone 6'
+        msg = (
+            "QuerySearchableTextSourceView is deprecated and will be "
+            "removed on Plone 6"
+        )
         warnings.warn(msg, DeprecationWarning)
         self.context = context
         self.request = request
@@ -351,9 +344,8 @@ class QuerySearchableTextSourceView(object):
     def getTerm(self, value):
         if not value:
             return None
-        if (not self.context.portal_path.endswith('/')) \
-                and (not value.startswith('/')):
-            value = '/' + value
+        if (not self.context.portal_path.endswith("/")) and (not value.startswith("/")):
+            value = "/" + value
         # get rid for path
         rid = self.context.catalog.getrid(self.context.portal_path + value)
         # first some defaults
@@ -368,14 +360,15 @@ class QuerySearchableTextSourceView(object):
             # title = brain.Title
             if brain.is_folderish:
                 browse_token = value
-            parent_token = '/'.join(value.split('/')[:-1])
-        if six.PY2 and isinstance(title, six.binary_type):
-            title = title.decode(self.context.encoding)
-        return BrowsableTerm(value, token=token,
-                             title=title,
-                             description=value,
-                             browse_token=browse_token,
-                             parent_token=parent_token)
+            parent_token = "/".join(value.split("/")[:-1])
+        return BrowsableTerm(
+            value,
+            token=token,
+            title=title,
+            description=value,
+            browse_token=browse_token,
+            parent_token=parent_token,
+        )
 
     def getValue(self, token):
         if token not in self.context:
@@ -386,24 +379,23 @@ class QuerySearchableTextSourceView(object):
         return self.template(name=name)
 
     def results(self, name):
-        query = ''
+        query = ""
 
         # check whether the normal search button was pressed
-        if name + '.search' in self.request.form:
-            query_fieldname = name + '.query'
+        if name + ".search" in self.request.form:
+            query_fieldname = name + ".query"
             if query_fieldname in self.request.form:
                 query = self.request.form[query_fieldname]
 
         # check whether a browse button was pressed
-        browse_prefix = name + '.browse.'
-        browse = tuple(x for x in self.request.form
-                       if x.startswith(browse_prefix))
+        browse_prefix = name + ".browse."
+        browse = tuple(x for x in self.request.form if x.startswith(browse_prefix))
         if len(browse) == 1:
-            path = browse[0][len(browse_prefix):]
-            query = 'path:' + path
+            path = browse[0][len(browse_prefix) :]
+            query = "path:" + path
             results = self.context.search(query)
-            if name + '.omitbrowsedfolder' in self.request.form:
-                results = six.moves.filter(lambda x: x != path, results)
+            if name + ".omitbrowsedfolder" in self.request.form:
+                results = filter(lambda x: x != path, results)
         else:
             results = self.context.search(query)
 
@@ -411,97 +403,96 @@ class QuerySearchableTextSourceView(object):
 
 
 @implementer(IVocabularyFactory)
-class KeywordsVocabulary(object):
-    u"""Vocabulary factory listing all catalog keywords from the 'Subject' index
+class KeywordsVocabulary:
+    """Vocabulary factory listing all catalog keywords from the 'Subject' index
 
-        >>> from plone.app.vocabularies.tests.base import DummyCatalog
-        >>> from plone.app.vocabularies.tests.base import create_context
-        >>> from plone.app.vocabularies.tests.base import DummyContent
-        >>> from plone.app.vocabularies.tests.base import Request
-        >>> from Products.PluginIndexes.KeywordIndex.KeywordIndex import KeywordIndex  # noqa
+    >>> from plone.app.vocabularies.tests.base import DummyCatalog
+    >>> from plone.app.vocabularies.tests.base import create_context
+    >>> from plone.app.vocabularies.tests.base import DummyContent
+    >>> from plone.app.vocabularies.tests.base import Request
+    >>> from Products.PluginIndexes.KeywordIndex.KeywordIndex import KeywordIndex  # noqa
 
-        >>> context = create_context()
+    >>> context = create_context()
 
-        First test bytes vocabularies
-        >>> rids = ('/1234', '/2345', '/dummy/1234')
-        >>> tool = DummyCatalog(rids)
-        >>> context.portal_catalog = tool
-        >>> index = KeywordIndex('Subject')
-        >>> done = index._index_object(
-        ...     1,
-        ...     DummyContent('ob1', [b'foo', b'bar', b'baz']), attr='Subject'
-        ... )
-        >>> done = index._index_object(
-        ...     2,
-        ...     DummyContent(
-        ...         'ob2',
-        ...         [b'blee', b'bar', u'non-åscii'.encode('utf8')]),
-        ...         attr='Subject',
-        ... )
-        >>> tool.indexes['Subject'] = index
-        >>> vocab = KeywordsVocabulary()
-        >>> result = vocab(context)
+    First test bytes vocabularies
+    >>> rids = ('/1234', '/2345', '/dummy/1234')
+    >>> tool = DummyCatalog(rids)
+    >>> context.portal_catalog = tool
+    >>> index = KeywordIndex('Subject')
+    >>> done = index._index_object(
+    ...     1,
+    ...     DummyContent('ob1', [b'foo', b'bar', b'baz']), attr='Subject'
+    ... )
+    >>> done = index._index_object(
+    ...     2,
+    ...     DummyContent(
+    ...         'ob2',
+    ...         [b'blee', b'bar', u'non-åscii'.encode('utf8')]),
+    ...         attr='Subject',
+    ... )
+    >>> tool.indexes['Subject'] = index
+    >>> vocab = KeywordsVocabulary()
+    >>> result = vocab(context)
 
-        Value type is kept ...
-        >>> expected = [b'bar', b'baz', b'blee', b'foo', u'non-åscii'.encode('utf8')]
-        >>> sorted(result.by_value) == expected
-        True
+    Value type is kept ...
+    >>> expected = [b'bar', b'baz', b'blee', b'foo', u'non-åscii'.encode('utf8')]
+    >>> sorted(result.by_value) == expected
+    True
 
-        but tokens are base64 encoded text
-        >>> expected = ['YmF6', 'YmFy', 'YmxlZQ==', 'Zm9v', 'bm9uLcOlc2NpaQ==']
-        >>> sorted(result.by_token) == expected
-        True
+    but tokens are base64 encoded text
+    >>> expected = ['YmF6', 'YmFy', 'YmxlZQ==', 'Zm9v', 'bm9uLcOlc2NpaQ==']
+    >>> sorted(result.by_token) == expected
+    True
 
-        >>> result.getTermByToken(expected[-1]).title == u'non-åscii'
-        True
+    >>> result.getTermByToken(expected[-1]).title == u'non-åscii'
+    True
 
-        Testing unicode vocabularies
-        First clear the index. Comparing non-six.text_type to six.text_type objects fails.
-        >>> index.clear()
-        >>> done = index._index_object(
-        ...     1,
-        ...     DummyContent('obj1', [u'äüö', u'nix']), attr='Subject'
-        ... )
-        >>> tool.indexes['Subject'] = index
-        >>> vocab = KeywordsVocabulary()
-        >>> result = vocab(context)
-        >>> expected = ['bml4', 'w6TDvMO2']
-        >>> sorted(result.by_token) == expected
-        True
-        >>> set(result.by_value) == {u'nix', u'äüö'}
-        True
-        >>> result.getTermByToken(expected[0]).title == u'nix'
-        True
+    Testing unicode vocabularies
+    First clear the index. Comparing bytes to str objects fails.
+    >>> index.clear()
+    >>> done = index._index_object(
+    ...     1,
+    ...     DummyContent('obj1', [u'äüö', u'nix']), attr='Subject'
+    ... )
+    >>> tool.indexes['Subject'] = index
+    >>> vocab = KeywordsVocabulary()
+    >>> result = vocab(context)
+    >>> expected = ['bml4', 'w6TDvMO2']
+    >>> sorted(result.by_token) == expected
+    True
+    >>> set(result.by_value) == {u'nix', u'äüö'}
+    True
+    >>> result.getTermByToken(expected[0]).title == u'nix'
+    True
 
     """
+
     # Allow users to customize the index to easily create
     # KeywordVocabularies for other keyword indexes
-    keyword_index = 'Subject'
-    path_index = 'path'
+    keyword_index = "Subject"
+    path_index = "path"
 
     def section(self, context):
-        """gets section from which subjects are used.
-        """
+        """gets section from which subjects are used."""
         registry = queryUtility(IRegistry)
         if registry is None:
             return None
-        if registry.get('plone.subjects_of_navigation_root', False):
-            portal = getToolByName(context, 'portal_url').getPortalObject()
+        if registry.get("plone.subjects_of_navigation_root", False):
+            portal = getToolByName(context, "portal_url").getPortalObject()
             return getNavigationRootObject(context, portal)
         return None
 
     def all_keywords(self, kwfilter):
         site = getSite()
-        self.catalog = getToolByName(site, 'portal_catalog', None)
+        self.catalog = getToolByName(site, "portal_catalog", None)
         if self.catalog is None:
             return SimpleVocabulary([])
         index = self.catalog._catalog.getIndex(self.keyword_index)
         return safe_simplevocabulary_from_values(index._index, query=kwfilter)
 
     def keywords_of_section(self, section, kwfilter):
-        """Valid keywords under the given section.
-        """
-        pcat = getToolByName(section, 'portal_catalog')
+        """Valid keywords under the given section."""
+        pcat = getToolByName(section, "portal_catalog")
         cat = pcat._catalog
         path_idx = cat.indexes[self.path_index]
         tags_idx = cat.indexes[self.keyword_index]
@@ -509,15 +500,15 @@ class KeywordsVocabulary(object):
         # query all oids of path - low level
         pquery = {
             self.path_index: {
-                'query': '/'.join(section.getPhysicalPath()),
-                'depth': -1,
+                "query": "/".join(section.getPhysicalPath()),
+                "depth": -1,
             }
         }
-        kwfilter = safe_encode(kwfilter)
+        kwfilter = safe_text(kwfilter)
         # uses internal zcatalog specific details to quickly get the values.
         path_result, info = path_idx._apply_index(pquery)
         for tag in tags_idx.uniqueValues():
-            if kwfilter and kwfilter not in safe_encode(tag):
+            if kwfilter and kwfilter not in safe_text(tag):
                 continue
             tquery = {self.keyword_index: tag}
             tags_result, info = tags_idx._apply_index(tquery)
@@ -544,6 +535,7 @@ class CatalogVocabulary(SlicableVocabulary):
     @classmethod
     def fromItems(cls, query, context, *interfaces):
         return cls(query)
+
     fromValues = fromItems
 
     @classmethod
@@ -556,7 +548,7 @@ class CatalogVocabulary(SlicableVocabulary):
     @property
     @memoize
     def catalog(self):
-        return getToolByName(getSite(), 'portal_catalog')
+        return getToolByName(getSite(), "portal_catalog")
 
     @property
     @memoize
@@ -566,8 +558,8 @@ class CatalogVocabulary(SlicableVocabulary):
         except ParseError:
             # a parseError: Query contains only common words may happen,
             # semantically this means we want all result w/o SearchableText
-            if 'SearchableText' in self.query:
-                del self.query['SearchableText']
+            if "SearchableText" in self.query:
+                del self.query["SearchableText"]
                 return self.catalog(**self.query)
             raise
 
@@ -576,13 +568,13 @@ class CatalogVocabulary(SlicableVocabulary):
             yield self.createTerm(brain, None)
 
     def __contains__(self, value):
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             # perhaps it's already a uid
             uid = value
         else:
             uid = IUUID(value)
         query = self.query.copy()
-        query['UID'] = uid
+        query["UID"] = uid
         return len(self.catalog(**query)) > 0
 
     def __len__(self):
@@ -593,16 +585,15 @@ class CatalogVocabulary(SlicableVocabulary):
             slice_inst = index
             start = slice_inst.start
             stop = slice_inst.stop
-            return [self.createTerm(brain, None)
-                    for brain in self.brains[start:stop]]
+            return [self.createTerm(brain, None) for brain in self.brains[start:stop]]
         else:
             return self.createTerm(self.brains[index], None)
 
     def getTerm(self, value):
-        if not isinstance(value, six.string_types):
+        if not isinstance(value, str):
             # here we have a content and fetch the uuid as hex value
             value = IUUID(value)
-        query = {'UID': value}
+        query = {"UID": value}
         brains = self.catalog(**query)
         for b in brains:
             return self.createTerm(b, None)
@@ -611,7 +602,7 @@ class CatalogVocabulary(SlicableVocabulary):
 
 
 @implementer(IVocabularyFactory)
-class CatalogVocabularyFactory(object):
+class CatalogVocabularyFactory:
     """
     Test application of Navigation Root:
 
@@ -640,6 +631,7 @@ class CatalogVocabularyFactory(object):
       ['/dummy/sub-site', '/dummy/sub-site/ghij']
 
     """
+
     # We want to get rid of this and use CatalogSource instead,
     # but we can't in Plone versions that support
     # plone.app.widgets < 1.6.0
@@ -647,30 +639,28 @@ class CatalogVocabularyFactory(object):
     def __call__(self, context, query=None):
         parsed = {}
         if query:
-            parsed = parseQueryString(context, query['criteria'])
-            if 'sort_on' in query:
-                parsed['sort_on'] = query['sort_on']
-            if 'sort_order' in query:
-                parsed['sort_order'] = str(query['sort_order'])
+            parsed = parseQueryString(context, query["criteria"])
+            if "sort_on" in query:
+                parsed["sort_on"] = query["sort_on"]
+            if "sort_order" in query:
+                parsed["sort_order"] = str(query["sort_order"])
 
         # If no path is specified check if we are in a sub-site and use that
         # as the path root for catalog searches
-        if 'path' not in parsed:
+        if "path" not in parsed:
             site = getSite()
             nav_root = getNavigationRootObject(context, site)
             site_path = site.getPhysicalPath()
             if nav_root and nav_root.getPhysicalPath() != site_path:
-                parsed['path'] = {
-                    'query': '/'.join(nav_root.getPhysicalPath()),
-                    'depth': -1
+                parsed["path"] = {
+                    "query": "/".join(nav_root.getPhysicalPath()),
+                    "depth": -1,
                 }
         return CatalogVocabulary.fromItems(parsed, context)
 
 
 def request_query_cache_key(func, vocab):
-    return json.dumps([
-        vocab.query, vocab.text_search_index, vocab.title_template
-    ])
+    return json.dumps([vocab.query, vocab.text_search_index, vocab.title_template])
 
 
 @implementer(IQuerySource, IVocabularyFactory)
@@ -793,11 +783,11 @@ class StaticCatalogVocabulary(CatalogVocabulary):
        (u'proto:/site/2345 /site/2345 - BrainTitle /2345', '/site/2345')]
 
     """
+
     title_template = "{brain.Title} ({path})"
     text_search_index = "SearchableText"
 
-    def __init__(self, query, text_search_index=None,
-                 title_template=None):
+    def __init__(self, query, text_search_index=None, title_template=None):
         self.query = query
         if text_search_index:
             self.text_search_index = text_search_index
@@ -809,13 +799,13 @@ class StaticCatalogVocabulary(CatalogVocabulary):
     def nav_root_path(self):
         site = getSite()
         nav_root = getNavigationRootObject(site, site)
-        return '/'.join(nav_root.getPhysicalPath())
+        return "/".join(nav_root.getPhysicalPath())
 
     def get_brain_path(self, brain):
         nav_root_path = self.nav_root_path
         path = brain.getPath()
         if path.startswith(nav_root_path):
-            path = path[len(nav_root_path):]
+            path = path[len(nav_root_path) :]
         return path
 
     @staticmethod
@@ -829,11 +819,15 @@ class StaticCatalogVocabulary(CatalogVocabulary):
 
     def createTerm(self, brain, context=None):
         return SimpleTerm(
-            value=brain.UID, token=brain.UID,
-            title=safe_unicode(self.title_template.format(
-                brain=brain, path=self.get_brain_path(brain),
-                url=brain.getURL(),
-            ))
+            value=brain.UID,
+            token=brain.UID,
+            title=safe_text(
+                self.title_template.format(
+                    brain=brain,
+                    path=self.get_brain_path(brain),
+                    url=brain.getURL(),
+                )
+            ),
         )
 
     def search(self, query):
@@ -847,13 +841,11 @@ class StaticCatalogVocabulary(CatalogVocabulary):
         query = {self.text_search_index: query}
         query.update(self.query)
         brains = self.catalog(**query)
-        return SimpleVocabulary([
-            self.createTerm(b) for b in brains
-        ])
+        return SimpleVocabulary([self.createTerm(b) for b in brains])
 
 
 @implementer(ISource)
-class CatalogSource(object):
+class CatalogSource:
     """Catalog source for use with Choice fields.
 
     When instantiating the source, you can pass keyword arguments
@@ -905,24 +897,24 @@ class CatalogSource(object):
         value can be either a string (hex value of uuid or path) or a plone
         content object.
         """
-        if not isinstance(value, six.string_types):
+        if not isinstance(value, str):
             # here we have a content and fetch the uuid as hex value
             value = IUUID(value)
         # else we have uuid hex value or path
 
-        if value.startswith('/'):
+        if value.startswith("/"):
             # it is a path query
             site = getSite()
-            site_path = '/'.join(site.getPhysicalPath())
-            path = os.path.join(site_path, value.lstrip('/'))
-            query = {'path': {'query': path, 'depth': 0}}
+            site_path = "/".join(site.getPhysicalPath())
+            path = os.path.join(site_path, value.lstrip("/"))
+            query = {"path": {"query": path, "depth": 0}}
         else:
             # its a uuid
-            query = {'UID': value}
+            query = {"UID": value}
         return bool(self.search_catalog(query))
 
     def search_catalog(self, user_query):
         query = user_query.copy()
         query.update(self.query)
-        catalog = getToolByName(getSite(), 'portal_catalog')
+        catalog = getToolByName(getSite(), "portal_catalog")
         return catalog(query)
