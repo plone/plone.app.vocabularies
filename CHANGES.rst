@@ -8,6 +8,20 @@ Changelog
 
 .. towncrier release notes start
 
+5.0.0b1 (2022-08-31)
+--------------------
+
+New features:
+
+
+- Remove dependency on CMFPlone (use plone.base).
+  In images vocab use utility instead of import.
+  isort/black (pure) and pyupgrade --py37-plus`.
+  Remove traces of six.
+  Bump version to 5.0.
+  [jensens] (#72)
+
+
 4.3.0 (2021-09-01)
 ------------------
 
