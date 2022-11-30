@@ -2,7 +2,7 @@ from setuptools import find_packages
 from setuptools import setup
 
 
-version = "5.0.0b2.dev0"
+version = "5.0.1.dev0"
 
 setup(
     name="plone.app.vocabularies",
@@ -35,6 +35,7 @@ setup(
     namespace_packages=["plone", "plone.app"],
     include_package_data=True,
     zip_safe=False,
+    python_requires=">=3.8",
     install_requires=[
         "plone.app.querystring",
         "plone.base",
