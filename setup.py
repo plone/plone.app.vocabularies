@@ -46,10 +46,8 @@ setup(
     ],
     extras_require=dict(
         test=[
-            "mock",
             "plone.app.testing",
             "zope.configuration",
-            "zope.testing",
         ]
     ),
 )
