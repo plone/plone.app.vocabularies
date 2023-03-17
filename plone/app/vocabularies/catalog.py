@@ -333,7 +333,7 @@ class QuerySearchableTextSourceView:
     def __init__(self, context, request):
         msg = (
             "QuerySearchableTextSourceView is deprecated and will be "
-            "removed on Plone 6"
+            "removed on Plone 7"
         )
         warnings.warn(msg, DeprecationWarning)
         self.context = context

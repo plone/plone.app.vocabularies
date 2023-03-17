@@ -148,7 +148,7 @@ class GroupsSourceQueryView:
     template = ViewPageTemplateFile("searchabletextsource.pt")
 
     def __init__(self, context, request):
-        msg = "GroupsSourceQueryView is deprecated and will be removed on " "Plone 6"
+        msg = "GroupsSourceQueryView is deprecated and will be removed on Plone 7"
         warnings.warn(msg, DeprecationWarning)
         self.context = context
         self.request = request
