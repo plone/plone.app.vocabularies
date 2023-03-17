@@ -162,7 +162,7 @@ Date/Time Related
    same as above but with 2 character abbreviations.
 
 ``plone.app.vocabularies.Month``
-   same as above but with month names starting with zero in january.
+   same as above but with month names starting with zero in January.
 
 ``plone.app.vocabularies.MonthAbbr``
    same as above but with 3 character abbreviations.
@@ -171,7 +171,7 @@ Images
 ------
 
 ``plone.app.vocabularies.ImagesScales``
-   All image scales which are avaiable on Plone site.
+   All image scales which are available on Plone site.
 
 
 API/ Tools
@@ -187,7 +187,7 @@ API/ Tools
 
 ``plone.app.vocabularies.terms.safe_simpleterm_from_value`` (function)
     Create a ``SimpleTerm`` from a *dirty* or *untrusted* value.
-    Token is encoded carefully and Title converted to unicode.
+    Token is encoded carefully and Title converted to Unicode.
 
 ``plone.app.vocabularies.terms.safe_simplevocabulary_from_values`` (function)
     Create a ``SimpleVocabulary`` from a iterable (list) of *dirty* or *untrusted* values.

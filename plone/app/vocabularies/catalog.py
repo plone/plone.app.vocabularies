@@ -57,7 +57,7 @@ def parse_query(query, path_prefix=""):
     {'SearchableText': 'foo* AND bar*'}
 
     We also filter out some special characters. They are handled like
-    spaces and seperate words from each other.
+    spaces and separate words from each other.
 
     >>> parse_query('foo +bar some-thing')
     {'SearchableText': 'foo* AND bar* AND some* AND thing*'}
