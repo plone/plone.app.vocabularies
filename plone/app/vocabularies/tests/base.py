@@ -29,7 +29,6 @@ class DummyContext:
 
 
 class DummyUrlTool:
-
     name = "portal_url"
 
     def __init__(self, context):
@@ -70,7 +69,6 @@ class Response(dict):
 
 
 class Request(dict):
-
     debug = False
     response = Response()
 
@@ -79,7 +77,6 @@ class Request(dict):
 
 
 class Brain:
-
     Title = "BrainTitle"
     is_folderish = True
 
