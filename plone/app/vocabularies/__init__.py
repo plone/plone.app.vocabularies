@@ -1,16 +1,10 @@
 from plone.app.vocabularies.interfaces import IPermissiveVocabulary
 from plone.app.vocabularies.interfaces import ISlicableVocabulary
+from urllib import parse
 from zope.interface import directlyProvides
 from zope.interface import implementer
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
-
-import urllib
-
-
-_token_parse_py3 = getattr(urllib, "parse", None)
-_token_parse_py27 = lambda token: urllib.unquote_plus(token).decode("utf8")
-parse = _token_parse_py3.unquote if _token_parse_py3 else _token_parse_py27
 
 
 @implementer(ISlicableVocabulary)

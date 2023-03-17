@@ -35,7 +35,6 @@ class MetaDataFieldsVocabulary:
 
     >>> from zope.component import queryUtility
     >>> from plone.app.vocabularies.tests.base import DummyCatalog
-    >>> from plone.app.vocabularies.tests.base import DummyTool
     >>> from plone.app.vocabularies.tests.base import create_context
 
     >>> context = create_context()

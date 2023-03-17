@@ -119,7 +119,6 @@ def parse_query(query, path_prefix=""):
 @provider(IContextSourceBinder)
 class SearchableTextSource:
     """
-    >>> from plone.app.vocabularies.tests.base import Brain
     >>> from plone.app.vocabularies.tests.base import DummyCatalog
     >>> from plone.app.vocabularies.tests.base import create_context
     >>> from plone.app.vocabularies.tests.base import DummyTool
@@ -229,7 +228,6 @@ class SearchableTextSourceBinder:
       >>> binder.query == query
       True
 
-      >>> from plone.app.vocabularies.tests.base import Brain
       >>> from plone.app.vocabularies.tests.base import create_context
       >>> from plone.app.vocabularies.tests.base import DummyTool
 
@@ -729,7 +727,6 @@ class StaticCatalogVocabulary(CatalogVocabulary):
 
     Here are some doctests::
 
-      >>> from plone.app.vocabularies.tests.base import Brain
       >>> from plone.app.vocabularies.tests.base import DummyCatalog
       >>> from plone.app.vocabularies.tests.base import create_context
       >>> from plone.app.vocabularies.tests.base import DummyTool
