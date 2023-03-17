@@ -1,214 +1,216 @@
 <configure
-  xmlns="http://namespaces.zope.org/zope"
-  xmlns:zcml="http://namespaces.zope.org/zcml">
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    >
 
   <utility
-    component=".language.AvailableContentLanguageVocabularyFactory"
-    name="plone.app.vocabularies.AvailableContentLanguages"
-    />
+      name="plone.app.vocabularies.AvailableContentLanguages"
+      component=".language.AvailableContentLanguageVocabularyFactory"
+      />
 
   <utility
-    component=".language.SupportedContentLanguageVocabularyFactory"
-    name="plone.app.vocabularies.SupportedContentLanguages"
-    />
+      name="plone.app.vocabularies.SupportedContentLanguages"
+      component=".language.SupportedContentLanguageVocabularyFactory"
+      />
 
   <utility
-    component=".security.RolesVocabularyFactory"
-    name="plone.app.vocabularies.Roles"
-    />
+      name="plone.app.vocabularies.Roles"
+      component=".security.RolesVocabularyFactory"
+      />
 
   <utility
-    component=".security.PermissionsVocabularyFactory"
-    name="plone.app.vocabularies.Permissions"
-    />
+      name="plone.app.vocabularies.Permissions"
+      component=".security.PermissionsVocabularyFactory"
+      />
 
   <utility
-    component=".types.AllowedContentTypesVocabularyFactory"
-    name="plone.app.vocabularies.AllowedContentTypes"
-    />
+      name="plone.app.vocabularies.AllowedContentTypes"
+      component=".types.AllowedContentTypesVocabularyFactory"
+      />
 
   <utility
-    component=".types.AllowableContentTypesVocabularyFactory"
-    name="plone.app.vocabularies.AllowableContentTypes"
-    />
+      name="plone.app.vocabularies.AllowableContentTypes"
+      component=".types.AllowableContentTypesVocabularyFactory"
+      />
 
   <utility
-    component=".types.PortalTypesVocabularyFactory"
-    name="plone.app.vocabularies.PortalTypes"
-    />
+      name="plone.app.vocabularies.PortalTypes"
+      component=".types.PortalTypesVocabularyFactory"
+      />
 
   <utility
-    component=".types.ReallyUserFriendlyTypesVocabularyFactory"
-    name="plone.app.vocabularies.ReallyUserFriendlyTypes"
-    />
+      name="plone.app.vocabularies.ReallyUserFriendlyTypes"
+      component=".types.ReallyUserFriendlyTypesVocabularyFactory"
+      />
 
   <utility
-    component=".types.UserFriendlyTypesVocabularyFactory"
-    name="plone.app.vocabularies.UserFriendlyTypes"
-    />
+      name="plone.app.vocabularies.UserFriendlyTypes"
+      component=".types.UserFriendlyTypesVocabularyFactory"
+      />
 
   <utility
-    component=".skins.SkinsVocabularyFactory"
-    name="plone.app.vocabularies.Skins"
-    />
+      name="plone.app.vocabularies.Skins"
+      component=".skins.SkinsVocabularyFactory"
+      />
 
   <utility
-    component=".workflow.WorkflowsVocabularyFactory"
-    name="plone.app.vocabularies.Workflows"
-    />
+      name="plone.app.vocabularies.Workflows"
+      component=".workflow.WorkflowsVocabularyFactory"
+      />
 
   <utility
-    component=".workflow.WorkflowStatesVocabularyFactory"
-    name="plone.app.vocabularies.WorkflowStates"
-    />
+      name="plone.app.vocabularies.WorkflowStates"
+      component=".workflow.WorkflowStatesVocabularyFactory"
+      />
 
   <utility
-    component=".workflow.WorkflowTransitionsVocabularyFactory"
-    name="plone.app.vocabularies.WorkflowTransitions"
-    />
+      name="plone.app.vocabularies.WorkflowTransitions"
+      component=".workflow.WorkflowTransitionsVocabularyFactory"
+      />
 
   <utility
-    component=".editors.AvailableEditorsVocabularyFactory"
-    name="plone.app.vocabularies.AvailableEditors"
-    />
+      name="plone.app.vocabularies.AvailableEditors"
+      component=".editors.AvailableEditorsVocabularyFactory"
+      />
 
   <utility
-    component=".catalog.KeywordsVocabularyFactory"
-    name="plone.app.vocabularies.Keywords"
-    />
+      name="plone.app.vocabularies.Keywords"
+      component=".catalog.KeywordsVocabularyFactory"
+      />
 
   <utility
-    component=".syndication.SyndicationFeedTypesVocabularyFactory"
-    name="plone.app.vocabularies.SyndicationFeedTypes"
-    />
+      name="plone.app.vocabularies.SyndicationFeedTypes"
+      component=".syndication.SyndicationFeedTypesVocabularyFactory"
+      />
 
   <utility
-    component=".syndication.SyndicatableFeedItemsFactory"
-    name="plone.app.vocabularies.SyndicatableFeedItems"
-    />
+      name="plone.app.vocabularies.SyndicatableFeedItems"
+      component=".syndication.SyndicatableFeedItemsFactory"
+      />
 
   <utility
-    factory=".principals.UsersFactory"
-    name="plone.app.vocabularies.Users"
-    />
+      factory=".principals.UsersFactory"
+      name="plone.app.vocabularies.Users"
+      />
   <utility
-    factory=".principals.GroupsFactory"
-    name="plone.app.vocabularies.Groups"
-    />
+      factory=".principals.GroupsFactory"
+      name="plone.app.vocabularies.Groups"
+      />
   <utility
-    factory=".principals.PrincipalsFactory"
-    name="plone.app.vocabularies.Principals"
-    />
+      factory=".principals.PrincipalsFactory"
+      name="plone.app.vocabularies.Principals"
+      />
 
   <utility
-    factory=".catalog.CatalogVocabularyFactory"
-    name="plone.app.vocabularies.Catalog"
-    />
+      factory=".catalog.CatalogVocabularyFactory"
+      name="plone.app.vocabularies.Catalog"
+      />
 
   <utility
-    component=".actions.ActionCategoriesVocabularyFactory"
-    name="plone.app.vocabularies.Actions"
-    />
+      name="plone.app.vocabularies.Actions"
+      component=".actions.ActionCategoriesVocabularyFactory"
+      />
 
   <utility
-    component=".actions.PortalActionCategoriesVocabularyFactory"
-    name="plone.app.vocabularies.PortalActionCategories"
-    />
+      name="plone.app.vocabularies.PortalActionCategories"
+      component=".actions.PortalActionCategoriesVocabularyFactory"
+      />
 
   <utility
-    component=".datetimerelated.TimezonesFactory"
-    name="plone.app.vocabularies.Timezones"
-    />
+      name="plone.app.vocabularies.Timezones"
+      component=".datetimerelated.TimezonesFactory"
+      />
 
   <utility
-    component=".datetimerelated.CommonTimezonesFactory"
-    name="plone.app.vocabularies.CommonTimezones"
-    />
+      name="plone.app.vocabularies.CommonTimezones"
+      component=".datetimerelated.CommonTimezonesFactory"
+      />
 
   <utility
-    zcml:condition="installed plone.app.event"
-    component=".datetimerelated.AvailableTimezonesFactory"
-    name="plone.app.vocabularies.AvailableTimezones"
-    />
+      name="plone.app.vocabularies.AvailableTimezones"
+      component=".datetimerelated.AvailableTimezonesFactory"
+      zcml:condition="installed plone.app.event"
+      />
 
   <utility
-    component=".datetimerelated.WeekdaysFactory"
-    name="plone.app.vocabularies.Weekdays"
-    />
+      name="plone.app.vocabularies.Weekdays"
+      component=".datetimerelated.WeekdaysFactory"
+      />
 
   <utility
-    component=".datetimerelated.WeekdaysAbbrFactory"
-    name="plone.app.vocabularies.WeekdaysAbbr"
-    />
+      name="plone.app.vocabularies.WeekdaysAbbr"
+      component=".datetimerelated.WeekdaysAbbrFactory"
+      />
 
   <utility
-    component=".datetimerelated.WeekdaysShortFactory"
-    name="plone.app.vocabularies.WeekdaysShort"
-    />
+      name="plone.app.vocabularies.WeekdaysShort"
+      component=".datetimerelated.WeekdaysShortFactory"
+      />
 
   <utility
-    component=".datetimerelated.MonthFactory"
-    name="plone.app.vocabularies.Month"
-    />
+      name="plone.app.vocabularies.Month"
+      component=".datetimerelated.MonthFactory"
+      />
 
   <utility
-    component=".datetimerelated.MonthAbbrFactory"
-    name="plone.app.vocabularies.MonthAbbr"
-    />
+      name="plone.app.vocabularies.MonthAbbr"
+      component=".datetimerelated.MonthAbbrFactory"
+      />
 
   <utility
-    component=".images.ScalesVocabulary"
-    name="plone.app.vocabularies.ImagesScales"
-    />
+      name="plone.app.vocabularies.ImagesScales"
+      component=".images.ScalesVocabulary"
+      />
 
   <utility
+      name="plone.app.vocabularies.MetadataFields"
       component=".metadatafields.MetaDataFieldsVocabularyFactory"
-      name="plone.app.vocabularies.MetadataFields" />
+      />
 
   <!-- All source implementations will be deprecated -->
   <adapter
-      for=".catalog.SearchableTextSource
-           zope.publisher.interfaces.browser.IBrowserRequest"
       factory=".catalog.QuerySearchableTextSourceView"
       provides="zope.browser.interfaces.ITerms"
-      />
-
-  <adapter
-      zcml:condition="installed zope.formlib"
       for=".catalog.SearchableTextSource
            zope.publisher.interfaces.browser.IBrowserRequest"
+      />
+
+  <adapter
       factory=".catalog.QuerySearchableTextSourceView"
       provides="zope.formlib.interfaces.ISourceQueryView"
+      for=".catalog.SearchableTextSource
+           zope.publisher.interfaces.browser.IBrowserRequest"
+      zcml:condition="installed zope.formlib"
       />
 
   <adapter
-      for=".users.UsersSource
-           zope.publisher.interfaces.browser.IBrowserRequest"
       factory=".users.UsersSourceQueryView"
       provides="zope.browser.interfaces.ITerms"
-      />
-
-  <adapter
-      zcml:condition="installed zope.formlib"
       for=".users.UsersSource
            zope.publisher.interfaces.browser.IBrowserRequest"
+      />
+
+  <adapter
       factory=".users.UsersSourceQueryView"
       provides="zope.formlib.interfaces.ISourceQueryView"
+      for=".users.UsersSource
+           zope.publisher.interfaces.browser.IBrowserRequest"
+      zcml:condition="installed zope.formlib"
       />
 
   <adapter
-      for=".groups.GroupsSource
-           zope.publisher.interfaces.browser.IBrowserRequest"
       factory=".groups.GroupsSourceQueryView"
       provides="zope.browser.interfaces.ITerms"
+      for=".groups.GroupsSource
+           zope.publisher.interfaces.browser.IBrowserRequest"
       />
 
   <adapter
-      zcml:condition="installed zope.formlib"
-      for=".groups.GroupsSource
-           zope.publisher.interfaces.browser.IBrowserRequest"
       factory=".groups.GroupsSourceQueryView"
       provides="zope.formlib.interfaces.ISourceQueryView"
+      for=".groups.GroupsSource
+           zope.publisher.interfaces.browser.IBrowserRequest"
+      zcml:condition="installed zope.formlib"
       />
 
 </configure>
