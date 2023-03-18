@@ -205,9 +205,7 @@ class WorkflowTransitionsVocabulary:
             transition_folder = getattr(wf, "transitions", None)
             wf_name = wf.title or wf.id
             if transition_folder is not None:
-
                 for transition in transition_folder.values():
-
                     # zope.i18nmessageid will choke
                     # if undecoded UTF-8 bytestrings slip through
                     # which we may encounter on international sites

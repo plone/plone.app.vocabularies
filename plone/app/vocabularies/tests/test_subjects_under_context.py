@@ -7,7 +7,6 @@ import unittest
 
 
 class TestKeywordsUnderContext(unittest.TestCase):
-
     layer = PAVocabularies_INTEGRATION_TESTING
 
     def setUp(self):

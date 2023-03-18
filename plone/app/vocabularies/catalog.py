@@ -57,7 +57,7 @@ def parse_query(query, path_prefix=""):
     {'SearchableText': 'foo* AND bar*'}
 
     We also filter out some special characters. They are handled like
-    spaces and seperate words from each other.
+    spaces and separate words from each other.
 
     >>> parse_query('foo +bar some-thing')
     {'SearchableText': 'foo* AND bar* AND some* AND thing*'}
@@ -119,7 +119,6 @@ def parse_query(query, path_prefix=""):
 @provider(IContextSourceBinder)
 class SearchableTextSource:
     """
-    >>> from plone.app.vocabularies.tests.base import Brain
     >>> from plone.app.vocabularies.tests.base import DummyCatalog
     >>> from plone.app.vocabularies.tests.base import create_context
     >>> from plone.app.vocabularies.tests.base import DummyTool
@@ -229,7 +228,6 @@ class SearchableTextSourceBinder:
       >>> binder.query == query
       True
 
-      >>> from plone.app.vocabularies.tests.base import Brain
       >>> from plone.app.vocabularies.tests.base import create_context
       >>> from plone.app.vocabularies.tests.base import DummyTool
 
@@ -308,10 +306,10 @@ class QuerySearchableTextSourceView:
     <plone.app.vocabularies.terms.BrowsableTerm object at ...>
 
     >>> template = view.render(name='t')
-    >>> u'<input type="text" name="t.query" value="" />' in template
+    >>> u'<input name="t.query" type="text" value="" />' in template
     True
 
-    >>> u'<input type="submit" name="t.search" value="Search" />' in template
+    >>> u'<input name="t.search" type="submit" value="Search" />' in template
     True
 
     >>> request = Request(form={'t.search' : True, 't.query' : 'value'})
@@ -335,7 +333,7 @@ class QuerySearchableTextSourceView:
     def __init__(self, context, request):
         msg = (
             "QuerySearchableTextSourceView is deprecated and will be "
-            "removed on Plone 6"
+            "removed on Plone 7"
         )
         warnings.warn(msg, DeprecationWarning)
         self.context = context
@@ -729,7 +727,6 @@ class StaticCatalogVocabulary(CatalogVocabulary):
 
     Here are some doctests::
 
-      >>> from plone.app.vocabularies.tests.base import Brain
       >>> from plone.app.vocabularies.tests.base import DummyCatalog
       >>> from plone.app.vocabularies.tests.base import create_context
       >>> from plone.app.vocabularies.tests.base import DummyTool

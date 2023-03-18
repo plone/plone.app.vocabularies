@@ -37,19 +37,26 @@ setup(
     zip_safe=False,
     python_requires=">=3.8",
     install_requires=[
+        "BTrees",
+        "Products.ZCatalog",
         "plone.app.querystring",
         "plone.base",
+        "plone.app.layout",
+        "plone.memoize",
+        "plone.namedfile",
+        "plone.registry",
+        "plone.uuid",
         "pytz",
         "setuptools",
-        "zope.deprecation",
+        "z3c.formwidget.query",
+        "zope.browser",
         "zope.globalrequest",
     ],
     extras_require=dict(
         test=[
-            "mock",
             "plone.app.testing",
+            "Products.ExtendedPathIndex",
             "zope.configuration",
-            "zope.testing",
         ]
     ),
 )

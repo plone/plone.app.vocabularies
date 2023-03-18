@@ -47,7 +47,7 @@ class AvailableContentLanguageVocabulary:
         ltool = getToolByName(site, "portal_languages", None)
         if ltool is not None:
             languages = ltool.getAvailableLanguages()
-            items = [(l, languages[l].get("native", l)) for l in languages]
+            items = [(lang, languages[lang].get("native", lang)) for lang in languages]
             items.sort(key=itemgetter(1))
             items = [SimpleTerm(i[0], i[0], i[1]) for i in items]
         return SimpleVocabulary(items)
@@ -100,7 +100,9 @@ class SupportedContentLanguageVocabulary:
         if ltool is not None:
             items = ltool.listSupportedLanguages()
             all_langs = ltool.getAvailableLanguages()
-            items = [(l[0], all_langs[l[0]].get("native", l[1])) for l in items]
+            items = [
+                (lang[0], all_langs[lang[0]].get("native", lang[1])) for lang in items
+            ]
             items.sort(key=itemgetter(1))
             items = [
                 SimpleTerm(i[0], i[0], all_langs.get(i[0], {}).get("native", i[1]))

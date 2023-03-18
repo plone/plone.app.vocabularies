@@ -133,10 +133,10 @@ class GroupsSourceQueryView:
 
     >>> template = view.render(name='t')
 
-    >>> u'<input type="text" name="t.query" value="" />' in template
+    >>> u'<input name="t.query" type="text" value="" />' in template
     True
 
-    >>> u'<input type="submit" name="t.search" value="Search" />' in template
+    >>> u'<input name="t.search" type="submit" value="Search" />' in template
     True
 
     >>> request = Request(form={'t.search' : True, 't.query' : 'value'})
@@ -148,7 +148,7 @@ class GroupsSourceQueryView:
     template = ViewPageTemplateFile("searchabletextsource.pt")
 
     def __init__(self, context, request):
-        msg = "GroupsSourceQueryView is deprecated and will be removed on " "Plone 6"
+        msg = "GroupsSourceQueryView is deprecated and will be removed on Plone 7"
         warnings.warn(msg, DeprecationWarning)
         self.context = context
         self.request = request
