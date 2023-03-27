@@ -1,9 +1,9 @@
 from BTrees.IIBTree import intersection
-from plone.app.layout.navigation.root import getNavigationRootObject
 from plone.app.vocabularies import SlicableVocabulary
 from plone.app.vocabularies.terms import BrowsableTerm
 from plone.app.vocabularies.terms import safe_simplevocabulary_from_values
 from plone.app.vocabularies.utils import parseQueryString
+from plone.base.navigationroot import get_navigation_root_object
 from plone.base.utils import safe_text
 from plone.memoize import request
 from plone.memoize.instance import memoize
@@ -477,7 +477,7 @@ class KeywordsVocabulary:
             return None
         if registry.get("plone.subjects_of_navigation_root", False):
             portal = getToolByName(context, "portal_url").getPortalObject()
-            return getNavigationRootObject(context, portal)
+            return get_navigation_root_object(context, portal)
         return None
 
     def all_keywords(self, kwfilter):
@@ -647,7 +647,7 @@ class CatalogVocabularyFactory:
         # as the path root for catalog searches
         if "path" not in parsed:
             site = getSite()
-            nav_root = getNavigationRootObject(context, site)
+            nav_root = get_navigation_root_object(context, site)
             site_path = site.getPhysicalPath()
             if nav_root and nav_root.getPhysicalPath() != site_path:
                 parsed["path"] = {
@@ -795,7 +795,7 @@ class StaticCatalogVocabulary(CatalogVocabulary):
     @memoize
     def nav_root_path(self):
         site = getSite()
-        nav_root = getNavigationRootObject(site, site)
+        nav_root = get_navigation_root_object(site, site)
         return "/".join(nav_root.getPhysicalPath())
 
     def get_brain_path(self, brain):

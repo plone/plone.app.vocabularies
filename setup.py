@@ -41,7 +41,6 @@ setup(
         "Products.ZCatalog",
         "plone.app.querystring",
         "plone.base",
-        "plone.app.layout",
         "plone.memoize",
         "plone.namedfile",
         "plone.registry",
