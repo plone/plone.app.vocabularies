@@ -380,7 +380,7 @@ Fixes:
 2.1.15 (2014-04-11)
 -------------------
 
-- Make ``KeywordsVocabulary`` more customizeable using an ``keyword_index``
+- Make ``KeywordsVocabulary`` more customizable using an ``keyword_index``
   class variable to allow users to inherit and just override that attribute
   to build their own keyword vocabularies.
   [saily]
