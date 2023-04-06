@@ -8,6 +8,17 @@ Changelog
 
 .. towncrier release notes start
 
+5.0.2 (2023-04-06)
+------------------
+
+Bug fixes:
+
+
+- Import navigation root specific from plone.base.
+  And so remove transitive circular dependency on plone.app.layout.
+  [jensens] (#74)
+
+
 5.0.1 (2023-03-22)
 ------------------
 

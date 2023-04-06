@@ -1,3 +1,0 @@
-Import navigation root specific from plone.base.
-And so remove transitive circular dependency on plone.app.layout.
-[jensens]
