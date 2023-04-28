@@ -102,11 +102,6 @@
       />
 
   <utility
-      factory=".catalog.CatalogVocabularyFactory"
-      name="plone.app.vocabularies.Catalog"
-      />
-
-  <utility
       name="plone.app.vocabularies.Actions"
       component=".actions.ActionCategoriesVocabularyFactory"
       />
