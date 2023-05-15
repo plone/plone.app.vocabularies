@@ -331,7 +331,7 @@ class QuerySearchableTextSourceView:
 
     Titles need to be unicode:
     >>> view.getTerm(list(view.results('t'))[0]).title
-    u'/foo'
+    '/foo'
     """
 
     template = ViewPageTemplateFile("searchabletextsource.pt")
@@ -703,7 +703,7 @@ class StaticCatalogVocabulary(CatalogVocabulary):
       <zope.schema.vocabulary.SimpleVocabulary object at ...>
 
       >>> [(t.title, t.value) for t in vocab.search('foo')]
-      [(u'BrainTitle (/1234)', '/1234'), (u'BrainTitle (/2345)', '/2345')]
+      [('BrainTitle (/1234)', '/1234'), ('BrainTitle (/2345)', '/2345')]
 
     We strip out the site path from the rendered path in the title template:
 
@@ -711,21 +711,21 @@ class StaticCatalogVocabulary(CatalogVocabulary):
       >>> context.portal_catalog = catalog
       >>> vocab = StaticCatalogVocabulary({'portal_type': ['Document']})
       >>> [(t.title, t.value) for t in vocab.search('bar')]
-      [(u'BrainTitle (/site/1234)', '/site/1234'),
-       (u'BrainTitle (/site/2345)', '/site/2345')]
+      [('BrainTitle (/site/1234)', '/site/1234'),
+       ('BrainTitle (/site/2345)', '/site/2345')]
 
       >>> context.__name__ = 'site'
       >>> vocab = StaticCatalogVocabulary({'portal_type': ['Document']})
       >>> [(t.title, t.value) for t in vocab.search('bar')]
-      [(u'BrainTitle (/1234)', '/site/1234'),
-       (u'BrainTitle (/2345)', '/site/2345')]
+      [('BrainTitle (/1234)', '/site/1234'),
+       ('BrainTitle (/2345)', '/site/2345')]
 
     The title template can be customized:
 
       >>> vocab.title_template = "{url} {brain.UID} - {brain.Title} {path}"
       >>> [(t.title, t.value) for t in vocab.search('bar')]
-      [(u'proto:/site/1234 /site/1234 - BrainTitle /1234', '/site/1234'),
-       (u'proto:/site/2345 /site/2345 - BrainTitle /2345', '/site/2345')]
+      [('proto:/site/1234 /site/1234 - BrainTitle /1234', '/site/1234'),
+       ('proto:/site/2345 /site/2345 - BrainTitle /2345', '/site/2345')]
 
     """
 
