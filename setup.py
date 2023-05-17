@@ -37,9 +37,11 @@ setup(
     zip_safe=False,
     python_requires=">=3.8",
     install_requires=[
+        # be very careful adding dependencies here, as this package is used
+        # by many many other packages in plone.app.* namespace
+        # it is very easy to add transitive circular dependencies
         "BTrees",
         "Products.ZCatalog",
-        "plone.app.querystring",
         "plone.base",
         "plone.memoize",
         "plone.namedfile",
