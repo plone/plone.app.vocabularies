@@ -1,4 +1,0 @@
-Fix a circular dependency to `plone.app.querystring`.
-Move `.catalog.CatalogVocabularyFactory` to `plone.app.querystring.vocabularies`, move the ZCML to register the factory, move the the test and put BBB code with deprecation wanring into place.
-Move `.utils.parse_query` with new name `parseAndModifyFormquery` to `plone.app.querystring.queryparser` and put BBB code with deprecation wanring into place.
-[@jensens]

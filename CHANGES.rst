@@ -8,6 +8,18 @@ Changelog
 
 .. towncrier release notes start
 
+5.0.3 (2023-05-22)
+------------------
+
+Bug fixes:
+
+
+- Fix a circular dependency to `plone.app.querystring`.
+  Move `.catalog.CatalogVocabularyFactory` to `plone.app.querystring.vocabularies`, move the ZCML to register the factory, move the the test and put BBB code with deprecation wanring into place.
+  Move `.utils.parse_query` with new name `parseAndModifyFormquery` to `plone.app.querystring.queryparser` and put BBB code with deprecation wanring into place.
+  [@jensens] (fix-circular-dep-paquerstring)
+
+
 5.0.2 (2023-04-06)
 ------------------
 
