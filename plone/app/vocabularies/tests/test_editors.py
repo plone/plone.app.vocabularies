@@ -6,7 +6,6 @@ import unittest
 
 
 class AvailableEditorsTest(unittest.TestCase):
-
     layer = PAVocabularies_INTEGRATION_TESTING
 
     def setUp(self):

@@ -1,10 +1,8 @@
-from plone.base import MessageFactory as _
 from plone.base.interfaces import ISiteSyndicationSettings
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
 from zope.component import getUtility
 from zope.component.hooks import getSite
-from zope.i18nmessageid import MessageFactory
 from zope.interface import implementer
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm

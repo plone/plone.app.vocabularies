@@ -1,5 +1,5 @@
-from plone.app.layout.navigation.interfaces import INavigationRoot
 from plone.app.vocabularies.testing import PAVocabularies_INTEGRATION_TESTING
+from plone.base.interfaces import INavigationRoot
 from unittest import mock
 from zope.interface import alsoProvides
 
@@ -7,7 +7,6 @@ import unittest
 
 
 class TestKeywordsUnderContext(unittest.TestCase):
-
     layer = PAVocabularies_INTEGRATION_TESTING
 
     def setUp(self):

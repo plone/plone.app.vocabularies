@@ -205,10 +205,10 @@ class BaseFactory:
             (user:johndoe, user__johndoe, 'John Doe') or
             (group:editors, group__editors, 'Editors').
 
-        returns wether the triple shall be included in the vocabulary or not
+        returns whether the triple shall be included in the vocabulary or not
         (bool).
 
-        Meant to be overriden in subclasses for post-filtering result.
+        Meant to be overridden in subclasses for post-filtering result.
         """
         return True
 

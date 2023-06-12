@@ -1,9 +1,8 @@
 from BTrees.IIBTree import intersection
-from plone.app.layout.navigation.root import getNavigationRootObject
 from plone.app.vocabularies import SlicableVocabulary
 from plone.app.vocabularies.terms import BrowsableTerm
 from plone.app.vocabularies.terms import safe_simplevocabulary_from_values
-from plone.app.vocabularies.utils import parseQueryString
+from plone.base.navigationroot import get_navigation_root_object
 from plone.base.utils import safe_text
 from plone.memoize import request
 from plone.memoize.instance import memoize
@@ -16,6 +15,7 @@ from z3c.formwidget.query.interfaces import IQuerySource
 from zope.browser.interfaces import ITerms
 from zope.component import queryUtility
 from zope.component.hooks import getSite
+from zope.deferredimport import deprecated
 from zope.globalrequest import getRequest
 from zope.interface import implementer
 from zope.interface import provider
@@ -40,6 +40,12 @@ except ImportError:
         pass
 
 
+deprecated(
+    "Import CatalogVocabularyFactory from plone.app.querystring.vocabularies instead (will be removed in Plone 7)",
+    CatalogVocabularyFactory="plone.app.querystring.vocabularies:CatalogVocabularyFactory",
+)
+
+
 def parse_query(query, path_prefix=""):
     """Parse the query string and turn it into a dictionary for querying the
     catalog.
@@ -57,7 +63,7 @@ def parse_query(query, path_prefix=""):
     {'SearchableText': 'foo* AND bar*'}
 
     We also filter out some special characters. They are handled like
-    spaces and seperate words from each other.
+    spaces and separate words from each other.
 
     >>> parse_query('foo +bar some-thing')
     {'SearchableText': 'foo* AND bar* AND some* AND thing*'}
@@ -119,7 +125,6 @@ def parse_query(query, path_prefix=""):
 @provider(IContextSourceBinder)
 class SearchableTextSource:
     """
-    >>> from plone.app.vocabularies.tests.base import Brain
     >>> from plone.app.vocabularies.tests.base import DummyCatalog
     >>> from plone.app.vocabularies.tests.base import create_context
     >>> from plone.app.vocabularies.tests.base import DummyTool
@@ -229,7 +234,6 @@ class SearchableTextSourceBinder:
       >>> binder.query == query
       True
 
-      >>> from plone.app.vocabularies.tests.base import Brain
       >>> from plone.app.vocabularies.tests.base import create_context
       >>> from plone.app.vocabularies.tests.base import DummyTool
 
@@ -308,10 +312,10 @@ class QuerySearchableTextSourceView:
     <plone.app.vocabularies.terms.BrowsableTerm object at ...>
 
     >>> template = view.render(name='t')
-    >>> u'<input type="text" name="t.query" value="" />' in template
+    >>> u'<input name="t.query" type="text" value="" />' in template
     True
 
-    >>> u'<input type="submit" name="t.search" value="Search" />' in template
+    >>> u'<input name="t.search" type="submit" value="Search" />' in template
     True
 
     >>> request = Request(form={'t.search' : True, 't.query' : 'value'})
@@ -327,7 +331,7 @@ class QuerySearchableTextSourceView:
 
     Titles need to be unicode:
     >>> view.getTerm(list(view.results('t'))[0]).title
-    u'/foo'
+    '/foo'
     """
 
     template = ViewPageTemplateFile("searchabletextsource.pt")
@@ -335,7 +339,7 @@ class QuerySearchableTextSourceView:
     def __init__(self, context, request):
         msg = (
             "QuerySearchableTextSourceView is deprecated and will be "
-            "removed on Plone 6"
+            "removed on Plone 7"
         )
         warnings.warn(msg, DeprecationWarning)
         self.context = context
@@ -479,7 +483,7 @@ class KeywordsVocabulary:
             return None
         if registry.get("plone.subjects_of_navigation_root", False):
             portal = getToolByName(context, "portal_url").getPortalObject()
-            return getNavigationRootObject(context, portal)
+            return get_navigation_root_object(context, portal)
         return None
 
     def all_keywords(self, kwfilter):
@@ -601,64 +605,6 @@ class CatalogVocabulary(SlicableVocabulary):
     getTermByToken = getTerm
 
 
-@implementer(IVocabularyFactory)
-class CatalogVocabularyFactory:
-    """
-    Test application of Navigation Root:
-
-      >>> from plone.app.vocabularies.tests.base import create_context
-      >>> from plone.app.vocabularies.tests.base import DummyUrlTool
-      >>> from plone.app.vocabularies.tests.base import DummyCatalog
-      >>> class DummyPathCatalog(DummyCatalog):
-      ...     def __call__(self, **query):
-      ...         if 'path' in query and 'query' in query['path']:
-      ...             return [v for v in self.values() if
-      ...                     v.getPath().startswith(query['path']['query'])]
-      ...         return self.values()
-      >>> catalog = DummyPathCatalog(['/abcd', '/defg', '/dummy/sub-site',
-      ...                             '/dummy/sub-site/ghij'])
-      >>> context = create_context()
-      >>> context.portal_catalog = catalog
-      >>> context.portal_url = DummyUrlTool(context)
-      >>> factory = CatalogVocabularyFactory()
-
-      >>> sorted(t.token for t in factory(context))
-      ['/abcd', '/defg', '/dummy/sub-site', '/dummy/sub-site/ghij']
-
-      >>> from plone.app.vocabularies.tests.base import DummyNavRoot
-      >>> nav_root = DummyNavRoot('sub-site', parent=context)
-      >>> [t.token for t in factory(nav_root)]
-      ['/dummy/sub-site', '/dummy/sub-site/ghij']
-
-    """
-
-    # We want to get rid of this and use CatalogSource instead,
-    # but we can't in Plone versions that support
-    # plone.app.widgets < 1.6.0
-
-    def __call__(self, context, query=None):
-        parsed = {}
-        if query:
-            parsed = parseQueryString(context, query["criteria"])
-            if "sort_on" in query:
-                parsed["sort_on"] = query["sort_on"]
-            if "sort_order" in query:
-                parsed["sort_order"] = str(query["sort_order"])
-
-        # If no path is specified check if we are in a sub-site and use that
-        # as the path root for catalog searches
-        if "path" not in parsed:
-            site = getSite()
-            nav_root = getNavigationRootObject(context, site)
-            site_path = site.getPhysicalPath()
-            if nav_root and nav_root.getPhysicalPath() != site_path:
-                parsed["path"] = {
-                    "query": "/".join(nav_root.getPhysicalPath()),
-                    "depth": -1,
-                }
-        return CatalogVocabulary.fromItems(parsed, context)
-
-
 def request_query_cache_key(func, vocab):
     return json.dumps([vocab.query, vocab.text_search_index, vocab.title_template])
 
@@ -729,7 +675,6 @@ class StaticCatalogVocabulary(CatalogVocabulary):
 
     Here are some doctests::
 
-      >>> from plone.app.vocabularies.tests.base import Brain
       >>> from plone.app.vocabularies.tests.base import DummyCatalog
       >>> from plone.app.vocabularies.tests.base import create_context
       >>> from plone.app.vocabularies.tests.base import DummyTool
@@ -758,7 +703,7 @@ class StaticCatalogVocabulary(CatalogVocabulary):
       <zope.schema.vocabulary.SimpleVocabulary object at ...>
 
       >>> [(t.title, t.value) for t in vocab.search('foo')]
-      [(u'BrainTitle (/1234)', '/1234'), (u'BrainTitle (/2345)', '/2345')]
+      [('BrainTitle (/1234)', '/1234'), ('BrainTitle (/2345)', '/2345')]
 
     We strip out the site path from the rendered path in the title template:
 
@@ -766,21 +711,21 @@ class StaticCatalogVocabulary(CatalogVocabulary):
       >>> context.portal_catalog = catalog
       >>> vocab = StaticCatalogVocabulary({'portal_type': ['Document']})
       >>> [(t.title, t.value) for t in vocab.search('bar')]
-      [(u'BrainTitle (/site/1234)', '/site/1234'),
-       (u'BrainTitle (/site/2345)', '/site/2345')]
+      [('BrainTitle (/site/1234)', '/site/1234'),
+       ('BrainTitle (/site/2345)', '/site/2345')]
 
       >>> context.__name__ = 'site'
       >>> vocab = StaticCatalogVocabulary({'portal_type': ['Document']})
       >>> [(t.title, t.value) for t in vocab.search('bar')]
-      [(u'BrainTitle (/1234)', '/site/1234'),
-       (u'BrainTitle (/2345)', '/site/2345')]
+      [('BrainTitle (/1234)', '/site/1234'),
+       ('BrainTitle (/2345)', '/site/2345')]
 
     The title template can be customized:
 
       >>> vocab.title_template = "{url} {brain.UID} - {brain.Title} {path}"
       >>> [(t.title, t.value) for t in vocab.search('bar')]
-      [(u'proto:/site/1234 /site/1234 - BrainTitle /1234', '/site/1234'),
-       (u'proto:/site/2345 /site/2345 - BrainTitle /2345', '/site/2345')]
+      [('proto:/site/1234 /site/1234 - BrainTitle /1234', '/site/1234'),
+       ('proto:/site/2345 /site/2345 - BrainTitle /2345', '/site/2345')]
 
     """
 
@@ -798,7 +743,7 @@ class StaticCatalogVocabulary(CatalogVocabulary):
     @memoize
     def nav_root_path(self):
         site = getSite()
-        nav_root = getNavigationRootObject(site, site)
+        nav_root = get_navigation_root_object(site, site)
         return "/".join(nav_root.getPhysicalPath())
 
     def get_brain_path(self, brain):
