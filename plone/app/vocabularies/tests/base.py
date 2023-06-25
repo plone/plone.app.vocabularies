@@ -1,5 +1,5 @@
 from OFS.interfaces import IItem
-from plone.app.layout.navigation.interfaces import INavigationRoot
+from plone.base.interfaces import INavigationRoot
 from Products.ZCTextIndex.ParseTree import ParseError
 from zope.component.hooks import setSite
 from zope.interface import implementer
