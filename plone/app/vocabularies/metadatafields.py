@@ -26,6 +26,7 @@ _FIELD_LABEL = {
     "Type": _("Type"),
     "total_comments": _("Total comments"),
     "mime_type": _("MIME type"),
+    "Title": _("Title"),
 }
 
 
