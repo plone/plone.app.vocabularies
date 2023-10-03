@@ -64,4 +64,4 @@ python-dateutil = ['dateutil']
 ignore-packages = ['zope.formlib']
 
 [tool.codespell]
-ignore-words-list = "noone"
+ignore-words-list = "noone,iterms"

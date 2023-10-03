@@ -3,3 +3,6 @@
 [meta]
 template = "default"
 commit-id = "47959565"
+
+[pyproject]
+codespell_ignores = "iterms"
