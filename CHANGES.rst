@@ -8,6 +8,16 @@ Changelog
 
 .. towncrier release notes start
 
+5.0.4 (2023-10-07)
+------------------
+
+Bug fixes:
+
+
+- Fix the untranslated table-column-heading "Title" in listing_tabular for collections and folders.
+  [pbauer] (#82)
+
+
 5.0.3 (2023-05-22)
 ------------------
 
