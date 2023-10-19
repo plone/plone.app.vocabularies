@@ -1,8 +1,13 @@
 # Generated from:
 # https://github.com/plone/meta/tree/master/config/default
+# See the inline comments on how to expand/tweak this configuration file
 [meta]
 template = "default"
-commit-id = "47959565"
+commit-id = "68cda6e4"
 
 [pyproject]
 codespell_ignores = "iterms"
+dependencies_mappings = [
+    "'Products.ZCatalog' = ['Products.ZCTextIndex', 'Products.PluginIndexes']",
+    ]
+dependencies_ignores = "['zope.formlib']"

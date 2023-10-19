@@ -131,10 +131,10 @@ class UsersSourceQueryView:
     >>> view.getValue('user1')
     'user1'
 
-    >>> view.getValue('noone')
+    >>> view.getValue('no one')
     Traceback (most recent call last):
     ...
-    LookupError: noone
+    LookupError: no one
 
     >>> template = view.render(name='t')
 
