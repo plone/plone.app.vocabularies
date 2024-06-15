@@ -1,0 +1,3 @@
+Remove usage of `portal_properties`.
+In `getForbiddenContentTypes` we used to check `portal_properties.site_properties.forbidden_contenttypes`.
+[maurits]

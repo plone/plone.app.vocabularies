@@ -17,6 +17,7 @@ def getAllowedContentTypes(context):
     allowable (overall available) types.
     """
     allowable_types = getAllowableContentTypes(context)
+    # By default the next one is empty, but theoretically someone overwrites it.
     forbidden_types = getForbiddenContentTypes(context)
     allowed_types = [ctype for ctype in allowable_types if ctype not in forbidden_types]
     return allowed_types
@@ -37,18 +38,14 @@ def getAllowableContentTypes(context):
 
 
 def getForbiddenContentTypes(context):
-    """Method for retrieving the site property 'forbidden_contenttypes'.
+    """Get forbidden contenttypes.
 
     This is a list of mime-types not allowed in text input fields.
+
+    We used to get this from
+    portal_properties.site_properties.forbidden_contenttypes
+    Maybe we should have moved this to portal_registry, but no-one did.
     """
-    portal_properties = getToolByName(context, "portal_properties", None)
-    if portal_properties is not None:
-        return []
-    site_properties = getattr(portal_properties, "site_properties", None)
-    if site_properties is not None:
-        return []
-    if site_properties.hasProperty("forbidden_contenttypes"):
-        return list(site_properties.getProperty("forbidden_contenttypes"))
     return []
 
 
@@ -115,17 +112,6 @@ class AllowedContentTypesVocabulary:
       ...     return ('text/plain', 'text/spam')
       >>> tool.listAvailableTextInputs = listAvailableTextInputs
       >>> context.portal_transforms = tool
-
-      >>> tool = DummyTool('portal_properties')
-      >>> class DummyProperties(object):
-      ...     def hasProperty(self, value):
-      ...         return True
-      ...
-      ...     def getProperty(self, value):
-      ...         return ('text/spam', )
-      >>> tool.site_properties = DummyProperties()
-      >>> context.portal_properties = tool
-
       >>> types = util(context)
       >>> types
       <zope.schema.vocabulary.SimpleVocabulary object at ...>
