@@ -2,6 +2,7 @@ from Acquisition import aq_get
 from plone.app.vocabularies import PermissiveVocabulary
 from Products.CMFCore.utils import getToolByName
 from zope.component.hooks import getSite
+from zope.deprecation import deprecate
 from zope.i18n import translate
 from zope.interface import implementer
 from zope.schema.interfaces import IVocabularyFactory
@@ -37,6 +38,7 @@ def getAllowableContentTypes(context):
     return portal_transforms.listAvailableTextInputs()
 
 
+@deprecate("Returns nothing by default. Will be removed in Plone 7.")
 def getForbiddenContentTypes(context):
     """Get forbidden contenttypes.
 

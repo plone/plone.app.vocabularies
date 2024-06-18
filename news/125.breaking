@@ -1,3 +1,4 @@
-Remove usage of `portal_properties`.
-In `getForbiddenContentTypes` we used to check `portal_properties.site_properties.forbidden_contenttypes`.
+Remove usage of ``portal_properties``.
+In ``getForbiddenContentTypes`` we used to check ``portal_properties.site_properties.forbidden_contenttypes``.
+Now we return nothing, so deprecate ``getForbiddenContentTypes``, to be removed in Plone 7.
 [maurits]
