@@ -8,6 +8,8 @@ from zope.interface import implementer
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
+from icu import Collator, Locale
+
 
 
 def getAllowedContentTypes(context):
@@ -290,15 +292,25 @@ class ReallyUserFriendlyTypesVocabulary:
         site = getSite()
         ttool = getToolByName(site, "portal_types", None)
         if ttool is None:
-            return SimpleVocabulary([])
+            return PermissiveVocabulary([])
 
         request = aq_get(ttool, "REQUEST", None)
+        
+        # Get the current language from the request
+        language = request.get('LANGUAGE', 'en')
+        
+        # Create an ICU Collator for the current language
+        collator = Collator.createInstance(Locale(language))
+
         items = [
             (translate(ttool[t].Title(), context=request), t)
             for t in ttool.listContentTypes()
             if t not in BAD_TYPES
         ]
-        items.sort()
+        
+        # Sort items using the ICU Collator
+        items.sort(key=lambda x: collator.getSortKey(x[0]))
+        
         items = [SimpleTerm(i[1], i[1], i[0]) for i in items]
         return PermissiveVocabulary(items)
 
