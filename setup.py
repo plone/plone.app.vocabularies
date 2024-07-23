@@ -47,7 +47,6 @@ setup(
         # by many many other packages in plone.app.* namespace
         # it is very easy to add transitive circular dependencies
         "BTrees",
-        "unidecode",
         "Products.ZCatalog",
         "plone.base",
         "plone.memoize",
@@ -56,6 +55,7 @@ setup(
         "plone.uuid",
         "pytz",
         "setuptools",
+        "unidecode",
         "z3c.formwidget.query",
         "zope.browser",
         "zope.globalrequest",
