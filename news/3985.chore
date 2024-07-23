@@ -1,2 +1,2 @@
-Implemented pyICU for sorting of ReallyUserFriendlyTypes
+Implemented sorting of ReallyUserFriendlyTypes using `unidecode`
 [rohnsha0]
