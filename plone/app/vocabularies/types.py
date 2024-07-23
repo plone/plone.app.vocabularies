@@ -299,8 +299,7 @@ class ReallyUserFriendlyTypesVocabulary:
             for t in ttool.listContentTypes()
             if t not in BAD_TYPES
         ]
-        
-        print(items)
+    
         # Sort items based on the translated title using unidecode
         items.sort(key=lambda x: unidecode(x[0]).lower())
         
