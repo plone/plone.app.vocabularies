@@ -1,6 +1,7 @@
 from Acquisition import aq_get
 from plone.app.vocabularies import PermissiveVocabulary
 from Products.CMFCore.utils import getToolByName
+from unidecode import unidecode
 from zope.component.hooks import getSite
 from zope.deprecation import deprecate
 from zope.i18n import translate
@@ -298,9 +299,12 @@ class ReallyUserFriendlyTypesVocabulary:
             for t in ttool.listContentTypes()
             if t not in BAD_TYPES
         ]
-        items.sort()
-        items = [SimpleTerm(i[1], i[1], i[0]) for i in items]
-        return PermissiveVocabulary(items)
+
+        # Sort items based on the translated title using unidecode
+        items.sort(key=lambda x: unidecode(x[0]).lower())
+
+        terms = [SimpleTerm(i[1], i[1], i[0]) for i in items]
+        return PermissiveVocabulary(terms)
 
 
 ReallyUserFriendlyTypesVocabularyFactory = ReallyUserFriendlyTypesVocabulary()

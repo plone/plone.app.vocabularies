@@ -55,6 +55,7 @@ setup(
         "plone.uuid",
         "pytz",
         "setuptools",
+        "unidecode",
         "z3c.formwidget.query",
         "zope.browser",
         "zope.globalrequest",
