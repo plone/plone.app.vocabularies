@@ -8,6 +8,16 @@ Changelog
 
 .. towncrier release notes start
 
+6.0.1 (2024-07-31)
+------------------
+
+Bug fixes:
+
+
+- Implemented sorting of ReallyUserFriendlyTypes using `unidecode`.
+  [rohnsha0] (#3985)
+
+
 6.0.0 (2024-06-26)
 ------------------
 
