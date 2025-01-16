@@ -280,11 +280,13 @@ class ReallyUserFriendlyTypesVocabulary:
     Containment is unenforced, to make GenericSetup import validation
     handle validation triggered by Choice.fromUnicode() on insertion:
 
-        >>> assert 'arbitrary_value' in util(context)
+        >>> non_friendly_type = types.getTermByToken('Plone Site')
+        >>> non_friendly_type.title, non_friendly_type.token
+        ('Plone Site', 'Plone Site')
 
         >>> doc = types.by_token['Document']
         >>> doc.title, doc.token, doc.value
-        (u'Page', 'Document', 'Document')
+        ('Page', 'Document', 'Document')
     """
 
     def __call__(self, context):

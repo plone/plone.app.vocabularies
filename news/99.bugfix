@@ -1,0 +1,2 @@
+Fix rare case of "non friendly" token lookup in `plone.app.vocabularies.ReallyUserFriendlyTypes`
+[petschki]
