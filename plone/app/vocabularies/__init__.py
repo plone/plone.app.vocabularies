@@ -1,6 +1,6 @@
 from plone.app.vocabularies.interfaces import IPermissiveVocabulary
 from plone.app.vocabularies.interfaces import ISlicableVocabulary
-from urllib import parse
+from urllib.parse import unquote
 from zope.interface import directlyProvides
 from zope.interface import implementer
 from zope.schema.vocabulary import SimpleTerm
@@ -57,5 +57,5 @@ class PermissiveVocabulary(SimpleVocabulary):
             v = super().getTermByToken(token)
         except LookupError:
             # fallback using dummy term, assumes token==value
-            return SimpleTerm(token, title=parse(token))
+            return SimpleTerm(token, title=unquote(token))
         return v
