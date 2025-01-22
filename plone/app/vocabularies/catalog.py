@@ -626,7 +626,7 @@ class StaticCatalogVocabulary(CatalogVocabulary):
     Relation/RelationChoice values (to create a z3c.relationfield style
     relation). This vocabulary will work with a variety of selection widgets,
     and provides a text search method to work with the
-    plone.app.z3cform.widget.AjaxSelectWidget.
+    plone.app.z3cform.widgets.select.AjaxSelectWidget.
 
     This vocabulary can be used to make a named vocabulary with a factory
     function:
@@ -657,7 +657,7 @@ class StaticCatalogVocabulary(CatalogVocabulary):
     index, but you could have your vocabulary search on "Title" instead:
 
         from plone.autoform import directives
-        from plone.app.z3cform.widget import AjaxSelectFieldWidget
+        from plone.app.z3cform.widgets.select import AjaxSelectFieldWidget
 
 
         directives.widget(
