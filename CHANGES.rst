@@ -8,6 +8,17 @@ Changelog
 
 .. towncrier release notes start
 
+6.0.2 (2025-01-23)
+------------------
+
+Bug fixes:
+
+
+- Fix rare case of "non friendly" token lookup in `plone.app.vocabularies.ReallyUserFriendlyTypes`
+  [petschki] (#99)
+- Fix DeprecationWarnings. [maurits] (#4090)
+
+
 6.0.1 (2024-07-31)
 ------------------
 
