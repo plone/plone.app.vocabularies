@@ -46,7 +46,6 @@ setup(
         # be very careful adding dependencies here, as this package is used
         # by many many other packages in plone.app.* namespace
         # it is very easy to add transitive circular dependencies
-        "BTrees",
         "Products.ZCatalog",
         "plone.base",
         "plone.memoize",
@@ -57,8 +56,7 @@ setup(
         "setuptools",
         "unidecode",
         "z3c.formwidget.query",
-        "zope.browser",
-        "zope.globalrequest",
+        "Zope",
     ],
     extras_require=dict(
         test=[
