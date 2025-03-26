@@ -599,6 +599,8 @@ class CatalogVocabulary(SlicableVocabulary):
             value = IUUID(value)
         query = {"UID": value}
         brains = self.catalog(**query)
+        if not brains:
+            raise LookupError
         for b in brains:
             return self.createTerm(b, None)
 
