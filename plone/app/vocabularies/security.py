@@ -11,6 +11,15 @@ from zope.schema.vocabulary import SimpleVocabulary
 
 import zope.deferredimport
 
+DEFAULT_PERMISSION = "View"
+DEFAULT_PERMISSION_SECURE = "Modify portal content"
+PERMISSIONS = {
+    "plone.app.vocabularies.Catalog": "View",
+    "plone.app.vocabularies.Keywords": "Modify portal content",
+    "plone.app.vocabularies.SyndicatableFeedItems": "Modify portal content",
+    "plone.app.vocabularies.Users": "Modify portal content",
+    "plone.app.multilingual.RootCatalog": "View",
+}
 
 zope.deferredimport.deprecated(
     "Import from plone.app.vocabularies.principals instead",
