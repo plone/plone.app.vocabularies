@@ -601,6 +601,7 @@ class CatalogVocabulary(SlicableVocabulary):
         brains = self.catalog(**query)
         for b in brains:
             return self.createTerm(b, None)
+        raise LookupError(value)
 
     getTermByToken = getTerm
 
