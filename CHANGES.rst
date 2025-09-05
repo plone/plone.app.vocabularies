@@ -8,6 +8,15 @@ Changelog
 
 .. towncrier release notes start
 
+6.0.3 (2025-09-05)
+------------------
+
+Bug fixes:
+
+
+- Now in CatalogVocabulary getTerm raises LookupError when it cannot find the referred object instead of returning None. @parruc (#106)
+
+
 6.0.2 (2025-01-23)
 ------------------
 

@@ -1,1 +1,0 @@
-Now in CatalogVocabulary getTerm raises LookupError when it cannot find the referred object instead of returning None. @parruc
