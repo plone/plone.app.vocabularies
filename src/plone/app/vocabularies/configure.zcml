@@ -208,4 +208,9 @@
       zcml:condition="installed zope.formlib"
       />
 
+  <utility
+      name="plone.recyclebin.RestoreContainers"
+      component=".containers.RestoreContainersVocabularyFactory"
+      />
+
 </configure>
