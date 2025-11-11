@@ -48,7 +48,6 @@ setup(
         "plone.registry",
         "plone.uuid",
         "pytz",
-        "setuptools",
         "unidecode",
         "z3c.formwidget.query",
         "Zope",
