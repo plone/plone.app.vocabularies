@@ -5,7 +5,6 @@ from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 
-
 _FIELD_LABEL = {
     "CreationDate": _("Created on"),
     "Creator": _("Creator"),

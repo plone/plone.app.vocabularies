@@ -10,7 +10,6 @@ from zope.schema.vocabulary import SimpleTerm
 
 import warnings
 
-
 try:
     from zope.formlib.interfaces import ISourceQueryView
 except ImportError:

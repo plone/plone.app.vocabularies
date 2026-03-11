@@ -30,7 +30,6 @@ import json
 import os
 import warnings
 
-
 try:
     from zope.formlib.interfaces import ISourceQueryView
 except ImportError:
