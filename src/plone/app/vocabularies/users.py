@@ -10,7 +10,6 @@ from zope.schema.vocabulary import SimpleTerm
 import warnings
 import zope.deferredimport
 
-
 zope.deferredimport.deprecated(
     "Import from plone.app.vocabularies.principals instead",
     UsersFactory="plone.app.vocabularies:principals.UsersFactory",

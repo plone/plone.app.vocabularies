@@ -8,7 +8,6 @@ from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 
-
 GETTER = {"user": "getUserById", "group": "getGroupById"}
 
 _USER_SEARCH = {
