@@ -1,0 +1,5 @@
+`get_field_label` now wraps unmapped catalog metadata field names in a
+translatable message instead of returning a plain string, so custom or
+add-on-provided field labels can actually be translated, matching what
+`MetaDataFieldsVocabularyFactory` already does.
+[afonsojanu]
