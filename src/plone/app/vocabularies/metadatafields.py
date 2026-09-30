@@ -75,4 +75,27 @@ MetaDataFieldsVocabularyFactory = MetaDataFieldsVocabulary()
 
 
 def get_field_label(field):
-    return _FIELD_LABEL.get(field, field)
+    """Return the translated label for a catalog metadata field.
+
+    Fields with a known, curated label are returned as such:
+
+    >>> get_field_label('Title')
+    'Title'
+
+    Fields that are not in ``_FIELD_LABEL`` still need to come back as a
+    translatable message (using the field name as msgid), not as a plain
+    string, otherwise the page template rendering it will never even try
+    to translate it, no matter which translations a site or add-on
+    registers for that field name. This mirrors what
+    ``MetaDataFieldsVocabulary`` already does for the terms it builds:
+
+    >>> from zope.i18nmessageid import Message
+    >>> label = get_field_label('anUnmappedColumn')
+    >>> label
+    'anUnmappedColumn'
+    >>> isinstance(label, Message)
+    True
+    >>> label.domain
+    'plone'
+    """
+    return _FIELD_LABEL.get(field, _(field))
