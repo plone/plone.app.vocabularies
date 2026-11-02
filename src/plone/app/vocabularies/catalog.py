@@ -749,8 +749,7 @@ class StaticCatalogVocabulary(CatalogVocabulary):
     def get_brain_path(self, brain):
         nav_root_path = self.nav_root_path
         path = brain.getPath()
-        if path.startswith(nav_root_path):
-            path = path[len(nav_root_path) :]
+        path = path.removeprefix(nav_root_path)
         return path
 
     @staticmethod
