@@ -24,5 +24,5 @@ class AvailableEditorsTest(unittest.TestCase):
         )
         editors = vocab_util(self.portal)
         self.assertEqual(2, len(editors.by_token))
-        self.assertTrue("None" in [x for x in editors.by_token])
-        self.assertTrue("TinyMCE" in [x for x in editors.by_token])
+        self.assertTrue("None" in [*editors.by_token])
+        self.assertTrue("TinyMCE" in [*editors.by_token])

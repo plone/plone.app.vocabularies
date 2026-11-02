@@ -187,8 +187,7 @@ class BaseFactory:
             return True
         registry = getUtility(IRegistry)
         return not [
-            x
-            for x in filter(
+            *filter(
                 registry.get,
                 [cfg["many"] for cfg in SOURCES[self.source]["searches"]],
             )
